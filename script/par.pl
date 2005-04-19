@@ -766,6 +766,8 @@ sub _fix_progname {
 
     # XXX - hack to make PWD work
     my $pwd = (defined &Win32::GetCwd) ? Win32::GetCwd() : $ENV{PWD};
+    $pwd = `pwd` if !defined $pwd;
+    chomp($pwd);
     $progname =~ s/^(?=\.\.?\Q$Config{_delim}\E)/$pwd$Config{_delim}/;
 
     $ENV{PAR_PROGNAME} = $progname;
