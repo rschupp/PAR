@@ -1,0 +1,92 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.40.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It would check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 116e4707ae3ac8c6f49909f4eb0bb5c7e216b9df AUTHORS
+SHA1 6078d16d3a182c46d75fc3361be87a066596a93e ChangeLog
+SHA1 63d5120ddbb62578fda184b2150ba7f78f2e2729 Changes
+SHA1 f8a5c7014dafe92cd9ea77aed6f2257feb9ba99c MANIFEST
+SHA1 97fc757429bddc570c6e68a01655ff5aa077e369 MANIFEST.SKIP
+SHA1 c4b19c47f66efbfbdb0a0cc6d39f4b2d9d5ec420 META.yml
+SHA1 6050f74004662b662104ec79bf5199eb0bdd2994 Makefile.PL
+SHA1 12eb682c4a79affff1133505c6bffcd9b6e6511e README
+SHA1 a35cbdb616f10c05084b32df17f7a55002c47d42 TODO
+SHA1 351e0cb69a890dcaf8832e372e9cbe49683b7063 contrib/automated_pp_test/automated_pp_test.pl
+SHA1 316ec0a6d223b30e91a9ce1b593551b685cd368a contrib/automated_pp_test/hello_tk.pl
+SHA1 3a32ffa47e874433d554b80633a3e125901d1bcf contrib/automated_pp_test/hi.ico
+SHA1 c14a036b0932c286fd27db66cbc5c31caea0b5e9 contrib/automated_pp_test/pipe_a_command.pm
+SHA1 640cff4d94ee320c4f9105d7f3352193cc3212ae contrib/automated_pp_test/prior_to_test.pm
+SHA1 506e1651a09db227a061fd613aae8e831300eed1 contrib/automated_pp_test/remove_file_and_try_executable_again.pm
+SHA1 5da134ca17c4d9b17983af3d46b5733281a04f25 contrib/automated_pp_test/test_in_further_subdir.pm
+SHA1 261373043fffcdc49a0b20dd58a98ceaef1043e8 contrib/gui_pp/gpp
+SHA1 7b79d1d630536cafd4340f0bdcf763e2a40d5318 contrib/gui_pp/gpp_readme.txt
+SHA1 88274beeb8532623b2f38638434d51f6724e94d6 contrib/procedural_pp/pp_old
+SHA1 46ff42e7e02b856e15106163cd77b1a55fc08fb9 inc/ExtUtils/AutoInstall.pm
+SHA1 5c3c99e6273ec64d0b63ac6b7817807557b46c97 inc/Module/Install.pm
+SHA1 947ab0384bbdeaa591bbfa6f82deb4f367822b54 inc/Module/Install/AutoInstall.pm
+SHA1 fd56d5c793014bccac2cd1e61926c4da8538ef99 inc/Module/Install/Base.pm
+SHA1 9ce6768a7b8f7032ec89594b773fafd58c6feb1d inc/Module/Install/Can.pm
+SHA1 b6c8f0f22c4c8ba48a7bac2c5e4bd61803a7b097 inc/Module/Install/Fetch.pm
+SHA1 7023c3cdd07f5042c31b6cdae926d75865cf3cdf inc/Module/Install/Include.pm
+SHA1 aabcd47178e4e7b27e340ff5273269c93697c9c1 inc/Module/Install/Makefile.pm
+SHA1 207dfa13341a374fc78325fbeb99bc36659aef2d inc/Module/Install/Metadata.pm
+SHA1 b6b0fee96b42d666aff11e0d10fd8eec99ad239f inc/Module/Install/PAR.pm
+SHA1 22652cdcb9d4f0693b07b844487f34e604eb6531 inc/Module/Install/PRIVATE.pm
+SHA1 69b240acd540a9a35fe77bbf55ee9009cae10ca1 inc/Module/Install/PRIVATE/PAR.pm
+SHA1 aff9341a15c04faec47089851e43d9d4061337e7 inc/Module/Install/Win32.pm
+SHA1 8e0d347ca21bc18b380d9d1aa5910b8d078a76b7 inc/Module/Install/WriteAll.pm
+SHA1 6458cec3e5ecc7a7ab12d138e63aea05486c48ad inc/Test/Builder.pm
+SHA1 d609df5fa76b959d08e5d9d0a15fe59c5c2f95e0 inc/Test/More.pm
+SHA1 b51ba7f3ce9850585ad7e01d4414e6289ab94978 lib/App/Packer/PAR.pm
+SHA1 c25b107515ac485d2629353adad4a25198fc485e lib/PAR.pm
+SHA1 03b7661c77e66f64bf030651fd9c84aec178b563 lib/PAR/FAQ.pod
+SHA1 c23871de4a6c92cf5f046ccc377b09405c79deac lib/PAR/Filter.pm
+SHA1 0e87bb0e9ee854dbe47d044ffd14649de3709fa7 lib/PAR/Filter/Bleach.pm
+SHA1 2b4994663901919e1ccf34f3321fe43fda979169 lib/PAR/Filter/Bytecode.pm
+SHA1 ed586e6279bf23a871a6fdd10afab5d47511b684 lib/PAR/Filter/Obfuscate.pm
+SHA1 78e78ebc394878aa87e0cd2cf1abecf07af9cdd9 lib/PAR/Filter/PatchContent.pm
+SHA1 386b3983aa94e7eb05284bf4c0bc14cd041b0431 lib/PAR/Filter/PodStrip.pm
+SHA1 1417d95418f57671e1516037fa68b45eee432cdd lib/PAR/Heavy.pm
+SHA1 4fe4f18d05f041ca98fa5033853c6bdbb0206716 lib/PAR/Packer.pm
+SHA1 62a66393eedebe242709cf723dc75c7ce41e9dfd lib/PAR/Tutorial.pod
+SHA1 43a6e1617c4578771b6be415a32712790e7ed082 myldr/Makefile.PL
+SHA1 3faece0134e7bfbcfd2e9736de95affe3e21d91d myldr/env.c
+SHA1 f0f7217f78d8e52faa1365c9a0b18f51804b2e4c myldr/file2c.pl
+SHA1 a8bda77b62a506ffc505d2fdf5e8fb97a7852319 myldr/internals.c
+SHA1 c2f1b12a8ba2bd4947e349b4ff460d91dbf91d1e myldr/main.c
+SHA1 ac483e923b3264cbe34710be56fc5eabdb492166 myldr/mktmpdir.c
+SHA1 5d0a28ff5dbe1fd78ac0d19bce9c14a21f48b2c7 myldr/mktmpdir.h
+SHA1 d09420b502c02f03d96df8343445c322ca9f5b10 myldr/parlsig.pl
+SHA1 98f6f49358af89cd1371e23ae2b9c59a50dbbce5 myldr/sha1.c
+SHA1 955bbcc29731e8c077826bf45d20f51a3bb76bc2 myldr/static.c
+SHA1 0e5cf21105ac1f646499fbfc8970830860e82702 myldr/utils.c
+SHA1 7b3e5be07f3db44c7f1a37ece3feea173e39fa9d myldr/win32.coff
+SHA1 fa6066c09715081d4d3f36685852207ff70caf9e myldr/win32.res
+SHA1 ee852494fd2882e6012791d968857eb76282498a package/parl.nsi
+SHA1 ee3841ee68f8655f9ef6f5f4c6fe798198829b88 script/par.pl
+SHA1 0197250a1c436389ed11d2a448c47c612442fe66 script/parl.pod
+SHA1 37cd4acdeb70478b4ce6bc439ee4da8d6ae94c3f script/pp
+SHA1 03d8a9113cee5d196b3dc1adb41bea5c11c16b0d script/tkpp
+SHA1 1fd0aa833e574ecf80f2fb553b3b241dfe48ba16 t/0-signature.t
+SHA1 af5aae5097adcbcb1b69f2aa1f54a31392daa9c2 t/1-basic.t
+SHA1 1118f77d3ce6956c39297f95999b68d738ab9c15 t/2-pp.t
+SHA1 a0258484d56cc699190be4cd93a16d145a0e1d16 t/hello.par
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (FreeBSD)
+
+iD8DBQFA5To6tLPdNzw1AaARAtsQAJ48g7CxKqVwC9KBucY8Yv5FDjDIdACggU4G
+mch1hqyg1stvdUSSw9J1Ooo=
+=iCR8
+-----END PGP SIGNATURE-----
