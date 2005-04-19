@@ -1,0 +1,34 @@
+- Implement inflate algorithm in perl as a non-XS fallback.
+
+- Implement Archive::Zip, Compress::Zlib and friends in C for performance.
+
+- Overrides @INC to provide coexistence support for multiple
+  versions of a module on the same machine.  Or use Ingy's only.pm.
+
+- caller() from pp'ed executable should return nothing, instead
+  of the current calling stacks.  Currently there's a workaround
+  as PAR_CLEARSTACK in myldr/main.c, but it segfaults and hence
+  is commented out by default.
+
+- make CHECK blocks work by perl_parse the code instead of
+  eval"". this should clenaly solve the above problem as well.
+
+- POSIX.pm does not currently work with "pp -C".  Need to change
+  it to either use preemptive extraction, or extract under the
+  appropriate directory.
+
+- On Cygwin, PAR_TEMP is not cleaned up even with "pp -C", because
+  the cleanup time happened too late.  Need to either use spawn()
+  or somehow assign win32's auto-unlink flags.
+
+- Implement selective filtering to -F.
+
+- Perl 5.9.2 on linux breaks PAR.
+
+- Cygwin needs perl_5_x_y.dll to be bundled instead of libperl.dll.
+  It also needs cygcrypt.dll etc, but that is another matter altogether.
+
+- Better document all PAR_* environment variables in PAR.pm.
+
+- Skip some binary modules (such as IO.dll) inside .par when packing standalone
+  executables, if parl already contains a copy of them.

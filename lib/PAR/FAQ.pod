@@ -1,0 +1,222 @@
+=head1 NAME
+
+PAR::FAQ - Frequently Asked Questions about PAR
+
+=head1 SYNOPSIS
+
+This is the Frequently Asked Questions list for the Perl Archive Toolkit.
+You can edit this document at L<http://par.perl.org/?FAQ> online.
+
+=head1 DESCRIPTION
+
+=head2 How do I make a F<.par> file for my CPAN module along with the F<.tar.gz> file?
+
+Do this in the module directory:
+
+    % make clean
+    % parl -p
+
+You may also digitally sign the generated F<.par> file:
+
+    % parl -s
+
+B<PAR::Dist> expects to find your F<MANIFEST> in the current directory, and
+uses B<Module::Signature> to (optionally) sign the newly generated PAR.
+
+The F<.par> file can be uploaded to CPAN along with your module's F<.tar.gz> file.
+Users of your module can then install from CPAN with a single command:
+
+    % parl -i cpan://PAUSEID/DISTNAME-0.01
+
+Where C<PAUSEID> is your PAUSE ID, and C<DISTNAME> is your module's distribution
+name (eg. C<Acme-FooBar>).
+
+=head2 If I try to compile my wxGlade generated script, it doesn't run. What's wrong?
+
+Comment out the line that starts with C<unless (caller)>, and compile it again.
+Note that this is considered a bug; clearing the caller stack is a development
+in progress.
+
+=head2 I get a C<link error: /usr/bin/ld: cannot find -lperl> during the C<make> step of the installation on Debian. What's wrong?
+
+You need to install the B<libperl-dev> package.
+
+Alternatively, create a symbolic link from F<libperl.so.5.6.1> to
+F<libperl.so> in F</usr/lib>:
+
+    % cd /usr/lib; ln -s libperl.so.5.6.1 libperl.so
+
+and re-run the C<make> step of the installation.
+
+=head2 I specify a F<.ico> file with C<--icon> for Win32, but the icon is still the black and white camel.  What's wrong?
+
+Unlike Perl2EXE, which can use a standard 16-color bitmap as an application
+icon, PAR requires a true Windows icon file.  Download a trial version of
+Microangelo (L<http://www.microangelo.us/>) and use that to create your F<.ico>
+file.
+
+The latest Netpbm tools at L<http://netpbm.sourceforge.net/> has
+B<ppmtowinicon>, which can tack a pbm and convert it to a windows icon.  It is
+open source and has win32 ports.
+
+=head2 I added a directory to my PAR file using C<zip -r> or winzip, and then generated an executable from this PAR file, and the executable failed to run (IO error: reading header signature :..). What's wrong?
+
+As pointed out by Alan Stewart, zip adds a directory entry for the new
+directory, and it causes the PAR executable to fail. 
+
+Just use this :
+
+    zip -r -D hello.par my_dir/ 
+
+or the B<Archive::Zip::addTree> as follows :
+
+    $zip->addTree( $root, $dest, sub { -f } )
+
+PAR version 0.81 and above supports adding whole directories with C<pp -A>,
+so you do not normally need to add directories this way.
+
+=head2 On what platforms can I run PAR?  On what platforms will the resulting executable run?
+
+Win32 (with VC++ or MinGW), FreeBSD, NetBSD, Linux, MacOSX, Cygwin, AIX,
+Solaris, HP-UX, Tru64.
+
+The resulting executable will run on any platforms that supports the binary
+format of the generating platform.
+
+=head2 How do I extract my script out of packed executable?
+
+In other words, "I did a C<pp foo.pl> and I lost F<foo.pl>, how do I get it
+back?".
+
+The answer is to just use unzip/winzip/winrar/whatever to decompress the
+executable, treating it like a normal Zip file.  You may need to rename the
+executable into a F<.zip> extension first.
+
+=head2 Can PAR completly hide my source code?
+
+Not completely, but possible to a degree.  PAR supports an input filter
+mechanism via C<pp -f> and C<pp -F> (see L<PAR::Filter>), which can be used
+to implement source obfuscators (or even product activation schemes).
+
+But if you are looking for 100% bulletproof way of hiding source code, it is
+not possible with any language.  Learning Perl, 3rd Edition has this answer to
+offer (quoted with permission from Randal Schwartz):
+
+    If you're wishing for an opaque binary, though, we have to tell
+    you that they don't exist. If someone can install and run your
+    program, they can turn it back into source code. Granted, this
+    won't necessarily be the same source that you started with, but
+    it will be some kind of source code. The real way to keep your
+    secret algorithm a secret is, alas, to apply the proper number
+    of attorneys; they can write a license that says "you can do
+    this with the code, but you can't do that. And if you break our
+    rules, we've got the proper number of attorneys to ensure that
+    you'll regret it."
+
+=head2 Perl Tk tips
+
+On Microsoft Windows, start your script with
+
+    use strict;
+    use Encode::Unicode;
+    use Tk;
+
+Some widgets use xbm bitmaps which don't get picked up by PAR.  The error is:
+
+    couldn't read bitmap file "": No such file or directory at Tk/Widget.pm line 203
+    error reading bitmap file "" at Tk/Widget.pm line 205.
+
+Fix is to find the missing xbm files (C<perl -V> tells you where to start
+looking), copy them to the script directory, and add them to the executable:
+
+    pp -a cbxarrow.xbm -a arrowdownwin.xbm -o test test.pl
+
+=head2 Under Win32, a pp packed executable has trouble executing other perl scripts or pp packed executable.
+
+Note that this problem should only happen if the perl version of both programs
+are binary-incompatible.
+
+When running on a Win32 system, if a perl script is packed with pp and invokes
+another Perl script or pp packed executable, either with C<system()> or backticks,
+the invoked program runs with the copy of F<perl5x.dll> already loaded into
+memory.
+
+If the calling executable was packed with C<pp -d>, the F<perl5x.dll> is the one
+from the installed perl bin directory.  Otherwise, it is the one packed with the
+executable.
+
+The F<perl5x.dll> from the bin dir knows the C<@INC> paths for the installed
+libraries; the one in the executable does not. Because of this, a program
+packed without C<-d> calling a program with packed with C<-d> or calling
+F<perl.exe> to run a plain Perl script may fail.  This is a Win32 limitation.
+
+=head2 How do I make a F<.exe> that runs with no console window under Windows?
+
+Use the C<pp --gui> option, like this:
+
+    % pp --gui -o file.exe file.pl
+
+=head2 How do I change the Icon of the generated F<.exe> file under Windows?
+
+Use the C<pp --icon> option, like this:
+
+    % pp --icon "c:\path\to\MyIcon.ico" -o file.exe file.pl
+
+=head2 On Windows XP, C<pp> crashes saying that C<par.exe has encountered a problem>
+
+This bug has been be fixed.  The following answer applies to PAR 0.76 and earlier:
+
+You may be able to escape this problem by setting some executables to Windows
+95 compatibility mode.  Specifically, find F<parl.exe> (probably in
+F<C:\perl\5.8.0\bin>) using Windows Explorer, and right-click on it and choose
+C<Properties>.  Choose the "Compatibility" tab and tick the box for C<Run this
+program with compatibility mode for> and check that the dropdown shows C<Windows
+95>.  Then click OK.
+
+Now you can hopefully run pp as normal to generate an EXE.  Before you can run
+the generated EXE, you'll need to set its compatibility mode too, in the same
+way as you did for F<parl.exe>.
+
+=head2 Problem with B<Win32::Perms> and F<Perms.DLL>
+
+This bug has been be fixed.  The following answer applies to PAR 0.79 and earlier:
+
+With a script F<my.pl> using B<Win32::Perms>, running C<pp -o my.exe my.pl> may
+produce this:
+
+    Can't locate loadable object for module Win32::Perms in @INC (@INC 
+    contains: CODE(0xb97eec) CODE(0xc8a99c) .) at ../blib/lib/PAR/Heavy.pm 
+    line 78
+
+In fact the dll is F<Perms.DLL> wit DLL in capital letters. That's the problem.
+The bootstrap function of PAR in the Dynaloader module fails 
+looking for F<Perms.dll> in the table of dlls which contains only F<Perms.DLL>.
+
+And so the solution is just rename F<Perms.DLL> to F<Perms.dll> and do
+C<pp -o my.exe my.pl> again... and everything goes right!
+
+
+=head1 SEE ALSO
+
+L<PAR>, L<PAR::Tutorial>
+
+=head1 AUTHORS
+
+Autrijus Tang E<lt>autrijus@autrijus.orgE<gt>
+
+L<http://par.perl.org/> is the official PAR website.  You can write
+to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty mail to
+E<lt>par-subscribe@perl.orgE<gt> to participate in the discussion.
+
+Please submit bug reports to E<lt>bug-par@rt.cpan.orgE<gt>.
+
+=head1 COPYRIGHT
+
+Copyright 2003, 2004, 2005 by Autrijus Tang E<lt>autrijus@autrijus.orgE<gt>.
+
+This document is free documentation; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+See L<http://www.perl.com/perl/misc/Artistic.html>
+
+=cut
