@@ -159,7 +159,7 @@ END { if ($ENV{PAR_CLEAN}) {
 BEGIN {
     Internals::PAR::BOOT() if defined &Internals::PAR::BOOT;
 
-    do {
+    eval {
 
 _par_init_env();
 
