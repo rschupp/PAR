@@ -7,6 +7,24 @@ use FindBin;
 use File::Spec;
 use ExtUtils::MakeMaker;
 
+sub samefiles {
+    my ($f1, $f2) = @_;
+    $f1 eq $f2 and return 1;
+    -e $f1 && -e $f2 or return 0;
+    -s $f1 == -s $f2 or return 0;
+    local $/ = \32768;
+    open my $fh1, $f1
+	and open my $fh2, $f2
+	or return 0;
+    while (1) {
+	my $c1 = <$fh1>;
+	my $c2 = <$fh2>;
+	last if !defined $c1 or !defined $c2;
+	return 0 if $c1 ne $c2;
+    }
+    return 1;
+}
+
 chdir File::Spec->catdir($FindBin::Bin, File::Spec->updir);
 
 my $cwd = getcwd();
@@ -37,7 +55,7 @@ if (defined &Win32::GetShortPathName) {
     $startperl = lc(Win32::GetShortPathName($startperl));
 }
 
-if ($startperl ne $^X) {
+if (!samefiles($startperl, $^X)) {
     print "1..0 # Skip '$^X' is not the same as '$startperl'\n";
     exit;
 }
