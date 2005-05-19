@@ -20,18 +20,15 @@ my $orig_X = $^X;
 my $orig_startperl = $startperl;
 
 if (!-e $parl) {
-    print "1..1\n";
-    print "ok 1 # skip 'parl' not found\n";
+    print "1..0 # Skip 'parl' not found\n";
     exit;
 }
 elsif (!($^X = main->can_run($^X))) {
-    print "1..1\n";
-    print "ok 1 # skip '$orig_X' not found\n";
+    print "1..0 # Skip '$orig_X' not found\n";
     exit;
 }
 elsif (!($startperl = main->can_run($startperl))) {
-    print "1..1\n";
-    print "ok 1 # skip '$orig_startperl' not found\n";
+    print "1..0 # Skip '$orig_startperl' not found\n";
     exit;
 }
 
@@ -41,8 +38,7 @@ if (defined &Win32::GetShortPathName) {
 }
 
 if ($startperl ne $^X) {
-    print "1..1\n";
-    print "ok 1 # skip '$^X' is not the same as '$startperl'\n";
+    print "1..0 # Skip '$^X' is not the same as '$startperl'\n";
     exit;
 }
 
