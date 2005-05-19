@@ -32,7 +32,7 @@ static const char *path_sep = ":";
 #endif
 
 #ifndef PL_statbuf
-static struct stat PL_statbuf;
+struct stat PL_statbuf;
 #endif
 
 #include "utils.c"
