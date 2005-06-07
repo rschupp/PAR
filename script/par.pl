@@ -221,7 +221,7 @@ my ($start_pos, $data_pos);
         read _FH, $buf, 4;
         read _FH, $buf, unpack("N", $buf);
 
-        if (defined($ext) and $ext !~ /\.(?:pm|ix|al)$/i) {
+        if (defined($ext) and $ext !~ /\.(?:pm|pl|ix|al)$/i) {
             my ($out, $filename) = _tempfile($ext, $crc);
             if ($out) {
                 binmode($out);
