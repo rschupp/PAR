@@ -1,4 +1,17 @@
-[Changes for 0.87 - January 31, 2004]
+[Changes for 0.88 - June 7, 2005]
+
+* Bug Fixes
+
+    - Extracted .pl files should be loadable via the coderef-in-@INC too,
+      just like .pm files and autosplit files.  This makes PAR work with
+      Perl 5.8.7 on Win32.
+
+    - Fix the build with GCC 4.0.
+
+    - If $ENV{PWD} is not defined, fallback to use `pwd` to obtain the
+      working directory for invoking.
+
+[Changes for 0.87 - January 31, 2005]
 
 * Bug Fixes
 

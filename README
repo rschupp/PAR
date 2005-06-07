@@ -20,17 +20,17 @@ also available online at <http://www.autrijus.org/par-tutorial/>.
 
 PAR uses the standard perl module install process:
 
-cpansign -v		# optional; see SIGNATURE for details
-perl Makefile.PL
-make			# or 'nmake' on Win32; see notes below
-make test
-make install
+    cpansign -v         # optional; see SIGNATURE for details
+    perl Makefile.PL
+    make                # or 'nmake' on Win32
+    make test
+    make install
 
 If your system has a C compiler, or if somebody has built a PAR package for
 your architecture, the 'pp' tool and a stand-alone binary version of par.pl
 will be installed, so you can generate self-executable binaries like this:
 
-    % pp -o foo.exe /home/test.pl
+    pp -o foo.exe /home/test.pl
 
 * Binary installation with pre-built PAR files
 
@@ -125,18 +125,14 @@ of libperl with the executable are most welcome.
 
 Please consult the documentation of 'pp' for more information.
 
-* Snapshots
+* Source Repository
 
-The in-development, updated-every-minute snapshot of PAR is available
-via rsync and http:
+You can check out the most recent revision from PAR's Subversion repository:
 
-    rsync -avuz rsync://p4.elixus.org/member/autrijus/PAR .
-    http://p4.elixus.org/snap/PAR.tar.gz
+    http://svn.openfoundry.org/par/trunk/
 
-Change history, opened files and other information are also available
-from the P4Web interface:
-
-    http://p4.elixus.org/member/autrijus/PAR/
+There is anonymous access to all. Commit access is handed out liberally;
+contact the mailing list for details.
 
 * Contact
 
