@@ -56,7 +56,7 @@ myldr/Makefile.PL
 myldr/mktmpdir.c
 myldr/mktmpdir.h
 myldr/parlsig.pl
-myldr/sha1.c
+myldr/sha1.c.PL
 myldr/static.c
 myldr/utils.c
 myldr/win32.coff

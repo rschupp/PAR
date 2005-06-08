@@ -1,4 +1,3 @@
-#include "ctype.h"
 #include "mktmpdir.h"
 
 #define PAR_TEMP "PAR_TEMP"

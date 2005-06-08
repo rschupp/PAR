@@ -168,6 +168,7 @@ all: $all
 clean:
 	-\$(RM) my_*.c
 	-\$(RM) main$o my_par_pl$o static$o
+	-\$(RM) sha1$o sha1.c
 	-\$(RM) *.opt *.pdb perlxsi.c
 	\$(MV) Makefile Makefile.old
 
@@ -183,7 +184,7 @@ distclean: clean
 	-\$(RM) $static_exe
 	-\$(RM) Makefile Makefile.old
 
-$par_exe: \$(OBJECTS) my_par_pl$o
+$par_exe: sha1$o \$(OBJECTS) my_par_pl$o
 	\$(LD) \$(OBJECTS) \$(PERL_LDFLAGS) $out$par_exe_link
 
 my_par_pl.c: $par_pl
@@ -219,6 +220,9 @@ my_perl.c:
 
 my_par.c: $par_exe
 	\$(PERL) $f2c $par_exe \$@ load_me_1 $long_literal $chunk_size
+
+sha1.c: sha1.c.PL
+	\$(PERL) sha1.c.PL sha1.c
 
 EOT
 }

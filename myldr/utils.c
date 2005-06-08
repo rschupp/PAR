@@ -15,6 +15,13 @@
  *
  */
 
+#ifdef WIN32
+#  include <io.h>
+#else
+#  include <fcntl.h>
+#endif
+#include <stdio.h>
+
 #include "env.c"
 
 char *par_findprog(char *prog, char *path) {

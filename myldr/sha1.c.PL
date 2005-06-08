@@ -1,3 +1,13 @@
+use strict;
+use warnings;
+
+use Config;
+
+(my $file = __FILE__) =~ s/\.PL$//;
+
+open my $fh, '>', $file or die "Could not open '$file' for writing: $!\n";
+
+print $fh <<'EOH';
 /* Borrowed by Alan Stewart in 2004 from SHA1.xs, part of Digest::SHA1 */
 
 /* Digest::SHA1 by Gisle Aas Copyright 1999-2003, Uwe Hollerbach Copyright 1997 */
@@ -12,7 +22,18 @@
 
 /* This code is in the public domain */
 
+#include <string.h>
+
 /* Useful defines & typedefs */
+
+EOH
+
+print  $fh "#ifndef H_PERL\n";
+printf $fh "typedef %s U8;\n", $Config{u8type};
+printf $fh "#define BYTEORDER 0x%s\n", $Config{byteorder};
+print  $fh "#endif\n";
+
+print $fh <<'EOF';
 
 #if defined(U64TYPE) && (defined(USE_64_BIT_INT) || ((BYTEORDER != 0x1234) && (BYTEORDER != 0x4321)))
 typedef U64TYPE ULONG;
@@ -313,3 +334,6 @@ static void sha_final(unsigned char digest[20], SHA_INFO *sha_info)
     sha_info->data[63] = (U8)((lo_bit_count >>  0) & 0xff);
     sha_transform_and_copy(digest, sha_info);
 }
+EOF
+
+close $fh;

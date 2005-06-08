@@ -1,12 +1,45 @@
+#include <ctype.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
+#include <sys/stat.h>
 #ifdef WIN32
-#include <windows.h>
+#  include <direct.h>
+#  define Direntry_t struct direct
+#  include <windows.h>
+#else
+#  include <dirent.h>
+#  define Direntry_t struct dirent
+#  include <unistd.h>
+#endif
+
+#ifndef W_OK
+#define W_OK 0x02
 #endif
 
 #ifndef X_OK
 #define X_OK 0x04
+#endif
+
+#ifndef S_ISDIR
+#   define S_ISDIR(m) ((m & S_IFMT) == S_IFDIR)
+#endif
+
+#ifndef S_ISLNK
+#   ifdef _S_ISLNK
+#	define S_ISLNK(m) _S_ISLNK(m)
+#   else
+#	ifdef _S_IFLNK
+#	    define S_ISLNK(m) ((m & S_IFMT) == _S_IFLNK)
+#	else
+#	    ifdef S_IFLNK
+#		define S_ISLNK(m) ((m & S_IFMT) == S_IFLNK)
+#	    else
+#		define S_ISLNK(m) (0)
+#	    endif
+#	endif
+#   endif
 #endif
 
 #ifndef S_ISREG

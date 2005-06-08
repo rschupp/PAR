@@ -1,10 +1,8 @@
-#include "EXTERN.h"
-#include "perl.h"
-
 #undef PL_statbuf
 #undef readdir
 #ifdef WIN32
-#define mkdir(file, mode) _mkdir(file)
+#  include <process.h>
+#  define mkdir(file, mode) _mkdir(file)
 #endif
 
 #include "mktmpdir.c"
