@@ -306,7 +306,7 @@ my ($start_pos, $data_pos);
 
     # load rest of the group in
     while (my $filename = (sort keys %require_list)[0]) {
-        local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
+        #local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
         require $filename unless $INC{$filename} or $filename =~ /BSDPAN/;
         delete $require_list{$filename};
     }
@@ -384,7 +384,7 @@ if (!$start_pos or ($ARGV[0] eq '--par-options' && shift)) {
 # Output mode (-O) handling {{{
 if ($out) {
     {
-        local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
+        #local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
         require IO::File;
         require Archive::Zip;
     }
@@ -578,7 +578,7 @@ if ($out) {
 
 
     {
-        local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
+        #local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
         require File::Find;
         require Archive::Zip;
     }
@@ -624,7 +624,7 @@ Usage: $0 [ -Alib.par ] [ -Idir ] [ -Mmodule ] [ src.par ] [ program.pl ]
 # }}}
 
 sub require_modules {
-    local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
+    #local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
 
     require lib;
     require DynaLoader;
