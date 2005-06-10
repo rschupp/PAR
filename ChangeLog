@@ -1,3 +1,14 @@
+[Changes for 0.89 - June 10, 2005]
+
+* Bug Fixes
+
+    - Stop static.c from pulling in Perl header files, otherwise
+      parl.exe ends up depending on the Perl DLL on Win32 when
+      Perl is built without PERL_IMPLICIT_SYS.
+
+    - With *nix and File::Path 1.06, par.pl's avoidance of loading
+      Cwd.pm caused syntax errors.
+
 [Changes for 0.88 - June 7, 2005]
 
 * Bug Fixes
