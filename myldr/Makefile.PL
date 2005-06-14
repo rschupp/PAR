@@ -204,6 +204,9 @@ test:
 
 .SUFFIXES: $o
 
+sha1.c: sha1.c.PL
+	\$(PERL) sha1.c.PL sha1.c
+
 EOT
 
     print OUT << "EOT" if $dynperl;
@@ -211,7 +214,7 @@ EOT
 $parldyn_exe: $par_exe
 	$par_exe -I../myldr/.. -I../blib/lib $lib_path -q -B -O\$@
 
-$static_exe: my_perl.c my_par.c static$o
+$static_exe: sha1$o my_perl.c my_par.c static$o
 	\$(LD) static$o \$(STATIC_LDFLAGS) $res $out$static_exe_link
 	\$(PERL) parlsig.pl $static_exe $par_exe $dynperl $chunk_size
 
@@ -220,9 +223,6 @@ my_perl.c:
 
 my_par.c: $par_exe
 	\$(PERL) $f2c $par_exe \$@ load_me_1 $long_literal $chunk_size
-
-sha1.c: sha1.c.PL
-	\$(PERL) sha1.c.PL sha1.c
 
 EOT
 }
