@@ -25,7 +25,7 @@ sub apply {
     no warnings 'uninitialized';
 
     my $data = '';
-    $data = $1 if $$ref =~ s/((?:^__DATA__$).*)//ms;
+    $data = $1 if $$ref =~ s/((?:^__DATA__\r?\n).*)//ms;
 
     my $line = 1;
     if ($$ref =~ /^=(?:head\d|pod|begin|item|over|for|back|end|cut)\b/) {
