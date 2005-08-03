@@ -134,19 +134,19 @@ caching/temporary directory is as follows:
 
 =item *
 
-If I<PAR_TEMP> is specified, use it as the cache directory for
+If I<PAR_GLOBAL_TEMP> is specified, use it as the cache directory for
 extracted libraries, and do not clean it up after execution.
 
 =item *
 
-If I<PAR_TEMP> is not set, but I<PAR_CLEAN> is specified, set
-I<PAR_TEMP> to C<I<TEMP>\par-I<USER>\temp-I<PID>\>, cleaning it
+If I<PAR_GLOBAL_TEMP> is not set, but I<PAR_CLEAN> is specified, set
+I<PAR_GLOBAL_TEMP> to C<I<TEMP>\par-I<USER>\temp-I<PID>\>, cleaning it
 after execution.
 
 =item *
 
 If both are not set, use C<I<TEMP>\par-I<USER>\temp-I<MTIME>\>
-as the I<PAR_TEMP>, reusing any existing files inside.  I<MTIME>
+as the I<PAR_GLOBAL_TEMP>, reusing any existing files inside.  I<MTIME>
 is the last-modified timestamp of the program.
 
 =back

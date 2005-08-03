@@ -559,7 +559,7 @@ L<http://aut.dyndns.org/par-tutorial/>.
  use lib 'http://aut.dyndns.org/par/DBI-latest.par';
  use DBI;    # always up to date!
 
-=item * Modules are cached under C<$ENV{PAR_TEMP}>
+=item * Modules are now cached under C<$ENV{PAR_GLOBAL_TEMP}>
 
 =item * Auto-updates with C<LWP::Simple::mirror>
 
