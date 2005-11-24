@@ -1,4 +1,4 @@
-#line 1 "inc/Module/Install/PAR.pm - /usr/local/lib/perl5/site_perl/5.8.5/Module/Install/PAR.pm"
+#line 1 "inc/Module/Install/PAR.pm - /usr/local/lib/perl5/site_perl/5.8.7/Module/Install/PAR.pm"
 package Module::Install::PAR;
 use Module::Install::Base; @ISA = qw(Module::Install::Base);
 
