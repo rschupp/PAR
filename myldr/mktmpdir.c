@@ -116,7 +116,7 @@ char *par_mktmpdir ( char **argv ) {
         strlen(subdirbuf_suffix) + 1024
     );
     sprintf(stmpdir, "%s%s%s%s", tmpdir, dir_sep, subdirbuf_prefix, username);
-    mkdir(stmpdir, 0755);
+    my_mkdir(stmpdir, 0755);
 
     /* Doesn't really work - XXX */
     progname = par_findprog(argv[0], strdup(val));

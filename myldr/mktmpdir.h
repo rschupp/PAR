@@ -68,5 +68,12 @@ static const char *path_sep = ":";
 struct stat PL_statbuf;
 #endif
 
+#ifdef WIN32
+#  include <process.h>
+#  define my_mkdir(file, mode) _mkdir(file)
+#else
+#  define my_mkdir(file, mode) mkdir(file,mode)
+#endif
+
 #include "utils.c"
 #include "sha1.c"
