@@ -96,7 +96,7 @@ sub pod_strip {
     local $^W;
 
     my $data = '';
-    $data = $1 if $pl_text =~ s/((?:^__DATA__$).*)//ms;
+    $data = $1 if $pl_text =~ s/((?:^__DATA__\r?\n).*)//ms;
 
     my $line = 1;
     if ($pl_text =~ /^=(?:head\d|pod|begin|item|over|for|back|end)\b/) {
