@@ -1,3 +1,18 @@
+[Changes for 0.90 - November 25, 2005]
+
+* Bug Fixes
+
+    - When compiling with static libperl, myldr/ may fail "make"
+      due to sha1.c not generated properly.
+
+    - Pod stripping could fail on __DATA__ sections for files
+      with CRLF line endings.
+
+    - The documentation erroneously referred to the PAR_TEMP
+      environment variable, whereas it should be PAR_GLOBAL_TEMP.
+
+    - Compilation fixes for MinGW/MSYS.
+
 [Changes for 0.89 - June 10, 2005]
 
 * Bug Fixes
