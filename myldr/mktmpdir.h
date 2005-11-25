@@ -64,9 +64,6 @@ static const char *dir_sep = "/";
 static const char *path_sep = ":";
 #endif
 
-#ifndef PL_statbuf
-struct stat PL_statbuf;
-#endif
 
 #ifdef WIN32
 #  include <process.h>

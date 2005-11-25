@@ -58,6 +58,10 @@ char *par_mktmpdir ( char **argv ) {
     unsigned char buf[32768];
     unsigned char sha_data[20];
 
+#ifndef PL_statbuf
+struct stat PL_statbuf;
+#endif
+
     if ( (val = (char *)par_getenv(PAR_TEMP)) && strlen(val) ) {
         par_setup_libpath(val);
         return strdup(val);

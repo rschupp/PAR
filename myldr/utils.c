@@ -22,16 +22,16 @@
 #endif
 #include <stdio.h>
 
-#ifndef PL_statbuf
-struct stat PL_statbuf;
-#endif
-
 #include "env.c"
 
 char *par_findprog(char *prog, char *path) {
     char *p, filename[MAXPATHLEN];
     int proglen, plen;
     char *par_temp = par_getenv("PAR_TEMP");
+
+#ifndef PL_statbuf
+struct stat PL_statbuf;
+#endif
 
 #ifdef WIN32
     if ( GetModuleFileName(0, filename, MAXPATHLEN) ) {

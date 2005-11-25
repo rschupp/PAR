@@ -5,10 +5,6 @@
 #include "my_perl.c"
 #include "my_par.c"
 
-#ifndef PL_statbuf
-struct stat PL_statbuf;
-#endif
-
 /*
 extern char * name_load_me_0;
 extern char * name_load_me_1;
