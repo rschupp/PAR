@@ -1,6 +1,9 @@
 #undef PL_statbuf
 #undef readdir
 
+#ifndef PL_statbuf
+struct stat PL_statbuf;
+#endif
 #include "mktmpdir.c"
 #include "my_perl.c"
 #include "my_par.c"
