@@ -22,6 +22,10 @@
 #endif
 #include <stdio.h>
 
+#ifndef PL_statbuf
+struct stat PL_statbuf;
+#endif
+
 #include "env.c"
 
 char *par_findprog(char *prog, char *path) {
