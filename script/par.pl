@@ -649,6 +649,7 @@ sub require_modules {
     require PAR::Heavy;
     require PAR::Dist;
     require PAR::Filter::PodStrip;
+    eval { require Scalar::Util };
 }
 
 # The C version of this code appears in myldr/mktmpdir.c
