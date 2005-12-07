@@ -16,7 +16,7 @@ contrib/pare/pare_readme.txt
 contrib/procedural_pp/pp_old
 contrib/stdio/Stdio.pm
 contrib/stdio/Stdio_readme.txt
-inc/ExtUtils/AutoInstall.pm
+inc/Module/AutoInstall.pm
 inc/Module/Install.pm
 inc/Module/Install/AutoInstall.pm
 inc/Module/Install/Base.pm
@@ -68,7 +68,7 @@ script/par.pl
 script/parl.pod
 script/pp
 script/tkpp
-SIGNATURE			Public-key signature (added by MakeMaker)
+SIGNATURE
 t/1-basic.t
 t/2-pp.t
 t/hello.par
