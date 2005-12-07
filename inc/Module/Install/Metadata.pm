@@ -93,13 +93,10 @@ sub feature {
     push @$features, (
         $name => [
             map {
-                (         ( ++$count % 2 )
-                      and ref($_)
-                      and ( ref($_) ne 'HASH' )
-                      and ( $count += $#$_ ) )
-                  ? @$_
-                  : $_
-              } @$mods
+                ref($_) ? ( ref($_) eq 'HASH' ) ? %$_
+                                                : @$_
+                        : $_
+            } @$mods
         ]
     );
 
