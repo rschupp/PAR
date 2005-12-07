@@ -8,6 +8,20 @@ use Config ();
 use File::Spec ();
 use ExtUtils::MakeMaker ();
 
+# check if we can load some module
+sub can_use {
+    my ($self, $mod, $ver) = @_;
+    $mod =~ s{::|\\}{/}g;
+    $mod .= ".pm" unless $mod =~ /\.pm$/i;
+
+    my $pkg = $mod;
+    $pkg =~ s{/}{::}g;
+    $pkg =~ s{\.pm$}{}i;
+
+    local $@;
+    eval { require $mod; $pkg->VERSION($ver || 0); 1 };
+}
+
 # check if we can run some command
 sub can_run {
     my ($self, $cmd) = @_;

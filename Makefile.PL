@@ -3,46 +3,42 @@
 use 5.006;
 use inc::Module::Install;
 
-name	    ('PAR');
-abstract    ('Perl Archive Tookit');
-version_from('lib/PAR.pm');
-license	    ('perl');
+name        'PAR';
+abstract    'Perl Archive Tookit';
+all_from    'lib/PAR.pm';
 
-requires    ('perl'             => 5.006);
-requires    ('File::Temp'       => 0.05);
-requires    ('Compress::Zlib'	=> ($^O eq 'MSWin32') ? 1.16 : 1.30);
-requires    ('Archive::Zip'	=> 1.00);
-requires    ('Module::ScanDeps'	=> 0.45);
-requires    ('PAR::Dist'	=> 0.06);
-features    (
-    'Windows --icon and --info support'	=> [
-	-default => 0,
-	recommends  ('Parse::Binary' => 0.04),
-	recommends  ('Win32::Exe' => 0.04),
-    ],
-) if ($^O eq 'MSWin32');
+requires    'File::Temp'        => 0.05;
+requires    'Compress::Zlib'    => ($^O eq 'MSWin32') ? 1.16 : 1.30;
+requires    'Archive::Zip'      => 1.00;
+requires    'Module::ScanDeps'  => 0.45;
+requires    'PAR::Dist'         => 0.06;
 
-features    (
-    'Digital signature support'	=> [
-	-default => 0,
-	recommends  ('Digest' => 0),
-        (
-            (eval { require Digest::SHA1; 1 } or
-             eval { require Digest::SHA; 1 }  or
-             eval { require Digest::SHA::PurePerl; 1 }) ? () :
-            recommends( (can_cc() ? 'Digest::SHA' : 'Digest::SHA::PurePerl') => 0 )
-        ),
-	recommends  ('Module::Signature' => 0.35),
-    ],
-) if (eval { require Crypt::OpenPGP; 1 } or can_run('gpg'));
+if ($^O eq 'MSWin32') {
+    feature 'Windows --icon and --info support',
+    recommends
+            'Parse::Binary'     => 0.04,
+            'Win32::Exe'        => 0.04;
+}
 
-include('ExtUtils::AutoInstall');
-include_deps('Test::More');
+if (can_use('Crypt::OpenPGP') or can_run('gpg')) {
+    my $has_sha1 = (
+        can_use('Digest::SHA1') or
+        can_use('Digest::SHA')  or
+        can_use('Digest::SHA::PurePerl')
+    );
 
-sign(1);
-auto_install_now( -default => 0 );
-no_index(directory => 'contrib');
+    feature 'Digital signature support',
+    recommends
+            'Digest',
+            ($has_sha1 ? () : (can_cc() ? 'Digest::SHA'
+                                        : 'Digest::SHA::PurePerl')),
+            'Module::Signature';
+}
+
+include_deps        'Test::More';
+no_index            directory => 'contrib';
+auto_install_now    -default => 0;
 
 &Autrijus->write;
-&WriteAll;
+&WriteAll(sign => 1);
 &Autrijus->fix;

@@ -1,6 +1,8 @@
 #line 1 "inc/Module/Install.pm - /usr/local/lib/perl5/site_perl/5.8.7/Module/Install.pm"
 package Module::Install;
-$VERSION = '0.39';
+use 5.004;
+
+$VERSION = '0.40';
 
 die << "." unless $INC{join('/', inc => split(/::/, __PACKAGE__)).'.pm'};
 Please invoke ${\__PACKAGE__} with:
@@ -21,7 +23,23 @@ use File::Path ();
 @inc::Module::Install::ISA = 'Module::Install';
 *inc::Module::Install::VERSION = *VERSION;
 
-#line 130
+sub autoload {
+    my $self   = shift;
+    my $caller = $self->_caller;
+
+    my $cwd = Cwd::cwd();
+    my $sym = "$caller\::AUTOLOAD";
+
+    $sym->{$cwd} = sub {
+        my $pwd = Cwd::cwd();
+        if (my $code = $sym->{$pwd}) {
+            goto &$code unless $cwd eq $pwd; # delegate back to parent dirs
+        }
+        $$sym =~ /([^:]+)$/ or die "Cannot autoload $caller - $sym";
+        unshift @_, ($self, $1);
+        goto &{$self->can('call')} unless uc($1) eq $1;
+    };
+}
 
 sub import {
     my $class = shift;
@@ -37,34 +55,46 @@ sub import {
         goto &{"$self->{name}::import"};
     }
 
-    *{caller(0) . "::AUTOLOAD"} = $self->autoload;
+    *{$self->_caller . "::AUTOLOAD"} = $self->autoload;
+    $self->preload;
 
     # Unregister loader and worker packages so subdirs can use them again
     delete $INC{"$self->{file}"};
     delete $INC{"$self->{path}.pm"};
 }
 
-#line 157
+sub preload {
+    my ($self) = @_;
 
-sub autoload {
-    my $self = shift;
-    my $caller = caller;
+    $self->load_extensions(
+        "$self->{prefix}/$self->{path}", $self
+    ) unless $self->{extensions};
 
-    my $cwd = Cwd::cwd();
-    my $sym = "$caller\::AUTOLOAD";
+    my @exts = @{$self->{extensions}};
 
-    $sym->{$cwd} = sub {
-        my $pwd = Cwd::cwd();
-        if (my $code = $sym->{$pwd}) {
-            goto &$code unless $cwd eq $pwd; # delegate back to parent dirs
+    unless (@exts) {
+        my $admin = $self->{admin};
+        @exts = $admin->load_all_extensions;
+    }
+
+    my %seen_method;
+    foreach my $obj (@exts) {
+        while (my ($method, $glob) = each %{ref($obj) . '::'}) {
+            next unless defined *{$glob}{CODE};
+            next if $method =~ /^_/;
+            next if $method eq uc($method);
+            $seen_method{$method}++;
         }
-        $$sym =~ /([^:]+)$/ or die "Cannot autoload $caller";
-        unshift @_, ($self, $1);
-        goto &{$self->can('call')} unless uc($1) eq $1;
-    };
-}
+    }
 
-#line 182
+    my $caller = $self->_caller;
+    foreach my $name (sort keys %seen_method) {
+        *{"${caller}::$name"} = sub {
+            ${"${caller}::AUTOLOAD"} = "${caller}::$name";
+            goto &{"${caller}::AUTOLOAD"};
+        };
+    }
+}
 
 sub new {
     my ($class, %args) = @_;
@@ -89,18 +119,14 @@ sub new {
     bless(\%args, $class);
 }
 
-#line 211
-
 sub call {
     my $self   = shift;
     my $method = shift;
-    my $obj = $self->load($method) or return;
+    my $obj    = $self->load($method) or return;
 
     unshift @_, $obj;
     goto &{$obj->can($method)};
 }
-
-#line 226
 
 sub load {
     my ($self, $method) = @_;
@@ -124,8 +150,6 @@ END
     $obj;
 }
 
-#line 256
-
 sub load_extensions {
     my ($self, $path, $top_obj) = @_;
 
@@ -141,9 +165,9 @@ sub load_extensions {
         $self->{pathnames}{$pkg} = delete $INC{$file};
         push @{$self->{extensions}}, $pkg->new( _top => $top_obj );
     }
-}
 
-#line 280
+    $self->{extensions} ||= [];
+}
 
 sub find_extensions {
     my ($self, $path) = @_;
@@ -162,8 +186,16 @@ sub find_extensions {
     @found;
 }
 
+sub _caller {
+    my $depth = 0;
+    my $caller = caller($depth);
+
+    while ($caller eq __PACKAGE__) {
+        $depth++;
+        $caller = caller($depth);
+    }
+
+    $caller;
+}
+
 1;
-
-__END__
-
-#line 618
