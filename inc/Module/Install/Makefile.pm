@@ -23,6 +23,14 @@ sub makemaker_args {
     $args;
 }
 
+sub build_subdirs {
+    my $self = shift;
+    my $subdirs = $self->makemaker_args->{DIR} ||= [];
+    for my $subdir (@_) {
+        push @$subdirs, $subdir;
+    }
+}
+
 sub clean_files {
     my $self = shift;
     my $clean = $self->makemaker_args->{clean} ||= {};
@@ -53,7 +61,11 @@ sub write {
     $args->{NAME} = $self->module_name || $self->name || $self->determine_NAME($args);
     $args->{VERSION} = $self->version || $self->determine_VERSION($args);
     $args->{NAME} =~ s/-/::/g;
-    $args->{test} = {TESTS => $self->tests};
+
+    # Only call $self->tests if we haven't been given explicit
+    # tests from makemaker_args.
+    $args->{test} ||= {TESTS => $self->tests};
+
 
     if ($] >= 5.005) {
 	$args->{ABSTRACT} = $self->abstract;
@@ -141,4 +153,4 @@ sub postamble {
 
 __END__
 
-#line 274
+#line 286

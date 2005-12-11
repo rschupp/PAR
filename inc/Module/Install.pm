@@ -1,8 +1,8 @@
-#line 1 "inc/Module/Install.pm - /usr/local/lib/perl5/site_perl/5.8.7/Module/Install.pm"
+#line 1 "/home/autrijus/work/par/inc/Module/Install.pm - /usr/local/lib/perl5/site_perl/5.8.7/Module/Install.pm"
 package Module::Install;
 use 5.004;
 
-$VERSION = '0.40';
+$VERSION = '0.41';
 
 die << "." unless $INC{join('/', inc => split(/::/, __PACKAGE__)).'.pm'};
 Please invoke ${\__PACKAGE__} with:
@@ -16,7 +16,8 @@ not:
 .
 
 use strict 'vars';
-use Cwd ();
+use Cwd qw(cwd abs_path);
+use FindBin;
 use File::Find ();
 use File::Path ();
 
@@ -27,11 +28,11 @@ sub autoload {
     my $self   = shift;
     my $caller = $self->_caller;
 
-    my $cwd = Cwd::cwd();
+    my $cwd = cwd();
     my $sym = "$caller\::AUTOLOAD";
 
     $sym->{$cwd} = sub {
-        my $pwd = Cwd::cwd();
+        my $pwd = cwd();
         if (my $code = $sym->{$pwd}) {
             goto &$code unless $cwd eq $pwd; # delegate back to parent dirs
         }
@@ -99,12 +100,17 @@ sub preload {
 sub new {
     my ($class, %args) = @_;
 
+    # ignore the prefix on extension modules built from top level.
+    my $base_path = abs_path($FindBin::Bin);
+    delete $args{prefix} unless abs_path(cwd()) eq $base_path;
+
     return $args{_self} if $args{_self};
 
     $args{dispatch} ||= 'Admin';
     $args{prefix}   ||= 'inc';
     $args{author}   ||= '.author';
     $args{bundle}   ||= 'inc/BUNDLES';
+    $args{base}     ||= $base_path;
 
     $class =~ s/^\Q$args{prefix}\E:://;
     $args{name}     ||= $class;
@@ -114,7 +120,7 @@ sub new {
         $args{path}  = $args{name};
         $args{path}  =~ s!::!/!g;
     }
-    $args{file}     ||= "$args{prefix}/$args{path}.pm";
+    $args{file}     ||= "$args{base}/$args{prefix}/$args{path}.pm";
 
     bless(\%args, $class);
 }
@@ -161,9 +167,11 @@ sub load_extensions {
         my ($file, $pkg) = @{$rv};
         next if $self->{pathnames}{$pkg};
 
-        eval { require $file; 1 } or (warn($@), next);
+        local $@;
+        my $new = eval { require $file; $pkg->can('new') };
+        if (!$new) { warn $@ if $@; next; }
         $self->{pathnames}{$pkg} = delete $INC{$file};
-        push @{$self->{extensions}}, $pkg->new( _top => $top_obj );
+        push @{$self->{extensions}}, &{$new}($pkg, _top => $top_obj );
     }
 
     $self->{extensions} ||= [];
