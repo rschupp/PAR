@@ -86,6 +86,7 @@ typedef BOOL (WINAPI *pALLOW)(DWORD);
     for (i = 0; i < argc; i++) {
         buf = (char *)malloc(strlen(argv[i]) + 14);
         sprintf(buf, "PAR_ARGV_%i", i);
+        par_unsetenv(buf);
         par_setenv(buf, argv[i]);
     }
 
