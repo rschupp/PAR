@@ -1,3 +1,11 @@
+[Changes for 0.91 - December 11, 2005]
+
+* Bug Fixes
+
+    - Applied Alan Stewart's patch which fixes @ARGV pollution in
+      daughter programs. See also 
+      http://www.nntp.perl.org/group/perl.par/2152
+
 [Changes for 0.90 - November 25, 2005]
 
 * Bug Fixes
