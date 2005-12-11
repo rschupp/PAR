@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Copyright (c) 2002 Mattia Barbon.
-# Copyright (c) 2002 Autrijus Tang.
+# Copyright (c) 2002 Audrey Tang.
 # This package is free software; you can redistribute it and/or
 # modify it under the same terms as Perl itself.
 

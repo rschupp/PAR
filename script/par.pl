@@ -849,7 +849,7 @@ L<PAR>, L<PAR::Dist>, L<parl>, L<pp>
 
 =head1 AUTHORS
 
-Autrijus Tang E<lt>autrijus@autrijus.orgE<gt>
+Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
 
 L<http://par.perl.org/> is the official PAR website.  You can write
 to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty mail to
@@ -859,7 +859,7 @@ Please submit bug reports to E<lt>bug-par@rt.cpan.orgE<gt>.
 
 =head1 COPYRIGHT
 
-Copyright 2002, 2003, 2004, 2005 by Autrijus Tang
+Copyright 2002, 2003, 2004, 2005 by Audrey Tang
 E<lt>autrijus@autrijus.orgE<gt>.
 
 Neither this program nor the associated L<parl> program impose any
