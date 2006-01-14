@@ -5,6 +5,8 @@
     - Applied Alan Stewart's patch which fixes @ARGV pollution in
       daughter programs. See also 
       http://www.nntp.perl.org/group/perl.par/2152
+    - Now mentioning the ENV var "PAR_VERBATIM" in the documentation.
+      See also http://www.nntp.perl.org/group/perl.par/2196
 
 [Changes for 0.90 - November 25, 2005]
 
