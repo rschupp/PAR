@@ -7,6 +7,8 @@
       http://www.nntp.perl.org/group/perl.par/2152
     - Now mentioning the ENV var "PAR_VERBATIM" in the documentation.
       See also http://www.nntp.perl.org/group/perl.par/2196
+    - Applied Malcolm Nooning's fix for the test suite. We used to get
+      failed tests on Windows because of spaces in path names.
 
 [Changes for 0.90 - November 25, 2005]
 
