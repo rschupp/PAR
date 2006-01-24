@@ -50,7 +50,8 @@ elsif (!($startperl = main->can_run($startperl))) {
     exit;
 }
 
-if (defined &Win32::GetShortPathName) {
+# NOTE: Win32::GetShortPathName exists on cygwin, too
+if ($^O eq 'MSWin32' && defined &Win32::GetShortPathName) {
     $^X = lc(Win32::GetShortPathName($^X));
     $startperl = lc(Win32::GetShortPathName($startperl));
 }

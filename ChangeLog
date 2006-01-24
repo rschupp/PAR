@@ -2,6 +2,8 @@
 
 * Bug Fixes
 
+	- Applied Roderich Schupp's and Malcolm Nooning's patches to
+	  the test suite fixing problems with Cygwin.
     - Applied Alan Stewart's patch which fixes @ARGV pollution in
       daughter programs. See also 
       http://www.nntp.perl.org/group/perl.par/2152

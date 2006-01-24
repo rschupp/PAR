@@ -23,7 +23,7 @@
 #
 #
 ########################################################################
-our $VERSION = 0.13;
+our $VERSION = 0.15;
 ########################################################################
 # Prior to each test
 #   . Remove any possible files that could exist from a previous
@@ -4396,7 +4396,7 @@ print "hello";
         'pp -v 3 hello.pl -o hello.exe > v_3_h_o.txt',
   );
 
-  if ($os !~ m/^Win/i) {
+  if ($os !~ m/^Win|cygwin/i) {
     @converted_array = ();
     foreach $command_string (@command_strings) {
         $command_string =~ s/hello.exe/hello.out/g;
@@ -4447,7 +4447,7 @@ print "hello";
 
 
   #............. Remove the ".exe" parts if not Windows
-  if ($os !~ m/^Win/i) {
+  if ($os !~ m/^Win|cygwin/i) {
     @converted_array = ();
     foreach $line (@results_to_expect_v) {
         $line =~ s/parl.exe/\/parl\\b/g;
@@ -4457,7 +4457,7 @@ print "hello";
     push(@results_to_expect_v, @converted_array);
   }
     
-  if ($os !~ m/^Win/i) {
+  if ($os !~ m/^Win|cygwin/i) {
     @converted_array = ();
     foreach $line (@results_to_expect_vv) {
         $line =~ s/parl.exe/\/parl\\b/g;
@@ -4467,7 +4467,7 @@ print "hello";
     push(@results_to_expect_vv, @converted_array);
   }
     
-  if ($os !~ m/^Win/i) {
+  if ($os !~ m/^Win|cygwin/i) {
     @converted_array = ();
     foreach $line (@results_to_expect_vvv) {
         $line =~ s/parl.exe/\/parl\\b/g;
