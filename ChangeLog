@@ -2,8 +2,6 @@
 
 * Bug Fixes
 
-	- Applied Roderich Schupp's and Malcolm Nooning's patches to
-	  the test suite fixing problems with Cygwin.
     - Applied Alan Stewart's patch which fixes @ARGV pollution in
       daughter programs. See also 
       http://www.nntp.perl.org/group/perl.par/2152
@@ -11,6 +9,10 @@
       See also http://www.nntp.perl.org/group/perl.par/2196
     - Applied Malcolm Nooning's fix for the test suite. We used to get
       failed tests on Windows because of spaces in path names.
+    - Applied Roderich Schupp's and Malcolm Nooning's patches to
+      the test suite fixing problems with Cygwin.
+    - Applied Vincent Ladeuil's patch to PAR::Filter::Bleach to return a
+      true value for modules that loaded okay.
 
 [Changes for 0.90 - November 25, 2005]
 
