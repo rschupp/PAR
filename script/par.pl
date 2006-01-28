@@ -859,7 +859,7 @@ Please submit bug reports to E<lt>bug-par@rt.cpan.orgE<gt>.
 
 =head1 COPYRIGHT
 
-Copyright 2002, 2003, 2004, 2005 by Audrey Tang
+Copyright 2002, 2003, 2004, 2005, 2006 by Audrey Tang
 E<lt>autrijus@autrijus.orgE<gt>.
 
 Neither this program nor the associated L<parl> program impose any
