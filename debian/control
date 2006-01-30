@@ -1,0 +1,18 @@
+Source: libpar-perl
+Section: perl
+Priority: optional
+Build-Depends: perl (>= 5.8.0-7), libperl-dev, debhelper (>= 4.0.2), libmodule-install-perl, libmodule-scandeps-perl, libarchive-zip-perl, libpar-dist-perl, libdigest-sha1-perl, libmodule-signature-perl, gnupg
+Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
+Uploaders: Florian Ragwitz <rafl@debian.org>, Krzysztof Krzyzaniak (eloy) <eloy@debian.org>
+Standards-Version: 3.6.2
+
+Package: libpar-perl
+Architecture: any
+Depends: ${perl:Depends}, ${misc:Depends}, ${shlibs:Depends}, libmodule-scandeps-perl, libarchive-zip-perl, libpar-dist-perl, libdigest-sha1-perl, libmodule-signature-perl
+Recommends: gnupg
+Description: Perl Archive Toolkit
+ This module lets you easily bundle a typical blib/ tree into a zip file, 
+ called a Perl Archive, or PAR.
+ .
+ It supports loading XS modules by overriding DynaLoader bootstrapping methods; 
+ it writes shared object file to a temporary file at the time it is needed.

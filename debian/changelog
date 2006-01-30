@@ -1,0 +1,18 @@
+libpar-perl (0.90-2) unstable; urgency=low
+
+  * debian/rules - rewritten, binary-indep are now binary-arch and vice-versa.
+    (closes: #348497)  
+  
+ -- Krzysztof Krzyzaniak (eloy) <eloy@debian.org>  Tue, 17 Jan 2006 13:55:39 +0100
+
+libpar-perl (0.90-1) unstable; urgency=low
+
+  * New upstream release (closes: #343734)
+
+ -- Krzysztof Krzyzaniak (eloy) <eloy@debian.org>  Sat, 17 Dec 2005 18:36:20 +0100
+
+libpar-perl (0.89-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Krzysztof Krzyzaniak (eloy) <eloy@debian.org>  Mon, 21 Nov 2005 09:38:51 +0100

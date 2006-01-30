@@ -1,0 +1,4 @@
+# format version number, currently 2; this line is compulsory!
+version=2
+http://mirrors.kernel.org/cpan/modules/by-module/PAR/PAR-([\.\d]+).tar.gz
+
