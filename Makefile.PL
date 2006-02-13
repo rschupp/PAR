@@ -40,7 +40,7 @@ no_index            directory => 'contrib';
 auto_install_now    -default => 0;
 auto_provides;
 
-par_base 'AUTRIJUS';
+par_base 'SMUELLER';
 
 par_prehook;
 WriteAll sign => 1;

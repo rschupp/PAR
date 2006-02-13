@@ -1,4 +1,4 @@
-[Changes for 0.91 - December 11, 2005]
+[Changes for 0.91 - February 13, 2006]
 
 * Bug Fixes
 
@@ -13,6 +13,7 @@
       the test suite fixing problems with Cygwin.
     - Applied Vincent Ladeuil's patch to PAR::Filter::Bleach to return a
       true value for modules that loaded okay.
+    - Changed 'PAR_BASE' in the Makefile.PL to 'SMUELLER'.
 
 [Changes for 0.90 - November 25, 2005]
 
