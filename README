@@ -42,7 +42,7 @@ actions are required on your part.
 However, if nobody has generated such a package for your architecture,
 you will see a short messages like this:
 
-    Fetching 'PAR-0.81-i386-freebsd-5.8.0.par' from www.cpan.org...
+    Fetching 'PAR-0.91-i386-freebsd-5.8.0.par' from www.cpan.org...
     *** No installation package available for your architecture.
     However, you may wish to generate one with 'make par' and send
     it to <AUTRIJUS@cpan.org>, so other people on the same platform
@@ -144,7 +144,7 @@ Please submit bug reports to <bug-par@rt.cpan.org>.
 
 * Copyright
 
-Copyright 2002, 2003, 2004, 2005 by Audrey Tang <autrijus@autrijus.org>.
+Copyright 2002, 2003, 2004, 2005, 2006 by Audrey Tang <autrijus@autrijus.org>.
 
 All rights reserved.  You can redistribute and/or modify
 this bundle under the same terms as Perl itself.
