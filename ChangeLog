@@ -1,10 +1,12 @@
 
-[Changes for 0.92 - February 17, 2006]
+[Changes for 0.92 - February 22, 2006]
 
 * Bug Fixes
 
     - Now requiring Module::ScanDeps 0.55 which handles autouse
       correctly.
+    - Now shipping with a correct SIGNATURE. (Which was broken for
+      0.91.)
 
 [Changes for 0.91 - February 13, 2006]
 
