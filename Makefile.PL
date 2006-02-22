@@ -10,8 +10,8 @@ all_from    'lib/PAR.pm';
 requires    'File::Temp'        => 0.05;
 requires    'Compress::Zlib'    => ($^O eq 'MSWin32') ? 1.16 : 1.30;
 requires    'Archive::Zip'      => 1.00;
-requires    'Module::ScanDeps'  => 0.55;
-requires    'PAR::Dist'         => 0.06;
+requires    'Module::ScanDeps'  => 0.56;
+requires    'PAR::Dist'         => 0.08;
 
 if ($^O eq 'MSWin32') {
     feature 'Windows --icon and --info support',

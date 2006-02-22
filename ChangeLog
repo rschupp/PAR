@@ -3,7 +3,7 @@
 
 * Bug Fixes
 
-    - Now requiring Module::ScanDeps 0.55 which handles autouse
+    - Now requiring Module::ScanDeps 0.56 which handles autouse
       correctly.
     - Now shipping with a correct SIGNATURE. (Which was broken for
       0.91.)
