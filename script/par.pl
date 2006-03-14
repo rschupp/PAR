@@ -141,6 +141,12 @@ This is just a zip file beginning with the magic string "C<PK\003\004>".
 
 =item * Ending section
 
+The pre-computed cache name.  A pack('Z40') string of the value of -T 
+(--tempcache) or the hash of the file, followed by C<\0CACHE>.  The hash
+of the file is calculated with L<Digest::SHA>, L<Digest::SHA1>, or 
+L<Digest::MD5>.  If none of those modules is available, the C<mtime> of
+the file is used.
+
 A pack('N') number of the total length of FILE and PAR sections,
 followed by a 8-bytes magic string: "C<\012PAR.pm\012>".
 
