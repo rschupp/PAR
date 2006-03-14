@@ -784,7 +784,7 @@ sub _par_init_env {
     for (qw( SPAWNED TEMP CLEAN DEBUG CACHE PROGNAME ARGC ARGV_0 ) ) {
         delete $ENV{'PAR_'.$_};
     }
-    for (qw/ TEMP CLEAN DEBUG /) {
+    for (qw/ TMPDIR TEMP CLEAN DEBUG /) {
         $ENV{'PAR_'.$_} = $ENV{'PAR_GLOBAL_'.$_} if exists $ENV{'PAR_GLOBAL_'.$_};
     }
 
@@ -826,7 +826,7 @@ require PAR;
 unshift @INC, \&PAR::find_par;
 PAR->import(@par_args);
 
-die qq(Can't open perl script "$progname": No such file or directory\n)
+die qq(par.pl: Can't open perl script "$progname": No such file or directory\n)
     unless -e $progname;
 
 do $progname;

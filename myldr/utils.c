@@ -46,6 +46,9 @@ struct stat PL_statbuf;
         return(prog);
     }
 
+    /* Walk through PATH, looking for ourself.  
+       XXX - This is the wrong way to do this.  We should look 
+       at /proc/$$/exe */
     proglen = strlen(prog);
     p = strtok(path, path_sep);
     while ( p != NULL ) {
@@ -146,6 +149,10 @@ void par_init_env () {
 
     if ( (buf = par_getenv("PAR_GLOBAL_DEBUG")) != NULL ) {
         par_setenv("PAR_DEBUG", buf);
+    }
+
+    if ( (buf = par_getenv("PAR_GLOBAL_TMPDIR")) != NULL ) {
+        par_setenv("PAR_TMPDIR", buf);
     }
 
     if ( (buf = par_getenv("PAR_GLOBAL_TEMP")) != NULL ) {

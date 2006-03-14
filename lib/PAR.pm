@@ -140,14 +140,43 @@ extracted libraries, and do not clean it up after execution.
 =item *
 
 If I<PAR_GLOBAL_TEMP> is not set, but I<PAR_CLEAN> is specified, set
-I<PAR_GLOBAL_TEMP> to C<I<TEMP>\par-I<USER>\temp-I<PID>\>, cleaning it
+I<PAR_GLOBAL_TEMP> to C<I<TEMP>/par-I<USER>/temp-I<PID>/>, cleaning it
 after execution.
 
 =item *
 
-If both are not set, use C<I<TEMP>\par-I<USER>\temp-I<MTIME>\>
-as the I<PAR_GLOBAL_TEMP>, reusing any existing files inside.  I<MTIME>
-is the last-modified timestamp of the program.
+If both are not set,  use C<I<TEMP>/par-I<USER>/cache-I<HASH>/> as the
+I<PAR_GLOBAL_TEMP>, reusing any existing files inside.
+
+=back
+
+Here is a description of the variables the previous paths.
+
+=over 4
+
+=item *
+
+I<TEMP> is a temporary directory, which can be set via 
+C<$ENV{PAR_GLOBAL_TMPDIR}>,
+C<$ENV{TMPDIR}>, C<$ENV{TEMP}> or C<$ENV{TMP}>, in that order of priority.
+If none of those are set, I<C:\TEMP>, I</tmp> are checked.  If neither
+of them exists, I<.> is used.
+
+=item *
+
+I<USER> is the user name, or SYSTEM if none can be found.  On Win32, 
+this is C<$Win32::LoginName>.  On Unix, this is C<$ENV{USERNAME>> or 
+C<$ENV{USER}>.
+
+=item *
+
+I<PID> is the process ID.  Forked children use the parent's PID.
+
+=item *
+
+I<HASH> is a crypto-hash of the entire par file or executable,
+calculated at creation time.  This value can be overloaded with C<pp>'s
+--tempdir parameter.
 
 =back
 
@@ -220,7 +249,7 @@ sub import {
                 "script/$ARGV[0].pl",
                 $ARGV[0],
                 "$ARGV[0].pl",
-            ) or die qq(Can't open perl script "$ARGV[0]": No such file or directory);
+            ) or die qq(PAR.pm: Can't open perl script "$ARGV[0]": No such file or directory);
             shift @ARGV;
         }
         elsif (!$member) {
@@ -468,7 +497,7 @@ sub _set_par_temp {
     require File::Spec;
 
     foreach my $path (
-        (map $ENV{$_}, qw( TMPDIR TEMP TMP )),
+        (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMP TMP )),
         qw( C:\\TEMP /tmp . )
     ) {
         next unless $path and -d $path and -w $path;

@@ -1416,7 +1416,7 @@ my $member = eval { $zip->memberNamed($file) }
                 || $zip->memberNamed("$file.pl")
                 || $zip->memberNamed("script/$file")
                 || $zip->memberNamed("script/$file.pl")
-        or die qq(Can't open perl script "$file": No such file or directory);
+        or die qq(mail.pl: Can't open perl script "$file": No such file or directory);
 PAR::_run_member($member, 1);
 
 __MAIN__
@@ -1439,7 +1439,7 @@ sub _main_pl_single {
     return << "__MAIN__";
 my \$zip = \$PAR::LibCache{\$ENV{PAR_PROGNAME}} || Archive::Zip->new(__FILE__);
 my \$member = eval { \$zip->memberNamed('$file') }
-        or die qq(Can't open perl script "$file": No such file or directory (\$zip));
+        or die qq(main.pl: Can't open perl script "$file": No such file or directory (\$zip));
 PAR::_run_member(\$member, 1);
 
 __MAIN__
