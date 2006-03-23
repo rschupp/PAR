@@ -1,4 +1,18 @@
 
+[Changes for 0.93 - March 23, 2006]
+
+* New Features
+
+    - Added support for PAR_TMPDIR (PAR_GLOBAL_TMPDIR) so that the
+      temp directory can be controlled for just the PAR file bits.
+      (Leolo)
+
+* Bug Fixes
+
+    - Documented the bits that make up PAR_TEMP. (Leolo)
+    - Fixed the call to par_findprog. path (aka val) was set to tmpdir.
+      (Leolo)
+
 [Changes for 0.92 - February 22, 2006]
 
 * Bug Fixes
