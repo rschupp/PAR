@@ -12,6 +12,7 @@
     - Documented the bits that make up PAR_TEMP. (Leolo)
     - Fixed the call to par_findprog. path (aka val) was set to tmpdir.
       (Leolo)
+    - Documented the CACHE name at the end of a self-executing PAR. (Leolo)  
 
 [Changes for 0.92 - February 22, 2006]
 
