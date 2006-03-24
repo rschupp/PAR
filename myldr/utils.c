@@ -24,8 +24,66 @@
 
 #include "env.c"
 
+
+#if defined __linux__ || defined __FreeBSD__
+
+/*  Look at /proc/$$/{exe,file} for the current executable 
+
+    Returns malloc()ed string.  Caller must free.
+    Returns NULL if can't be found.
+    
+    Note that FreeBSD has /proc unmounted by default.  You'd think we could
+    get this info via the kvm interface, but it turns out that to get
+    kvm_getprocs()/kvm_read() to return any information we don't already
+    have, we need read-access to /boot/kmem, which we don't have.  And I
+    couldn't get to work anyway.  Email me (philip-at-pied.nu) if want a
+    stab at the code. */
+
+char *par_current_exec_proc( void ) 
+{
+    char proc_path[MAXPATHLEN + 1], link[MAXPATHLEN + 1];
+    char *ret = NULL;
+    int n;
+    
+    n = snprintf( proc_path, MAXPATHLEN, "/proc/%i/%s", (int)getpid(), 
+#if defined __FreeBSD__
+        "file"
+#else
+        "exe"
+#endif
+    );
+    if( n < 0 ) 
+        return NULL;
+
+    n = readlink( proc_path, link, MAXPATHLEN);
+    if( n < 0 )
+        return NULL;
+    
+    ret = (char *)malloc( n+1 );
+    if( ret == NULL )
+        return NULL;
+
+    memcpy( ret, link, n );
+    ret[n] = '\0';
+
+    return ret;
+} 
+
+#endif
+
+char *par_current_exec( void )
+{
+#if defined __linux__ || defined __FreeBSD__
+    return par_current_exec_proc();
+#else
+    return NULL;
+#endif
+}
+
+
+
 char *par_findprog(char *prog, char *path) {
-    char *p, filename[MAXPATHLEN];
+    char *p, *ret, filename[MAXPATHLEN];
     int proglen, plen;
     char *par_temp = par_getenv("PAR_TEMP");
 
@@ -46,9 +104,18 @@ struct stat PL_statbuf;
         return(prog);
     }
 
-    /* Walk through PATH, looking for ourself.  
-       XXX - This is the wrong way to do this.  We should look 
-       at /proc/$$/exe */
+#if defined __linux__ || defined __FreeBSD__
+    ret = par_current_exec_proc();
+#else
+    ret = NULL;
+#endif
+
+    if( ret != NULL ) {
+        par_setenv( "PAR_PROGNAME", ret );
+        return ret;
+    }
+
+    /* Walk through PATH (path), looking for ourself (prog) */
     proglen = strlen(prog);
     p = strtok(path, path_sep);
     while ( p != NULL ) {
@@ -84,6 +151,7 @@ struct stat PL_statbuf;
     return(prog);
 }
 
+
 char *par_basename (const char *name) {
     const char *base = name;
     const char *p;
@@ -94,6 +162,9 @@ char *par_basename (const char *name) {
 
     return (char *)base;
 }
+
+
+
 
 char *par_dirname (const char *path) {
     static char bname[MAXPATHLEN];

@@ -72,4 +72,6 @@ SIGNATURE
 t/1-basic.t
 t/2-pp.t
 t/hello.par
+t/test-proc
+t/30-current_exec.t
 TODO

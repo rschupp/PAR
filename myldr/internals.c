@@ -46,8 +46,9 @@ XS(XS_Internals_PAR_BOOT) {
     }
 
     if ((tmpgv = gv_fetchpv("0", TRUE, SVt_PV))) {/* $0 */
-        if ( ( stmpdir = par_getenv("PAR_TEMP") ) ) {
-            sv_setpv(GvSV(tmpgv), fakeargv[0]);
+    	char *prog = NULL;
+        if ( ( prog = par_getenv("PAR_PROGNAME") ) ) {
+            sv_setpv(GvSV(tmpgv), prog);
         }
         else {
 #ifdef HAS_PROCSELFEXE
@@ -56,7 +57,15 @@ XS(XS_Internals_PAR_BOOT) {
 #ifdef OS2
             sv_setpv(GvSV(tmpgv), os2_execname(aTHX));
 #else
-            sv_setpv(GvSV(tmpgv), fakeargv[0]);
+            prog = par_current_exec();
+
+            if( prog != NULL ) {            
+                sv_setpv( GvSV(tmpgv), prog );
+                free( prog );
+            }
+            else {
+                sv_setpv(GvSV(tmpgv), fakeargv[0]);
+            }
 #endif
 #endif
         }
@@ -92,11 +101,11 @@ XS(XS_Internals_PAR_BOOT) {
         stmpdir = par_mktmpdir( fakeargv );
 #ifndef WIN32
         i = execvp(SvPV_nolen(GvSV(tmpgv)), fakeargv);
-        croak("%s: execution of %s failed - aborting with %i.\n", fakeargv[0], SvPV_nolen(GvSV(tmpgv)), i);
+        croak("%s: execution of %s failed - aborting with %i.\n", fakeargv[0], 
+        				SvPV_nolen(GvSV(tmpgv)), i);
         return;
 #endif
     }
-
     i = PerlDir_mkdir(stmpdir, 0755);
     if ( (i != 0) && (i != EEXIST) && (i != -1) ) {
         croak("%s: creation of private temporary subdirectory %s failed - aborting with %i.\n", fakeargv[0], stmpdir, i);

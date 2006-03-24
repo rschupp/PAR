@@ -296,7 +296,6 @@ my ($start_pos, $data_pos);
 
         die "Bootstrapping failed: cannot find $module!\n";
     }, @INC);
-    # }}}
 
     # Now load all bundled files {{{
 
