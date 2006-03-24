@@ -51,7 +51,7 @@ is( $out_path, $out_full, "Found the same file via PATH and full path" );
 SKIP: {
     skip "Inline::C not installed; Can't verify with execvp", 1
             unless $has_inline_c;
-    skip "Can't get running executable not in PATH on $^O", 1
+    skip "Can't get running executable that isn't in PATH on $^O", 1
             unless $^O =~ /linux/i or 
 		   ( $^O =~ /freebsd/i and -l "/proc/$$/file" );
 

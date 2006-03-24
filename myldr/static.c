@@ -14,7 +14,8 @@ extern char load_me_0[];
 extern char load_me_1[];
 */
 
-char *my_file;
+char *my_file = NULL;
+int  my_size = 0;
 
 int my_mkfile (char* argv0, char* stmpdir, const char* name, unsigned long size) {
     int i;
@@ -22,8 +23,9 @@ int my_mkfile (char* argv0, char* stmpdir, const char* name, unsigned long size)
     struct stat PL_statbuf;
 #endif
 
-    my_file = (char *)malloc(strlen(stmpdir) + strlen(name) + 5);
-    sprintf(my_file, "%s/%s", stmpdir, name);
+    my_size = strlen(stmpdir) + strlen(name) + 5;
+    my_file = (char *)malloc( my_size );
+    snprintf(my_file, my_size, "%s/%s", stmpdir, name);
 
     if ( par_lstat(my_file, &PL_statbuf) == 0 ) {
         if ( (unsigned long)PL_statbuf.st_size == size ) return -2;
@@ -81,11 +83,11 @@ typedef BOOL (WINAPI *pALLOW)(DWORD);
         close(i); chmod(my_file, 0755);
     }
 
-    sprintf(buf, "%i", argc);
+    snprintf(buf, MAXPATHLEN, "%i", argc);
     par_setenv("PAR_ARGC", buf);
     for (i = 0; i < argc; i++) {
         buf = (char *)malloc(strlen(argv[i]) + 14);
-        sprintf(buf, "PAR_ARGV_%i", i);
+        snprintf(buf, MAXPATHLEN, "PAR_ARGV_%i", i);
         par_unsetenv(buf);
         par_setenv(buf, argv[i]);
     }

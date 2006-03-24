@@ -115,7 +115,11 @@ struct stat PL_statbuf;
         return ret;
     }
 
-    /* Walk through PATH (path), looking for ourself (prog) */
+    /* Walk through PATH (path), looking for ourself (prog).
+        This fails if we are invoked in an obscure manner;
+        Basically, execvp( "/full/path/to/prog", "prog", NULL ) and
+        "/full/path/to" isn't in $PATH.  Of course, I can't think 
+        of a situation this will happen. */
     proglen = strlen(prog);
     p = strtok(path, path_sep);
     while ( p != NULL ) {
@@ -138,7 +142,7 @@ struct stat PL_statbuf;
             return(prog);
         }
 
-        sprintf(filename, "%s%s%s", p, dir_sep, prog);
+        snprintf(filename, MAXPATHLEN, "%s%s%s", p, dir_sep, prog);
         if ((stat(filename, &PL_statbuf) == 0) && S_ISREG(PL_statbuf.st_mode) &&
             access(filename, X_OK) == 0) {
                 par_setenv("PAR_PROGNAME", filename);
