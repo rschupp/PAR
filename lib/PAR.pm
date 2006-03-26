@@ -383,6 +383,7 @@ sub par_handle {
 my %escapes;
 sub unpar {
     my ($par, $file, $member_only, $allow_other_ext) = @_;
+	return if not defined $par;
     my $zip = $LibCache{$par};
     my @rv = $par;
 
