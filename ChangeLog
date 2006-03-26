@@ -23,6 +23,8 @@
       main.c (Leolo)
     - Applied patch from RT ticket. (tsee)
       https://rt.cpan.org/Ticket/Display.html?id=13959
+    - Applied Ivan Kudryavtsev's patch that fixes a couple of calls
+      to PAR subroutines in PatchContent filtered code. (tsee)
 
 [Changes for 0.92 - February 22, 2006]
 

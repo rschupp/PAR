@@ -27,7 +27,8 @@ sub PATCH_CONTENT () { +{
     ],
     'Tk.pm'             => [
         'foreach $dir (@INC)' => 
-        'if (my $member = PAR::unpar($0, $file, 1)) {
+        'require PAR;
+         if (my $member = PAR::unpar($0, $file, 1)) {
             $file =~ s![/\\\\]!_!g;
             return PAR::Heavy::_dl_extract($member,$file,$file);
          }
@@ -46,7 +47,8 @@ sub PATCH_CONTENT () { +{
     ],
     'Win32/SystemInfo.pm'   => [
         '$dll .= "cpuspd.dll";' =>
-        '$dll = "lib/Win32/cpuspd.dll";
+        'require PAR;
+         $dll = "lib/Win32/cpuspd.dll";
          if (my $member = PAR::unpar($0, $dll, 1)) {
              $dll = PAR::Heavy::_dl_extract($member,"cpuspd.dll","cpuspd.dll");
              $dll =~ s!\\\\!/!g;
@@ -54,7 +56,8 @@ sub PATCH_CONTENT () { +{
     ],
     'SQL/Parser.pm'   	    => [
         'my @dialects;' =>
-        'my @dialects = ();
+        'require PAR;
+         my @dialects = ();
          foreach my $member ( $PAR::LastAccessedPAR->members ) {
              next unless $member->fileName =~ m!\bSQL/Dialects/([^/]+)\.pm$!;
              push @dialects, $1;
@@ -70,7 +73,8 @@ sub PATCH_CONTENT () { +{
         'if (eof(POD_DIAG)) ' => 'if (0 and eof(POD_DIAG)) ',
         'close POD_DIAG' => '# close POD_DIAG',
         'while (<POD_DIAG>) ' =>
-        'for(map "$_\\n\\n", split/\\r?\\n(?:\\r?\\n)*/, 
+        'require PAR;
+        for(map "$_\\n\\n", split/\\r?\\n(?:\\r?\\n)*/, 
             PAR::read_file("lib/Pod/perldiag.pod") ||
             PAR::read_file("lib/pod/perldiag.pod")
         ) ',
