@@ -195,6 +195,28 @@ looking for F<Perms.dll> in the table of dlls which contains only F<Perms.DLL>.
 And so the solution is just rename F<Perms.DLL> to F<Perms.dll> and do
 C<pp -o my.exe my.pl> again... and everything goes right!
 
+=head2 Problems with chdir() and relative @INC paths
+
+If a perl program's C<@INC> list contains relative paths and that
+program calls chdir before loading a module via C<require>, its
+behavior can be different from a PAR-packed executable based on that
+program.  This is because C<pp> typically gleans the module loads
+without executing code, so it doesn't see the C<chdir>.  Note that
+this primarily affects developers who routinely use C<-Mblib> or C<-I
+inc> etc.
+
+Here's a simple workaround to turn your relative C<@INC> paths into
+absolute paths before C<chdir>.
+
+    require File::Spec;
+    for (@INC) {
+        if (! ref $_ && -d $_ && !File::Spec->file_name_is_absolute($_)) {
+            $_ = File::Spec->rel2abs($_);
+        }
+    }
+
+Source: L<http://www.nntp.perl.org/group/perl.par/2281>
+
 
 =head1 SEE ALSO
 
