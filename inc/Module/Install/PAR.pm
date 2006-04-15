@@ -1,31 +1,36 @@
-#line 1 "inc/Module/Install/PAR.pm - /usr/local/lib/perl5/site_perl/5.8.7/Module/Install/PAR.pm"
+#line 1
 package Module::Install::PAR;
-use Module::Install::Base; @ISA = qw(Module::Install::Base);
+
+use Module::Install::Base;
+@ISA = qw(Module::Install::Base);
+
+$VERSION = '0.61';
+
+use strict;
 
 sub par_base {
     my ($self, $base, $file) = @_;
-    my $class = ref($self);
+    my $class     = ref($self);
     my $inc_class = join('::', @{$self->_top}{qw(prefix name)});
     my $ftp_base;
 
-    if (defined $base and length $base) {
-        if ($base =~ m!^(([A-Z])[A-Z])[-_A-Z]+\Z!) {
+    if ( defined $base and length $base ) {
+        if ( $base =~ m!^(([A-Z])[A-Z])[-_A-Z]+\Z! ) {
             $self->{mailto} = "$base\@cpan.org";
             $ftp_base = "ftp://ftp.cpan.org/pub/CPAN/authors/id/$2/$1/$base";
-            $base = "http://www.cpan.org/authors/id/$2/$1/$base";
-        }
-        elsif ($base !~ m!^(\w+)://!) {
+            $base     = "http://www.cpan.org/authors/id/$2/$1/$base";
+        } elsif ( $base !~ m!^(\w+)://! ) {
             die "Cannot recognize path '$base'; please specify an URL or CPAN ID";
         }
-        $base .= '/' unless $base =~ m!/\Z!;
+        $base     .= '/' unless $base     =~ m!/\Z!;
         $ftp_base .= '/' unless $ftp_base =~ m!/\Z!;
     }
 
     require Config;
     my $suffix = "$Config::Config{archname}-$Config::Config{version}.par";
 
-    unless ($file ||= $self->{file}) {
-        my $name    = $self->name or return;
+    unless ( $file ||= $self->{file} ) {
+        my $name    = $self->name    or return;
         my $version = $self->version or return;
         $name =~ s!::!-!g;
         $self->{file} = $file = "$name-$version-$suffix";
@@ -35,31 +40,31 @@ sub par_base {
     $perl = Win32::GetShortPathName($perl)
         if $perl =~ / / and defined &Win32::GetShortPathName;
 
-    $self->preamble(<<"END") if $base;
+    $self->preamble(<<"END_MAKEFILE") if $base;
 # --- $class section:
 
 all ::
-\t\@$perl -M$inc_class -e \"extract_par(q($file))\"
+\t\$(NOECHO) $perl -M$inc_class -e \"extract_par(q($file))\"
 
-END
+END_MAKEFILE
 
-    $self->postamble(<<"END");
+    $self->postamble(<<"END_MAKEFILE");
 # --- $class section:
 
 $file: all test
-\t\@\$(PERL) -M$inc_class -e \"make_par(q($file))\"
+\t\$(NOECHO) \$(PERL) -M$inc_class -e \"make_par(q($file))\"
 
 par :: $file
-\t\@\$(NOOP)
+\t\$(NOECHO) \$(NOOP)
 
 par-upload :: $file
 \tcpan-upload -verbose $file
 
-END
+END_MAKEFILE
 
-    $self->{url} = $base;
+    $self->{url}     = $base;
     $self->{ftp_url} = $ftp_base;
-    $self->{suffix} = $suffix;
+    $self->{suffix}  = $suffix;
 
     return $self;
 }
@@ -67,7 +72,7 @@ END
 sub fetch_par {
     my ($self, $url, $file, $quiet) = @_;
     $url = $self->{url} || $self->par_base($url)->{url};
-    $ftp_url = $self->{ftp_url};
+    my $ftp_url = $self->{ftp_url};
     $file ||= $self->{file};
 
     return $file if -f $file or $self->get_file(
@@ -76,13 +81,13 @@ sub fetch_par {
     );
 
     require Config;
-    print << "END" if $self->{mailto} and !$quiet;
+    print <<"END_MESSAGE" if $self->{mailto} and ! $quiet;
 *** No installation package available for your architecture.
 However, you may wish to generate one with '$Config::Config{make} par' and send
 it to <$self->{mailto}>, so other people on the same platform
 can benefit from it.
 *** Proceeding with normal installation...
-END
+END_MESSAGE
     return;
 }
 
@@ -90,13 +95,12 @@ sub extract_par {
     my ($self, $file) = @_;
     return unless -f $file;
 
-    if (eval { require Archive::Zip; 1 }) {
+    if ( eval { require Archive::Zip; 1 } ) {
         my $zip = Archive::Zip->new;
         return unless $zip->read($file) == Archive::Zip::AZ_OK()
                   and $zip->extractTree('', 'blib/') == Archive::Zip::AZ_OK();
-    }
-    elsif ($self->can_run('unzip')) {
-        return if system(unzip => $file, qw(-d blib));
+    } elsif ( $self->can_run('unzip') ) {
+        return if system( unzip => $file, qw(-d blib) );
     }
 
     local *PM_TO_BLIB;
@@ -113,7 +117,7 @@ sub make_par {
         return;
     }
 
-    return PAR::Dist::blib_to_par(dist => $file);
+    return PAR::Dist::blib_to_par( dist => $file );
 }
 
 1;
