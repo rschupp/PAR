@@ -12,8 +12,11 @@
       executable, if possible on this OS. (Leolo)
     - par_findprog() now uses par_current_exec() if possible.
 
-* Bug Fixes
+* Bug Fixes, etc.
 
+    - Upgraded to Module::Install 0.61 (Steffen Mueller)
+    - Document a strange interaction with chdir() and relative
+      paths. (Chris Dolan)
     - Documented the bits that make up PAR_TEMP. (Leolo)
     - Fixed the call to par_findprog. path (aka val) was set to
       tmpdir. (Leolo)
