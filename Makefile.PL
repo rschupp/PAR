@@ -46,20 +46,12 @@ par_prehook();
 WriteAll sign => 1;
 par_posthook();
 
-package Module::Install::PRIVATE::PAR;
-use Module::Install::Base; @ISA = qw(Module::Install::Base);
-
-use 5.006;
-use FindBin;
-use Config ();
-
 my %no_parl  = ();
 
 sub par_prehook {
-    my $self = shift;
     my $bork = $no_parl{$^O};
-    my $cc   = $self->can_cc unless $bork;
-    my $par  = $self->fetch_par('', '', !$cc) unless $cc or $bork;
+    my $cc   = can_cc unless $bork;
+    my $par  = fetch_par('', '', !$cc) unless $cc or $bork;
     my $exe  = $Config::Config{_exe};
     my $dynperl = $Config::Config{useshrplib} && ($Config::Config{useshrplib} ne 'false');
 
@@ -72,11 +64,11 @@ sub par_prehook {
 
     # XXX: this branch is currently not entered
     if ($cc and $par) {
-        my $answer = $self->prompt(
+        my $answer = prompt(
             "*** Pre-built PAR package found.  Use it instead of recompiling [y/N]?"
         );
         if ($answer !~ /^[Yy]/) {
-            $self->load('preamble')->{preamble} = '';
+            load('preamble')->{preamble} = '';
             $par = '';
         }
     } 
@@ -95,9 +87,9 @@ sub par_prehook {
         unlink $par_exe;
     }
 
-    $self->clean_files(@bin) if $par or $cc;
+    clean_files(@bin) if $par or $cc;
 
-    $self->makemaker_args(
+    makemaker_args(
         MAN1PODS		=> {
             'script/par.pl'	=> 'blib/man1/par.pl.1',
             'script/pp'	        => 'blib/man1/pp.1',
@@ -127,8 +119,6 @@ sub par_prehook {
 }
 
 sub par_posthook {
-    my $self = shift;
-
     my $exe = $Config::Config{_exe};
     return unless $exe eq '.exe';
 
