@@ -204,7 +204,7 @@ void par_rmtmpdir ( char *stmpdir, int recurse ) {
 
     if ((stmpdir == NULL) || !strlen(stmpdir)) return;
 
-    subsub_len = strlen(stmpdir) + 258
+    subsub_len = strlen(stmpdir) + 258;
     subsubdir = malloc( subsub_len );
 
     snprintf(subsubdir, subsub_len, "%s\\*.*", stmpdir);
