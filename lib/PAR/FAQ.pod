@@ -218,6 +218,45 @@ absolute paths before C<chdir>.
 Source: L<http://www.nntp.perl.org/group/perl.par/2281>
 
 
+=head2 My PAR executable needs some dynamic libraries
+
+If you use a Perl module that is tied to a dynamic library (that is,
+a C<.dll>, C<.so> or C<.dylib>) via XS then PAR will not
+automatically detect and include that dependency.  This omission can cause
+problems when the PAR package is executed on a machine that lacks the
+library.  The symptom can look something like this error message:
+
+  Can't load '/tmp/par-dave/cache-f5cc9fa27d926a299b2883dcef7dbc7aed777aff/2cffd144.bundle'
+  for module Image::Imlib2:
+  dlopen(/tmp/par-dave/cache-f5cc9fa27d926a299b2883dcef7dbc7aed777aff/2cffd144.bundle, 1):
+  Library not loaded: /sw/lib/libImlib2.1.dylib
+
+The key is the last line.  This can be solved by adding a C<-l> flag to C<pp> like so:
+
+  % pp -l /sw/lib/libImlib2.1.dylib -o foo foo.pl
+
+However, this will go badly if that path is actually a symlink,
+because PAR mistakenly includes the wrong filename.  On my computer I
+see that this is the case:
+
+  % ls -l /sw/lib/libImlib2*
+  -rwxr-xr-x    1 root     admin      797472 Feb 19 14:49 /sw/lib/libImlib2.1.2.1.dylib
+  lrwxr-xr-x    1 root     admin          21 Feb 27 08:34 /sw/lib/libImlib2.1.dylib -> libImlib2.1.2.1.dylib
+  -rw-r--r--    1 root     admin      916400 Feb 19 14:49 /sw/lib/libImlib2.a
+  lrwxr-xr-x    1 root     admin          21 Feb 27 08:34 /sw/lib/libImlib2.dylib -> libImlib2.1.2.1.dylib
+  -rwxr-xr-x    1 root     admin         941 Feb 19 14:49 /sw/lib/libImlib2.la
+
+A workaround is to make a copy of the library before running C<pp>.
+This resolves the symlink and creates a real file that C<pp> can
+injest:
+
+  % cp /sw/lib/libImlib2.1.dylib .
+  % pp -l libImlib2.1.dylib -o foo foo.pl
+
+[Note: Imlib2 posed particular problems due to hard-coded paths.
+Email cdolan at cpan.org for some nasty hacks if you need to bundle
+Imlib2]
+
 =head1 SEE ALSO
 
 L<PAR>, L<PAR::Tutorial>
