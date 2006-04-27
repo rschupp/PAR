@@ -1,6 +1,6 @@
 
 abstract: Perl Archive Tookit
-author: Audrey Tang <autrijus@autrijus.org>
+author: Audrey Tang <cpan@audreyt.org>
 distribution_type: module
 generated_by: Module::Install version 0.56
 license: perl
