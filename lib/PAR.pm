@@ -637,7 +637,9 @@ L<http://par.perl.org/> is the official PAR website.  You can write
 to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty mail to
 E<lt>par-subscribe@perl.orgE<gt> to participate in the discussion.
 
-Please submit bug reports to E<lt>bug-par@rt.cpan.orgE<gt>.
+Please submit bug reports to E<lt>bug-par@rt.cpan.orgE<gt>. If you need
+support, however, joining the E<lt>par@perl.orgE<gt> mailing list is
+preferred.
 
 =head1 COPYRIGHT
 
