@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 # $Id$
 use strict;
-
+use Config;
 use File::Spec;
 use File::Path;
 use File::Basename;
@@ -15,11 +15,14 @@ my $has_inline_c = eval "use Inline; 1;";
 ####
 my $EXEC = File::Spec->catfile( $FindBin::Bin, "test-10.exec" );
 my $TEMP = join '-', $FindBin::Bin, "tmp";
-my $SCRIPT = File::Spec->catdir( $FindBin::Bin, File::Spec->updir, "script" );
+my $SCRIPT = File::Spec->catdir( $FindBin::Bin, File::Spec->updir, "blib", "script" );
 my $PP = File::Spec->catfile( $SCRIPT, 'pp' );
-my $p = "blib/lib";
-$p .= ':' if $ENV{PERL5LIB};
-$ENV{PERL5LIB} .= $p;
+my $p = File::Spec->catdir("blib", "lib");
+
+my $sep = $Config{path_sep};
+$sep = ':' if not defined $sep;
+$p .= $sep if $ENV{PERL5LIB};
+$ENV{PERL5LIB} = $p . $ENV{PERL5LIB};
 
 
 
@@ -30,18 +33,22 @@ mkpath( [$TEMP], 0, 0700 );
 
 ####
 diag( "Please wait" );
-system( "$PP -o $EXEC t/test-proc" );
+my $test_proc = File::Spec->catfile('t', 'test-proc');
+system( "$PP -o $EXEC $test_proc" );
 
 ok( (-f $EXEC), "Created $EXEC" ) 
         or die "Failed to create $EXEC!\n";
 
 ####
-my $out_full = qx(PAR_GLOBAL_TMPDIR=$TEMP $EXEC);
+$ENV{PAR_GLOBAL_TMPDIR} = $TEMP;
+my $out_full = qx($EXEC);
 
 ok( ($out_full =~ /PAR_TEMP = $TEMP/), "Respected PAR_GLOBAL_TMPDIR" );
 
 my( $file, $path ) = fileparse( $EXEC );
-my $out_path = qx(PAR_GLOBAL_TMPDIR=$TEMP PATH=$path $file);
+
+$ENV{PATH} = $path;
+my $out_path = qx($file);
 
 is( $out_path, $out_full, "Found the same file via PATH and full path" );
 
