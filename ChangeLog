@@ -1,5 +1,5 @@
 
-[Changes for 0.93 - March 23, 2006]
+[Changes for 0.93 - May 19, 2006]
 
 * New Features
 
@@ -14,7 +14,7 @@
 
 * Bug Fixes, etc.
 
-    - Upgraded to Module::Install 0.61 (Steffen Mueller)
+    - Upgraded to Module::Install 0.62+ (Audrey Tang, Steffen Mueller)
     - Document a strange interaction with chdir() and relative
       paths. (Chris Dolan)
     - Documented the bits that make up PAR_TEMP. (Leolo)
