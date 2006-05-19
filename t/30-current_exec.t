@@ -22,7 +22,7 @@ my $p = File::Spec->catdir("blib", "lib");
 my $sep = $Config{path_sep};
 $sep = ':' if not defined $sep;
 $p .= $sep if $ENV{PERL5LIB};
-$ENV{PERL5LIB} = $p . $ENV{PERL5LIB};
+$ENV{PERL5LIB} = defined($ENV{PERL5LIB}) ? $p . $ENV{PERL5LIB} : $p;
 
 
 
