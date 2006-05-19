@@ -21,7 +21,7 @@ sub par_base {
         if ( $base =~ m!^(([A-Z])[A-Z])[-_A-Z]+\Z! ) {
             $self->{mailto} = "$base\@cpan.org";
             $ftp_base = "ftp://ftp.cpan.org/pub/CPAN/authors/id/$2/$1/$base";
-            $base     = "http://www.perl.com/authors/id/$2/$1/$base";
+            $base     = "http://www.cpan.org/authors/id/$2/$1/$base";
         } elsif ( $base !~ m!^(\w+)://! ) {
             die "Cannot recognize path '$base'; please specify an URL or CPAN ID";
         }
