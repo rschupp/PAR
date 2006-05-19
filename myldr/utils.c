@@ -45,7 +45,7 @@ char *par_current_exec_proc( void )
     char *ret = NULL;
     int n;
     
-    n = snprintf( proc_path, MAXPATHLEN, "/proc/%i/%s", (int)getpid(), 
+    n = sprintf( proc_path, "/proc/%i/%s", (int)getpid(), 
 #if defined __FreeBSD__
         "file"
 #else
@@ -142,7 +142,7 @@ struct stat PL_statbuf;
             return(prog);
         }
 
-        snprintf(filename, MAXPATHLEN, "%s%s%s", p, dir_sep, prog);
+        sprintf(filename, "%s%s%s", p, dir_sep, prog);
         if ((stat(filename, &PL_statbuf) == 0) && S_ISREG(PL_statbuf.st_mode) &&
             access(filename, X_OK) == 0) {
                 par_setenv("PAR_PROGNAME", filename);

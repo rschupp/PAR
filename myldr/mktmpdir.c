@@ -16,20 +16,20 @@ void par_setup_libpath( const char * stmpdir )
       "LD_LIBRARY_PATH", "LIBPATH", "LIBRARY_PATH",
       "PATH", "DYLD_LIBRARY_PATH", ""
    };
-   int ld_len = 0;
-    char *ld_path_env = NULL;
+   char *ld_path_env = NULL;
     for ( i = 0 ; strlen(key = ld_path_keys[i]) > 0 ; i++ ) {
         if ( ((val = (char *)par_getenv(key)) == NULL) || (strlen(val) == 0) ) {
             par_setenv(key, stmpdir);
         }
         else if(!strstr(val, stmpdir)) {
-            ld_len = strlen(stmpdir) + 
-                     strlen(path_sep) +
-                     strlen(val) + 2;
-            ld_path_env = (char *)malloc( ld_len );
-            snprintf(
-                ld_path_env, ld_len, 
-                "%s%s%s",
+            ld_path_env = (char *)malloc(
+                strlen(stmpdir) +
+                strlen(path_sep) +
+                strlen(val) + 2
+            );
+            sprintf(
+                ld_path_env,
+				"%s%s%s",
                 stmpdir, path_sep, val
             );
             par_setenv(key, ld_path_env);
@@ -52,7 +52,6 @@ char *par_mktmpdir ( char **argv ) {
 
     char *progname = NULL, *username = NULL;
     char *stmpdir = NULL;
-    char *stmpdir2 = NULL;
     int f, j, k, stmp_len = 0;
     char sha1[41];
     SHA_INFO sha_info;
@@ -125,10 +124,8 @@ struct stat PL_statbuf;
        need 2 buffers because snprintf() can't write to a buffer it's
        reading from. */
     stmpdir = malloc( stmp_len );
-    stmpdir2 = malloc( stmp_len );
-    snprintf(stmpdir2, stmp_len,
-             "%s%s%s%s", tmpdir, dir_sep, subdirbuf_prefix, username);
-    my_mkdir(stmpdir2, 0755);
+    sprintf(stmpdir, "%s%s%s%s", tmpdir, dir_sep, subdirbuf_prefix, username);
+    my_mkdir(stmpdir, 0755);
 
     /* Doesn't really work - XXX */
     val = (char *)par_getenv( "PATH" );
@@ -143,10 +140,10 @@ struct stat PL_statbuf;
             /* "$TEMP/par-$USER/cache-$cache_name" */
             lseek(f, -58, 2);
             read(f, buf, 41);
-            snprintf(
-                stmpdir, stmp_len,
+            sprintf(
+                stmpdir,
                 "%s%scache-%s%s",
-                stmpdir2, dir_sep, buf, subdirbuf_suffix
+                stmpdir, dir_sep, buf, subdirbuf_suffix
             );
         }
         else {
@@ -163,10 +160,10 @@ struct stat PL_statbuf;
                 sprintf( sha1+k*2, "%02x", sha_data[k] );
             }
             sha1[40] = '\0';
-            snprintf(
-                stmpdir, stmp_len,
+            sprintf(
+                stmpdir,
                 "%s%scache-%s%s",
-                stmpdir2, dir_sep, sha1, subdirbuf_suffix
+                stmpdir, dir_sep, sha1, subdirbuf_suffix
             );
         }
     }
@@ -174,14 +171,12 @@ struct stat PL_statbuf;
         /* "$TEMP/par-$USER/temp-$PID" */
 
         par_setenv("PAR_CLEAN", "1");
-        snprintf(
-            stmpdir, stmp_len,
+        sprintf(
+            stmpdir,
             "%s%stemp-%u%s",
-            stmpdir2, dir_sep, getpid(), subdirbuf_suffix
+            stmpdir, dir_sep, getpid(), subdirbuf_suffix
         );
     }
-
-    free( stmpdir2 );
 
     /* set dynamic loading path */
     par_setenv(PAR_TEMP, stmpdir);
@@ -207,16 +202,16 @@ void par_rmtmpdir ( char *stmpdir, int recurse ) {
     subsub_len = strlen(stmpdir) + 258;
     subsubdir = malloc( subsub_len );
 
-    snprintf(subsubdir, subsub_len, "%s\\*.*", stmpdir);
+    sprintf(subsubdir, "%s\\*.*", stmpdir);
     
     hFile = _findfirst( subsubdir, &cur_file );
     if ( hFile == -1 ) return;
 
     if (!strstr(cur_file.name, "\\")) {
-        snprintf(subsubdir, subsub_len, "%s\\%s", stmpdir, cur_file.name);
+        sprintf(subsubdir, "%s\\%s", stmpdir, cur_file.name);
     }
     else {
-        snprintf(subsubdir, subsub_len, "%s", cur_file.name);
+        sprintf(subsubdir, "%s", cur_file.name);
     }
 
     if (!(slashdot = strstr(subsubdir, "\\.")) || (strcmp(slashdot,"\\.") && strcmp(slashdot,"\\.."))) {
@@ -234,10 +229,10 @@ void par_rmtmpdir ( char *stmpdir, int recurse ) {
     }
     while ( _findnext( hFile, &cur_file ) == 0 ) {
         if (!strstr(cur_file.name, "\\")) {
-            snprintf(subsubdir, subsub_len, "%s\\%s", stmpdir, cur_file.name);
+            sprintf(subsubdir, "%s\\%s", stmpdir, cur_file.name);
         }
         else {
-            snprintf(subsubdir, subsub_len, "%s", cur_file.name);
+            sprintf(subsubdir, "%s", cur_file.name);
         }
 
         if (!(slashdot = strstr(subsubdir, "\\.")) || (strcmp(slashdot,"\\.") && strcmp(slashdot,"\\.."))) {
@@ -278,7 +273,7 @@ void par_rmtmpdir ( char *stmpdir, int recurse ) {
         {
             subsub_len = strlen(stmpdir) + strlen(dp->d_name) + 2;
             subsubdir = malloc( subsub_len);
-            snprintf(subsubdir, subsub_len, "%s/%s", stmpdir, dp->d_name);
+            sprintf(subsubdir, "%s/%s", stmpdir, dp->d_name);
             if (stat(subsubdir, &stbuf) != -1 && S_ISDIR(stbuf.st_mode) && recurse) {
                 par_rmtmpdir(subsubdir, 1);
             }

@@ -25,7 +25,7 @@ int my_mkfile (char* argv0, char* stmpdir, const char* name, unsigned long size)
 
     my_size = strlen(stmpdir) + strlen(name) + 5;
     my_file = (char *)malloc( my_size );
-    snprintf(my_file, my_size, "%s/%s", stmpdir, name);
+    sprintf(my_file, "%s/%s", stmpdir, name);
 
     if ( par_lstat(my_file, &PL_statbuf) == 0 ) {
         if ( (unsigned long)PL_statbuf.st_size == size ) return -2;
@@ -83,11 +83,11 @@ typedef BOOL (WINAPI *pALLOW)(DWORD);
         close(i); chmod(my_file, 0755);
     }
 
-    snprintf(buf, MAXPATHLEN, "%i", argc);
+    sprintf(buf, "%i", argc);
     par_setenv("PAR_ARGC", buf);
     for (i = 0; i < argc; i++) {
         buf = (char *)malloc(strlen(argv[i]) + 14);
-        snprintf(buf, MAXPATHLEN, "PAR_ARGV_%i", i);
+        sprintf(buf, "PAR_ARGV_%i", i);
         par_unsetenv(buf);
         par_setenv(buf, argv[i]);
     }
