@@ -508,6 +508,7 @@ sub _set_par_temp {
         $username =~ s/\W/_/g;
 
         my $stmpdir = File::Spec->catdir($path, "par-$username");
+        $stmpdir = $stmpdir =~ /^(.*)$/s;
         mkdir $stmpdir, 0755;
         if (!$ENV{PAR_CLEAN} and my $mtime = (stat($progname))[9]) {
             my $ctx = eval { require Digest::SHA; Digest::SHA->new(1) }

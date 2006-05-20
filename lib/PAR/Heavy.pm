@@ -1,5 +1,5 @@
 package PAR::Heavy;
-$PAR::Heavy::VERSION = '0.08';
+$PAR::Heavy::VERSION = '0.09';
 
 =head1 NAME
 
@@ -127,12 +127,14 @@ sub _dl_extract {
             SUFFIX      => ".$dlext",
             UNLINK      => ($^O ne 'MSWin32'),
         );
+		($filename) = $filename =~ /^([\x20-\xff]+)$/;
     }
     else {
         $filename = File::Spec->catfile(
             ($ENV{PAR_TEMP} || File::Spec->tmpdir),
             ($name || ($member->crc32String . ".$dlext"))
         );
+		($filename) = $filename =~ /^([\x20-\xff]+)$/;
 
         open $fh, '>', $filename or die $!
             unless -r $filename and -e $filename
