@@ -12,6 +12,7 @@ requires    'Compress::Zlib'    => ($^O eq 'MSWin32') ? 1.16 : 1.30;
 requires    'Archive::Zip'      => 1.00;
 requires    'Module::ScanDeps'  => 0.56;
 requires    'PAR::Dist'         => 0.08;
+requires    'Getopt::ArgvFile'  => 1.07;
 
 if ($^O eq 'MSWin32') {
     feature 'Windows --icon and --info support',

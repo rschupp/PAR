@@ -12,15 +12,15 @@ sub samefiles {
     $f1 eq $f2 and return 1;
     -e $f1 && -e $f2 or return 0;
     -s $f1 == -s $f2 or return 0;
-    local $/ = \32768;
-    open my $fh1, $f1
-	and open my $fh2, $f2
-	or return 0;
+    local $/ = \65536;
+    open my $fh1, '<', $f1 or return 0;
+	open my $fh2, '<', $f2 or return 0;
     while (1) {
-	my $c1 = <$fh1>;
-	my $c2 = <$fh2>;
-	last if !defined $c1 or !defined $c2;
-	return 0 if $c1 ne $c2;
+		my $c1 = <$fh1>;
+		my $c2 = <$fh2>;
+		last if !defined $c1 and !defined $c2;
+		return 0 if !defined $c1 or !defined $c2;
+		return 0 if $c1 ne $c2;
     }
     return 1;
 }

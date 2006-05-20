@@ -5,6 +5,7 @@ use PAR ();
 use PAR::Packer ();
 use Module::ScanDeps ();
 use App::Packer::PAR ();
+use Getopt::ArgvFile default=>1;
 use Getopt::Long qw(:config no_ignore_case);
 
 *VERSION = *PAR::Packer::VERSION;
@@ -118,6 +119,9 @@ replaced by F<a.exe> instead.
 
     # Pack 'hello' into a console-less 'out.exe' with icon (Win32 only)
     % pp --gui --icon hello.ico -o out.exe hello
+    
+    % pp @file hello.pl         # Pack 'hello.pl' but read _additional_
+                                # options from file 'file'
 
 =head1 DESCRIPTION
 
@@ -149,6 +153,14 @@ example, the three lines below are all equivalent:
     % pp -o output.exe input.pl
     % pp --output output.exe input.pl
     % pp --output=output.exe input.pl
+
+Since the command lines can become sufficiently long to reach the limits
+imposed by some shells, it is possible to have I<pp> read some of its
+options from one or more text files. The basic usage is to just include
+an argument starting with an 'at' (@) sigil. This argument will be
+interpeted as a file to read options from. Mixing ordinary options
+and C<@file> options is possible. This is implemented using the
+L<Getopt::ArgvFile> module, so read its documentation for advanced usage.
 
 =over 4
 
@@ -404,6 +416,8 @@ can significantly reduce the executable size.
 L<tkpp>, L<par.pl>, L<parl>, L<perlcc>
 
 L<PAR>, L<PAR::Packer>, L<Module::ScanDeps>
+
+L<Getopt::Long>, L<Getopt::ArgvFile>
 
 =head1 ACKNOWLEDGMENTS
 
