@@ -32,7 +32,7 @@ sub PATCH_CONTENT () { +{
     'Spreadsheet/ParseExcel.pm' => [
         qr/^=cmmt\s+.*=cut\s*/sm =>
         '',
-    ]
+    ],
     'SQL/Parser.pm'      => [
         'my @dialects;' =>
         'require PAR;
