@@ -13,6 +13,8 @@
       but by the "file" tool.
     - Applied Roderich Schupp's patch to 30-current_exec.t to fix a
       path issue.
+    - Now requiring Module::ScanDeps 0.60 which fixes a couple of bugs
+      which might be observed as PAR bugs.
 
 [Changes for 0.93 - May 19, 2006]
 
