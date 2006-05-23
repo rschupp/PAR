@@ -15,6 +15,9 @@
       path issue.
     - Now requiring Module::ScanDeps 0.60 which fixes a couple of bugs
       which might be observed as PAR bugs.
+    - Now working well with Spreadsheet::ParseExcel which uses an invalid
+      POD section to comment out a code block. This wasn't recognized by
+      PAR::Filter::PodStrip as POD and hence partly left in...
 
 [Changes for 0.93 - May 19, 2006]
 

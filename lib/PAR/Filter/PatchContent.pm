@@ -21,9 +21,27 @@ by default.
 
 sub PATCH_CONTENT () { +{
     map { ref($_) ? $_ : lc($_) }
-    'Pod/Usage.pm'	=> [
-    	' = $0' =>
-	' = $ENV{PAR_0} || $0',
+    'Pod/Usage.pm' => [
+        ' = $0' =>
+        ' = $ENV{PAR_0} || $0',
+    ],
+    # Some versions of Spreadsheet::ParseExcel have a weird non-POD construct =cmmt
+    # that is used to comment out a block of code. perl treats it as POD ans strips it.
+    # Since it's not POD, POD parsers ignore it.
+    # PAR::Filter::PodStrip only strips valid POD. Hence we remove it here.
+    'Spreadsheet/ParseExcel.pm' => [
+        qr/^=cmmt\s+.*=cut\s*/sm =>
+        '',
+    ]
+    'SQL/Parser.pm'      => [
+        'my @dialects;' =>
+        'require PAR;
+         my @dialects = ();
+         foreach my $member ( $PAR::LastAccessedPAR->members ) {
+             next unless $member->fileName =~ m!\bSQL/Dialects/([^/]+)\.pm$!;
+             push @dialects, $1;
+         }
+        ',
     ],
     'Tk.pm'             => [
         'foreach $dir (@INC)' => 
@@ -54,19 +72,9 @@ sub PATCH_CONTENT () { +{
              $dll =~ s!\\\\!/!g;
          } else { die $! }',
     ],
-    'SQL/Parser.pm'   	    => [
-        'my @dialects;' =>
-        'require PAR;
-         my @dialects = ();
-         foreach my $member ( $PAR::LastAccessedPAR->members ) {
-             next unless $member->fileName =~ m!\bSQL/Dialects/([^/]+)\.pm$!;
-             push @dialects, $1;
-         }
-        ',
-    ],
-    'XSLoader.pm'	    => [
-    	'goto retry unless $module and defined &dl_load_file;' =>
-	'goto retry;',
+    'XSLoader.pm'     => [
+        'goto retry unless $module and defined &dl_load_file;' =>
+        'goto retry;',
     ],
     'diagnostics.pm'        => [
         'CONFIG: ' => 'CONFIG: if (0) ',
@@ -81,9 +89,9 @@ sub PATCH_CONTENT () { +{
     ],
     'utf8_heavy.pl'	    => [
         '$list ||= eval { $caller->$type(); }'
-       	    => '$list = eval { $caller->$type(); }',
-	'|| croak("Can\'t find $encoding character property definition via $caller->$type or $file.pl")'
-	    => '|| croak("Can\'t find $encoding character property definition via $caller->$type or $file.pl") unless $list;'
+        => '$list = eval { $caller->$type(); }',
+    '|| croak("Can\'t find $encoding character property definition via $caller->$type or $file.pl")'
+        => '|| croak("Can\'t find $encoding character property definition via $caller->$type or $file.pl") unless $list;'
     ],
 } };
 
@@ -93,7 +101,12 @@ sub apply {
 
     my @rule = @{PATCH_CONTENT->{lc($name)}||[]} or return $$ref;
     while (my ($from, $to) = splice(@rule, 0, 2)) {
-        $$ref =~ s/\Q$from\E/$to/g;
+        if (ref($from) eq 'Regexp') {
+            $$ref =~ s/$from/$to/g;
+        }
+        else {
+            $$ref =~ s/\Q$from\E/$to/g;
+        }
     }
     return $$ref;
 }
