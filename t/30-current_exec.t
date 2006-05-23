@@ -47,8 +47,7 @@ ok( ($out_full =~ /PAR_TEMP = $TEMP/), "Respected PAR_GLOBAL_TMPDIR" );
 
 my( $file, $path ) = fileparse( $EXEC );
 
-$ENV{PATH} = $path;
-my $out_path = qx($file);
+my $out_path = do { local $ENV{PATH} = $path; qx($file); };
 
 is( $out_path, $out_full, "Found the same file via PATH and full path" );
 
@@ -83,6 +82,7 @@ C
     unless( $pid ) {        # child
         $ENV{PAR_GLOBAL_TMPDIR} = $TEMP;
         # warn "EXEC=$EXEC file=$file" ;
+		$ENV{PATH} = $path;
         exec_prog( $EXEC, $file );
     }
     my $exec_full = join '', <PROG>;
