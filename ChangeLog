@@ -9,6 +9,10 @@
 * Bug fixes, etc.
 
     - Fixed details in the 2-pp.t test file.
+    - Now recognizes text files that aren't picked up by the -T operator
+      but by the "file" tool.
+    - Applied Roderich Schupp's patch to 30-current_exec.t to fix a
+      path issue.
 
 [Changes for 0.93 - May 19, 2006]
 
