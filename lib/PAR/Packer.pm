@@ -197,9 +197,28 @@ sub _check_perl {
 
         if (my $file_checker = $self->_can_run("file")) {
             $self->_vprint(0, "Checking file type... ");
-            system($file_checker, $file);
+            my $checked = `$file_checker $file`;
+            if (defined $checked) {
+                $self->_vprint(
+                    0, "File type checking utility says this "
+                      ."about your file:\n$checked\n"
+                );
+                if ($checked =~ /text/) {
+                    $self->_vprint(
+                        0, "File is a text file, so we'll accept it."
+                    );
+                }
+                else {
+                    $self->_die("Please try a perlier file!\n");
+                }
+            }
+            else {
+                $self->_die("Please try a perlier file!\n");
+            }
         }
-        $self->_die("Please try a perlier file!\n");
+        else {
+            $self->_die("Please try a perlier file!\n");
+        }
     }
 
     my $handle = $self->_open($file);
