@@ -18,6 +18,8 @@
     - Now working well with Spreadsheet::ParseExcel which uses an invalid
       POD section to comment out a code block. This wasn't recognized by
       PAR::Filter::PodStrip as POD and hence partly left in...
+    - If the output directory doesn't exist, we create it now and output
+      a meaningful error message if that failed.
 
 [Changes for 0.93 - May 19, 2006]
 

@@ -1,4 +1,7 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
+
+eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
 
 package __par_pl;
 
@@ -427,6 +430,8 @@ if ($out) {
         die "$par is not a PAR file" unless <PAR> eq "PK\003\004";
     }
 
+    CreatePath($out) ;
+    
     my $fh = IO::File->new(
         $out,
         IO::File::O_CREAT() | IO::File::O_WRONLY() | IO::File::O_TRUNC(),
@@ -627,6 +632,17 @@ Usage: $0 [ -Alib.par ] [ -Idir ] [ -Mmodule ] [ src.par ] [ program.pl ]
     $ENV{PAR_PROGNAME} = $progname = $0 = shift(@ARGV);
 }
 # }}}
+
+sub CreatePath {
+    my ($name) = @_;
+    
+    require File::Basename;
+    my ($basename, $path, $ext) = File::Basename::fileparse($name, ('\..*'));
+    
+    require File::Path;
+    
+	File::Path::mkpath($path) unless(-e $path); # mkpath dies with error
+}
 
 sub require_modules {
     #local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
