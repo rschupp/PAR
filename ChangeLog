@@ -1,5 +1,5 @@
 
-[Changes for 0.94 - May 20, 2006]
+[Changes for 0.94 - Jun  1, 2006]
 
 * New Features
 
@@ -8,6 +8,8 @@
 
 * Bug fixes, etc.
 
+    - Workaround for a bug in Digest::SHA 5.38 and 5.39 that would prevent
+      PAR from being built.
     - Fixed details in the 2-pp.t test file.
     - Now recognizes text files that aren't picked up by the -T operator
       but by the "file" tool.
