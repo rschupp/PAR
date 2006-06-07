@@ -740,9 +740,9 @@ sub pack_manifest_hash {
         @{ $opt->{F} || ($verbatim ? [] : ['PodStrip']) },
       );
 
+    (my $privlib = $Config{privlib}) =~ s{\\}{/}g;
+    (my $archlib = $Config{archlib}) =~ s{\\}{/}g;
     foreach my $pfile (sort grep length $map{$_}, keys %map) {
-        (my $privlib = $Config{privlib}) =~ s{\\}{/}g;
-        (my $archlib = $Config{archlib}) =~ s{\\}{/}g;
         next if !$opt->{B} and (
             ($map{$pfile} eq "$privlib/$pfile") or
             ($map{$pfile} eq "$archlib/$pfile")
