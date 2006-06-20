@@ -558,10 +558,10 @@ if ($out) {
         # Workaround for bug in Digest::SHA 5.38 and 5.39
         my $sha_version = eval { $Digest::SHA::VERSION } || 0;
         if ($sha_version eq '5.38' or $sha_version eq '5.39') {
-            $ctx->addfile($progname, "b") if ($ctx);
+            $ctx->addfile($out, "b") if ($ctx);
         }
         else {
-            if ($ctx and open(my $fh, "<$progname")) {
+            if ($ctx and open(my $fh, "<$out")) {
                 binmode($fh);
                 $ctx->addfile($fh);
                 close($fh);
