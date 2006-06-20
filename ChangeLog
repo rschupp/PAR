@@ -1,4 +1,12 @@
 
+[Changes for 0.941 - Jun 20, 2006]
+
+* Bug fixes, etc.
+
+    - Version 0.94 of PAR would use the same cache area for all pp-ed
+      applications due to a faulty hotfix for Digest::SHA. This applies
+      to PAR 0.94 only. Think of 0.941 being PAR 0.94 done right.
+
 [Changes for 0.94 - Jun  1, 2006]
 
 * New Features
