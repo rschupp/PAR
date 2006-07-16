@@ -84,7 +84,9 @@ sub PATCH_CONTENT () { +{
         'require PAR; use Config;
         my @files = (
             "lib/pod/perldiag.pod",
+            "lib/Pod/perldiag.pod",
             "lib/pod/perldiag-$Config{version}.pod",
+            "lib/Pod/perldiag-$Config{version}.pod",
             "lib/pods/perldiag.pod",
             "lib/pods/perldiag-$Config{version}.pod",
         );
