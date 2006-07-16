@@ -41,7 +41,7 @@ no_index            directory => 'contrib';
 auto_install_now    -default => 0;
 auto_provides;
 
-par_base 'SMUELLER', 'fooooo';
+par_base 'SMUELLER';
 
 par_prehook();
 WriteAll sign => 1;
@@ -54,7 +54,6 @@ sub par_prehook {
     my $bork = $no_parl{$^O};
     my $cc;
     $cc = can_cc unless $bork;
-	$cc=0;
     my $par;
     $par = fetch_par('', '', !$cc) unless ($cc or $bork);
     my $exe  = $Config::Config{_exe};
