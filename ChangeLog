@@ -1,5 +1,15 @@
 
+[Changes for 0.942 - Jul 16, 2006]
+
+* Bug fixes, etc.
+
+    - Better support for diagnostics.pm (in conjunction with
+      Module::ScanDeps 0.62.)
+    - Now requiring Module::ScanDeps 0.62.
+
 [Changes for 0.941 - Jun 20, 2006]
+(No, PAR isn't stagnating. It's just that 1.00 would draw close if
+we continued with 0.01 increases.)
 
 * Bug fixes, etc.
 

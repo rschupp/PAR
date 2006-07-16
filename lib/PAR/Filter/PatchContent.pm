@@ -81,11 +81,19 @@ sub PATCH_CONTENT () { +{
         'if (eof(POD_DIAG)) ' => 'if (0 and eof(POD_DIAG)) ',
         'close POD_DIAG' => '# close POD_DIAG',
         'while (<POD_DIAG>) ' =>
-        'require PAR;
-        for(map "$_\\n\\n", split/\\r?\\n(?:\\r?\\n)*/, 
-            PAR::read_file("lib/Pod/perldiag.pod") ||
-            PAR::read_file("lib/pod/perldiag.pod")
-        ) ',
+        'require PAR; use Config;
+        my @files = (
+            "lib/pod/perldiag.pod",
+            "lib/pod/perldiag-$Config{version}.pod",
+            "lib/pods/perldiag.pod",
+            "lib/pods/perldiag-$Config{version}.pod",
+        );
+        my $contents;
+        foreach my $file (@files) {
+            $contents = PAR::read_file($file);
+            last if defined $contents;
+        }
+        for(map "$_\\n\\n", split/\\r?\\n(?:\\r?\\n)*/, $contents) ',
     ],
     'utf8_heavy.pl'	    => [
         '$list ||= eval { $caller->$type(); }'
