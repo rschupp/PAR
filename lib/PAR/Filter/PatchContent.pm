@@ -95,7 +95,7 @@ sub PATCH_CONTENT () { +{
             $contents = PAR::read_file($file);
             last if defined $contents;
         }
-        for(map "$_\\n\\n", split/\\r?\\n(?:\\r?\\n)*/, $contents) ',
+        for(map "$_\\n\\n", split/(?:\\r?\\n){2,}/, $contents) ',
     ],
     'utf8_heavy.pl'	    => [
         '$list ||= eval { $caller->$type(); }'
