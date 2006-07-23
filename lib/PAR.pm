@@ -165,7 +165,7 @@ of them exists, I<.> is used.
 =item *
 
 I<USER> is the user name, or SYSTEM if none can be found.  On Win32, 
-this is C<$Win32::LoginName>.  On Unix, this is C<$ENV{USERNAME>> or 
+this is C<$Win32::LoginName>.  On Unix, this is C<$ENV{USERNAME}> or 
 C<$ENV{USER}>.
 
 =item *
