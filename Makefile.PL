@@ -11,7 +11,7 @@ requires    'File::Temp'        => 0.05;
 requires    'Compress::Zlib'    => ($^O eq 'MSWin32') ? 1.16 : 1.30;
 requires    'Archive::Zip'      => 1.00;
 requires    'Module::ScanDeps'  => 0.62;
-requires    'PAR::Dist'         => 0.13;
+requires    'PAR::Dist'         => 0.15;
 requires    'Getopt::ArgvFile'  => 1.07;
 
 if ($^O eq 'MSWin32') {
