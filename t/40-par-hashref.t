@@ -38,4 +38,6 @@ ok(!$res, "Hello from filesys returned false");
 
 ok(eval("require Data; 1;"), 'fallback works');
 
+print PAR->import({run => 'hello', file => $par});
 
+ok(0, 'should not be reached if hello from par file is executed!');
