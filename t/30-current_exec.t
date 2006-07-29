@@ -93,7 +93,7 @@ C
 #### Clean up
 unlink $EXEC;
 rmtree( [$TEMP] );
-mkpath( [$TEMP], 0, 0700 );
+#mkpath( [$TEMP], 0, 0700 );
 
 
 1;
