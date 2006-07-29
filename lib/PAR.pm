@@ -5,6 +5,7 @@ use 5.006;
 use strict;
 use warnings;
 use Config '%Config';
+use Carp qw/croak/;
 
 =head1 NAME
 
@@ -78,15 +79,25 @@ You can also use wildcard characters:
 Since version 0.950, you can also use a different syntax for loading
 F<.par> archives:
 
-    use PAR { file => 'file.par' }, { file => 'otherfile.par' };
+    use PAR { file => 'foo.par' }, { file => 'otherfile.par' };
 
 Why? Because you can also do this:
 
-    use PAR { file => 'file.par, fallback => 1 };
+    use PAR { file => 'foo.par, fallback => 1 };
     use Foo::Bar;
 
-Foo::Bar will be searched in the system libs first and loaded from F<file.par>
+Foo::Bar will be searched in the system libs first and loaded from F<foo.par>
 if it wasn't found!
+
+    use PAR { file => 'foo.par', run => 'myscript' };
+
+This will load F<foo.par> as usual and then execute the F<script/myscript>
+file from the archive. Note that your program will not regain control. When
+F<script/myscript> exits, so does your main program. To make this more useful,
+you can defer this to runtime: (otherwise equivalent)
+
+    require PAR;
+    PAR->import( { file => 'foo.par', run => 'myscript' };
 
 =head1 DESCRIPTION
 
@@ -247,11 +258,9 @@ sub import {
         }
     }
 
-    # Whatever comes after this line is only executed the first time
-    # you do "use PAR"
     return if $PAR::__import;
     local $PAR::__import = 1;
-    
+
     # Insert PAR hook in @INC.
     unshift @INC, \&find_par   unless grep { $_ eq \&find_par }      @INC;
     push @INC, \&find_par_last unless grep { $_ eq \&find_par_last } @INC;
@@ -335,12 +344,38 @@ sub _import_hash_ref {
         die "Repositories not implemented yet.";
     }
 
+    # run was specified
+    # run the specified script from inside the PAR file.
+    if (exists $opt->{run} and defined $opt->{run}) {
+        my $script = $opt->{run};
+        require PAR::Heavy;
+        PAR::Heavy::_init_dynaloader();
+        
+        # XXX - handle META.yml here!
+        _extract_inc($opt->{file}) unless $ENV{PAR_CLEAN};
+        
+        my $zip = $LibCache{$opt->{file}};
+        my $member = _first_member( $zip,
+            (($script !~ /^script\//) ? ("script/$script", "script/$script.pl") : ()),
+            $script,
+            "$script.pl",
+        );
+        
+        if (not defined $member) {
+            croak("Cannot run script '$script' from PAR file '$opt->{file}'. Script couldn't be found in PAR file.");
+        }
+        
+        _run_member($member);
+    }
+
+    return();
 }
 
 sub _first_member {
     my $zip = shift;
     my %names = map { ( $_->fileName => $_ ) } $zip->members;
-    my %lc_names = map { ( lc($_->fileName) => $_ ) } $zip->members;
+    my %lc_names;
+    %lc_names = map { ( lc($_->fileName) => $_ ) } $zip->members if $is_insensitive_fs;
     foreach my $name (@_) {
         return $names{$name} if $names{$name};
         return $lc_names{lc($name)} if $is_insensitive_fs and $lc_names{lc($name)};

@@ -10,6 +10,9 @@
       use PAR { file => 'foo.par', fallback => 1 };
       ==> Loads modules from the PAR file only if loading
           them from @INC did not succeed.
+    - Introduced the 'run' option which executes a script
+      in a PAR archive just like
+      perl -MPAR foo.par script.pl
 
 - Bug fixes, etc.
 
