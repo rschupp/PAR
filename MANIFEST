@@ -61,7 +61,6 @@ myldr/utils.c
 myldr/win32.coff
 myldr/win32.obj
 myldr/win32.res
-package/parl.nsi
 README
 script/par.pl
 script/parl.pod
@@ -70,7 +69,9 @@ script/tkpp
 SIGNATURE
 t/1-basic.t
 t/2-pp.t
-t/hello.par
-t/test-proc
 t/30-current_exec.t
+t/40-par-hashref.t
+t/hello.par
+t/Hello.pm
+t/test-proc
 TODO

@@ -1,4 +1,21 @@
 
+[Changes for 0.950 - Jul 29, 2006]
+
+* New features
+
+    - Introduced new PAR loading syntax and semantics:
+      use PAR { file => 'path/to/par/or/URL' };
+      ==> equivalent to "use PAR 'path/to/par/or/URL';"
+    - Introduced the 'fallback' option: (default = 0)
+      use PAR { file => 'foo.par', fallback => 1 };
+      ==> Loads modules from the PAR file only if loading
+          them from @INC did not succeed.
+
+- Bug fixes, etc.
+
+    - Commented a couple of the routines in PAR.pm. (Yay!)
+    - New test script for the new fallback loading feature.
+
 [Changes for 0.942 - Jul 22, 2006]
 
 * Bug fixes, etc.
