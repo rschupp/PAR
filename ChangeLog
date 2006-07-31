@@ -18,6 +18,8 @@
 
     - Commented a couple of the routines in PAR.pm. (Yay!)
     - New test script for the new fallback loading feature.
+    - Fixed a bug in the Spreadsheet::ParseExcel handling in
+      PatchContent.pm.
 
 [Changes for 0.942 - Jul 22, 2006]
 

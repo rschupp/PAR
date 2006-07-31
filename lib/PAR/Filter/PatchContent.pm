@@ -30,7 +30,7 @@ sub PATCH_CONTENT () { +{
     # Since it's not POD, POD parsers ignore it.
     # PAR::Filter::PodStrip only strips valid POD. Hence we remove it here.
     'Spreadsheet/ParseExcel.pm' => [
-        qr/^=cmmt\s+.*=cut\s*/sm =>
+        qr/^=cmmt\s+.*?^=cut\s*/sm =>
         '',
     ],
     'SQL/Parser.pm'      => [
