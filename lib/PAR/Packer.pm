@@ -1435,7 +1435,7 @@ my $member = eval { $zip->memberNamed($file) }
                 || $zip->memberNamed("$file.pl")
                 || $zip->memberNamed("script/$file")
                 || $zip->memberNamed("script/$file.pl")
-        or die qq(mail.pl: Can't open perl script "$file": No such file or directory);
+        or die qq(main.pl: Can't open perl script "$file": No such file or directory);
 PAR::_run_member($member, 1);
 
 __MAIN__
