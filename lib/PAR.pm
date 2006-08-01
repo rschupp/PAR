@@ -13,7 +13,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.950 of PAR, released July 29, 2006.
+This document describes version 0.950 of PAR, released August 1, 2006.
 
 =head1 SYNOPSIS
 
@@ -98,6 +98,15 @@ you can defer this to runtime: (otherwise equivalent)
 
     require PAR;
     PAR->import( { file => 'foo.par', run => 'myscript' };
+
+If you have L<PAR::Repository::Client> installed, you can do this:
+
+    use PAR { repository => 'http://foo/bar/' };
+    use Module; # not locally installed!
+
+And PAR will fetch any modules you don't have from the specified PAR
+repository. For details on how this works, have a look at the SEE ALSO
+section below.
 
 =head1 DESCRIPTION
 
@@ -215,6 +224,8 @@ use vars qw(@PAR_INC_LAST);         # explicitly stated PAR library files (fallb
 use vars qw(%PAR_INC);              # sets {$par}{$file} for require'd modules
 use vars qw(@LibCache %LibCache);   # I really miss pseudohash.
 use vars qw($LastAccessedPAR $LastTempFile);
+use vars qw(@RepositoryObjects);    # If we have PAR::Repository::Client support, we
+                                    # put the ::Client objects in here.
 
 my $ver  = $Config{version};
 my $arch = $Config{archname};
@@ -340,8 +351,8 @@ sub _import_hash_ref {
         
     }
     else {
-        # repository FIXME XXX
-        die "Repositories not implemented yet.";
+        # Deal with repositories elsewhere
+        return(_import_repository($opt));
     }
 
     # run was specified
@@ -369,6 +380,22 @@ sub _import_hash_ref {
     }
 
     return();
+}
+
+
+# This sub is invoked by _import_hash_ref if a {repository}
+# option is found
+sub _import_repository {
+    my $opt = shift;
+    my $url = $opt->{repository};
+
+    eval "require PAR::Repository::Client; 1;";
+    if ($@) {
+        croak "In order to use the 'use PAR { repository => 'url' };' syntax, you need to install the PAR::Repository::Client module from CPAN. This module does not seem to be installed as indicated by the following error message: $@";
+    }
+    my $obj = PAR::Repository::Client->new(uri => $url);
+    push @RepositoryObjects, $obj;
+    return 1;
 }
 
 sub _first_member {
@@ -449,8 +476,27 @@ sub find_par {
 
 # This is the hook placed in @INC for loading PAR's
 # AFTER any other stuff in @INC
+# It also deals with loading from repositories as a
+# fallback-fallback ;)
 sub find_par_last {
-    return _find_par_internals(\@PAR_INC_LAST, @_);
+    my @args = @_;
+    # Try the local PAR files first
+    my $rv = _find_par_internals(\@PAR_INC_LAST, @args);
+    return $rv if defined $rv;
+
+    # No repositories => return
+    return() if not @RepositoryObjects;
+
+    my $module = $args[1];
+    $module =~ s/\.pm$//;
+    $module =~ s/\//::/g;
+    foreach my $client (@RepositoryObjects) {
+        my $local_file = $client->get_module($module, 1);
+        if ($local_file) {
+            return _find_par_internals([$PAR_INC_LAST[-1]], @args);
+        }
+    }
+    return();
 }
 
 
@@ -738,6 +784,7 @@ sub _set_progname {
     }
 }
 
+
 1;
 
 =head1 SEE ALSO
@@ -748,6 +795,11 @@ L<PAR::Tutorial>, L<PAR::FAQ> (For a more
 current FAQ, refer to the homepage.)
 
 L<par.pl>, L<parl>, L<pp>
+
+L<PAR::Dist> for details on PAR distributions.
+
+L<PAR::Repository::Client> for details on accessing PAR repositories.
+L<PAR::Repository> for details on how to set up such a repository.
 
 L<Archive::Zip>, L<perlfunc/require>
 
