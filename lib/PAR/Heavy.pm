@@ -82,7 +82,7 @@ sub _bootstrap {
     }
 
     my $member;
-    $member = PAR::find_par(undef, $file, 1) if defined &PAR::find_par;
+    $member = PAR::_find_par_any(undef, $file, 1) if defined &PAR::_find_par_any;
     return $bootstrap->(@args) unless $member;
 
     $FullCache{$file} = _dl_extract($member, $file);

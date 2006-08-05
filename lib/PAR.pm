@@ -483,9 +483,10 @@ sub find_par_last {
     # Try the local PAR files first
     my $rv = _find_par_internals(\@PAR_INC_LAST, @args);
     return $rv if defined $rv;
+    return $rv;
 
     # No repositories => return
-    return() if not @RepositoryObjects;
+    return $rv if not @RepositoryObjects;
 
     my $module = $args[1];
     $module =~ s/\.pm$//;
@@ -496,8 +497,16 @@ sub find_par_last {
             return _find_par_internals([$PAR_INC_LAST[-1]], @args);
         }
     }
-    return();
+    return $rv;
 }
+
+
+# This is a conjunction of the early find_par and the late
+# find_par_last. It's called by PAR::Heavy for Dynaloader stuff.
+sub _find_par_any {
+    return _find_par_internals([@PAR_INC, @PAR_INC_LAST], @_);
+}
+
 
 
 # This routine implements loading modules from PARs
