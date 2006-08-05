@@ -483,7 +483,6 @@ sub find_par_last {
     # Try the local PAR files first
     my $rv = _find_par_internals(\@PAR_INC_LAST, @args);
     return $rv if defined $rv;
-    return $rv;
 
     # No repositories => return
     return $rv if not @RepositoryObjects;
