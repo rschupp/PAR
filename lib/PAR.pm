@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.949_01';
+$PAR::VERSION = '0.950';
 
 use 5.006;
 use strict;
@@ -109,7 +109,11 @@ If you have L<PAR::Repository::Client> installed, you can do this:
 
 And PAR will fetch any modules you don't have from the specified PAR
 repository. For details on how this works, have a look at the SEE ALSO
-section below.
+section below. Finally, you can combine the C<run> and C<repository>
+options to run an application directly from a repository!
+
+  use PAR { repository => 'http://foo/bar/', run => 'my_app' };
+  # Will not reach this point as we executed my_app,
 
 =head1 DESCRIPTION
 
@@ -355,12 +359,22 @@ sub _import_hash_ref {
     }
     else {
         # Deal with repositories elsewhere
-        return(_import_repository($opt));
+        my $client = _import_repository($opt);
+        return() if not $client;
+
+        if (defined $opt->{run}) {
+            # run was specified
+            # run the specified script from the repository
+            $client->run_script( $opt->{run} );
+            return 1;
+        }
+        
+        return 1;
     }
 
     # run was specified
     # run the specified script from inside the PAR file.
-    if (exists $opt->{run} and defined $opt->{run}) {
+    if (defined $opt->{run}) {
         my $script = $opt->{run};
         require PAR::Heavy;
         PAR::Heavy::_init_dynaloader();
@@ -388,6 +402,7 @@ sub _import_hash_ref {
 
 # This sub is invoked by _import_hash_ref if a {repository}
 # option is found
+# Returns the repository client object on success.
 sub _import_repository {
     my $opt = shift;
     my $url = $opt->{repository};
@@ -398,7 +413,7 @@ sub _import_repository {
     }
     my $obj = PAR::Repository::Client->new(uri => $url);
     push @RepositoryObjects, $obj;
-    return 1;
+    return $obj;
 }
 
 sub _first_member {

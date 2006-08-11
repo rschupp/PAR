@@ -1,5 +1,5 @@
 
-[Changes for 0.950 - Jul 29, 2006]
+[Changes for 0.950 - Aug 11, 2006]
 
 * New features
 
@@ -13,6 +13,16 @@
     - Introduced the 'run' option which executes a script
       in a PAR archive just like
       perl -MPAR foo.par script.pl
+    - If PAR::Repository::Client is installed, you can add a
+      repository of .par distributions to your library search path
+      as follows:
+      use PAR { repository => 'http://foo' };
+    - Of course, 'run' also works with repositories:
+      use PAR { repository => 'http://foo', run => 'my_app' };
+      (This searches the repository for any distributions that have a
+      my_app script.)
+    --> For details on repositories, have a look at the
+        PAR::Repository::Client module.
 
 - Bug fixes, etc.
 
