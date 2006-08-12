@@ -13,10 +13,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.949_01 of PAR, released August 5, 2006.
-
-This is a developer release. It contains many new changes and might
-introduce new bugs. It is intended for testing purposes.
+This document describes version 0.950 of PAR, released August 11, 2006.
 
 =head1 SYNOPSIS
 
