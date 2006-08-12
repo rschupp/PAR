@@ -658,6 +658,49 @@ sub unpar {
             next unless $content =~ /^PK\003\004/;
             push @rv, unpar(\$content, undef, undef, 1);
         }
+        
+        # extract all dlls from the .par to $ENV{PAR_TEMP}!
+        # XXX is this correct?
+        # Intended to fix problem with Alien::wxWidgets/Wx...
+        # for all zip members that end in .dll/.so (depending on platform)
+        foreach my $member ( $zip->membersMatching(
+            '\.'.quotemeta($Config{dlext}).'$'
+        ) ) {
+            next if $member->isDirectory or !$ENV{PAR_TEMP};
+            my $member_name = $member->fileName;
+            next unless $member_name =~ m{
+                    \/([^/]+)$
+                }x
+                or $member_name =~ m{
+                    ^([^/]+)$
+                };
+            my $extract_name = $1;
+            my $dest_name = File::Spec->catfile($ENV{PAR_TEMP}, $extract_name);
+            $member->extractToFileNamed($dest_name);
+        }
+
+        # Now push this path into usual library search paths
+        my $separator = $Config{path_sep};
+        my $tempdir = $ENV{PAR_TEMP};
+        foreach my $key (qw(
+            LD_LIBRARY_PATH
+            LIB_PATH
+            LIBRARY_PATH
+            PATH
+            DYLD_LIBRARY_PATH
+        )) {
+           if (defined $ENV{$key} and $ENV{$key} ne '') {
+               # Check whether it's already in the path. If so, don't
+               # append the PAR temp dir in order not to overflow the
+               # maximum length for ENV vars.
+               $ENV{$key} .= $separator . $tempdir
+                 unless grep { $_ eq $tempdir } split $separator, $ENV{$key};
+           }
+           else {
+               $ENV{$key} = $tempdir;
+           }
+       }
+    
     }
 
     $LastAccessedPAR = $zip;
