@@ -1,7 +1,7 @@
 abstract: Perl Archive Tookit
 author: Audrey Tang <cpan@audreyt.org>
 distribution_type: module
-generated_by: Module::Install version 0.63
+generated_by: Module::Install version 0.630
 license: perl
 name: PAR
 no_index: 
@@ -15,7 +15,7 @@ provides:
     version: 0.91
   PAR: 
     file: lib/PAR.pm
-    version: 0.942
+    version: 0.950
   PAR::Filter: 
     file: lib/PAR/Filter.pm
     version: 0.02
@@ -43,6 +43,6 @@ requires:
   File::Temp: 0.05
   Getopt::ArgvFile: 1.07
   Module::ScanDeps: 0.62
-  PAR::Dist: 0.13
+  PAR::Dist: 0.15
   perl: 5.6.0
-version: 0.942
+version: 0.950
