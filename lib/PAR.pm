@@ -415,7 +415,7 @@ sub _import_repository {
     }
     my $obj = PAR::Repository::Client->new(
         uri => $url,
-        auto_install => $opt{install},
+        auto_install => $opt->{install},
     );
 
     push @RepositoryObjects, $obj;
