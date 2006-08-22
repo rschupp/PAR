@@ -1,4 +1,15 @@
 
+[Changes for 0.952 - Aug 22, 2006]
+
+* New features
+	- Added the "install" option to the PAR loading syntax.
+	  If specified, the contents of the PAR distribution are
+	  permanently installed.
+	  This requires PAR::Repository::Client 0.04.
+
+* Bug fixes, etc.
+	- Fixed broken META.yml in 0.951.
+
 [Changes for 0.951 - Aug 12, 2006]
 (This includes any changes up to 0.950.)
 

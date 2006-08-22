@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.951';
+$PAR::VERSION = '0.952';
 
 use 5.006;
 use strict;
@@ -13,7 +13,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.951 of PAR, released August 12, 2006.
+This document describes version 0.952 of PAR, released August 22, 2006.
 
 =head1 SYNOPSIS
 
@@ -106,8 +106,13 @@ If you have L<PAR::Repository::Client> installed, you can do this:
 
 And PAR will fetch any modules you don't have from the specified PAR
 repository. For details on how this works, have a look at the SEE ALSO
-section below. Finally, you can combine the C<run> and C<repository>
-options to run an application directly from a repository!
+section below. If you specify the C<install =E<gt> 1> option in the C<use PAR>
+line above, the distribution containing C<Module> will be permanently
+installed on your system. (C<use PAR { repository =E<gt> 'http://foo/bar', install =E<gt> 1 };>)
+
+Finally, you can combine the C<run> and C<repository>
+options to run an application directly from a repository! (And you can add
+the C<install> option, too.)
 
   use PAR { repository => 'http://foo/bar/', run => 'my_app' };
   # Will not reach this point as we executed my_app,
@@ -405,10 +410,14 @@ sub _import_repository {
     my $url = $opt->{repository};
 
     eval "require PAR::Repository::Client; 1;";
-    if ($@) {
-        croak "In order to use the 'use PAR { repository => 'url' };' syntax, you need to install the PAR::Repository::Client module from CPAN. This module does not seem to be installed as indicated by the following error message: $@";
+    if ($@ or not PAR::Repository::Client->VERSION >= 0.04) {
+        croak "In order to use the 'use PAR { repository => 'url' };' syntax, you need to install the PAR::Repository::Client module (version 0.04 or later) from CPAN. This module does not seem to be installed as indicated by the following error message: $@";
     }
-    my $obj = PAR::Repository::Client->new(uri => $url);
+    my $obj = PAR::Repository::Client->new(
+        uri => $url,
+        auto_install => $opt{install},
+    );
+
     push @RepositoryObjects, $obj;
     return $obj;
 }
