@@ -6,10 +6,12 @@ use Module::Install::Base;
 
 use vars qw{$VERSION $ISCORE @ISA};
 BEGIN {
-	$VERSION = '0.63';
+	$VERSION = '0.64';
 	$ISCORE  = 1;
 	@ISA     = qw{Module::Install::Base};
 }
+
+#line 74
 
 sub par_base {
     my ($self, $base, $file) = @_;
@@ -72,8 +74,13 @@ END_MAKEFILE
     return $self;
 }
 
+#line 161
+
 sub fetch_par {
     my ($self, $url, $file, $quiet) = @_;
+    $url = '' if not defined $url;
+    $file = '' if not defined $file;
+    
     $url = $self->{url} || $self->par_base($url)->{url};
     my $ftp_url = $self->{ftp_url};
     $file ||= $self->{file};
@@ -94,6 +101,8 @@ END_MESSAGE
     return;
 }
 
+#line 197
+
 sub extract_par {
     my ($self, $file) = @_;
     return unless -f $file;
@@ -105,11 +114,22 @@ sub extract_par {
     } elsif ( $self->can_run('unzip') ) {
         return if system( unzip => $file, qw(-d blib) );
     }
+    else {
+        die <<'HERE';
+Could not extract .par archive because neither Archive::Zip nor a
+working 'unzip' binary are availlable. Please consider installing
+Archive::Zip.
+HERE
+    }
 
     local *PM_TO_BLIB;
     open PM_TO_BLIB, '> pm_to_blib' or die $!;
-    close PM_TO_BLIB;
+    close PM_TO_BLIB or die $!;
+
+    return 1;
 }
+
+#line 243
 
 sub make_par {
     my ($self, $file) = @_;
@@ -124,3 +144,5 @@ sub make_par {
 }
 
 1;
+
+#line 274
