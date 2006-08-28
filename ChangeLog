@@ -1,4 +1,8 @@
 
+[Changes for 0.953 - Aug 282, 2006]
+* Bug fixes, etc.
+	- Added optional POD tests.
+
 [Changes for 0.952 - Aug 22, 2006]
 
 * New features
