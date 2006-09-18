@@ -92,8 +92,10 @@ replaced by F<a.exe> instead.
 
     % pp -p -o out.par file     # Creates 'out.par' from 'file'
     % pp -B -p -o out.par file  # same as above, but bundles core modules
+                                # and removes any local paths from @INC
     % pp -P -o out.pl file      # Creates 'out.pl' from 'file'
     % pp -B -p -o out.pl file   # same as above, but bundles core modules
+                                # and removes any local paths from @INC
                                 # (-B is assumed when making executables)
 
     % pp -e "print 123"         # Pack a one-liner into 'a.out'
@@ -189,6 +191,10 @@ You may specify C<-A> multiple times.
 
 Bundle core modules in the resulting package.  This option is enabled
 by default, except when C<-p> or C<-P> is specified.
+
+Since PAR version 0.953, this also strips any local paths from the
+list of module search paths C<@INC> before running the contained
+script.
 
 =item B<-C>, B<--clean>
 

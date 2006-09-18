@@ -1,7 +1,10 @@
 
-[Changes for 0.953 - Aug 282, 2006]
+[Changes for 0.953 - Sep 18, 2006]
 * Bug fixes, etc.
 	- Added optional POD tests.
+	- Modified -B so that if -B is in effect, all entries are stripped
+	  out of @INC except for the PAR hooks. This happens right before
+	  the script contained in the pp-ed binary is executed.
 
 [Changes for 0.952 - Aug 22, 2006]
 

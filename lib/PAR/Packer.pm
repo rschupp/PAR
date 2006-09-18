@@ -1,5 +1,5 @@
 package PAR::Packer;
-$PAR::Packer::VERSION = '0.12';
+$PAR::Packer::VERSION = '0.13';
 
 use 5.006;
 use strict;
@@ -1426,7 +1426,10 @@ sub _can_run {
 
 sub _main_pl_multi {
     my ($self) = @_;
-    return << '__MAIN__';
+   
+    my $clean_inc = $self->_main_pl_clean();
+    
+    return << '__MAIN__' . $clean_inc . "PAR::_run_member(\$member, 1);\n\n";
 my $file = $ENV{PAR_PROGNAME};
 my $zip = $PAR::LibCache{$ENV{PAR_PROGNAME}} || Archive::Zip->new(__FILE__);
 $file =~ s/^.*[\/\\]//;
@@ -1436,7 +1439,6 @@ my $member = eval { $zip->memberNamed($file) }
                 || $zip->memberNamed("script/$file")
                 || $zip->memberNamed("script/$file.pl")
         or die qq(main.pl: Can't open perl script "$file": No such file or directory);
-PAR::_run_member($member, 1);
 
 __MAIN__
 }
@@ -1455,13 +1457,39 @@ sub _open {
 
 sub _main_pl_single {
     my ($self, $file) = @_;
+    
+    my $clean_inc = $self->_main_pl_clean();
+
     return << "__MAIN__";
 my \$zip = \$PAR::LibCache{\$ENV{PAR_PROGNAME}} || Archive::Zip->new(__FILE__);
 my \$member = eval { \$zip->memberNamed('$file') }
         or die qq(main.pl: Can't open perl script "$file": No such file or directory (\$zip));
+
+$clean_inc
+
 PAR::_run_member(\$member, 1);
 
 __MAIN__
+}
+
+sub _main_pl_clean {
+    my $self = shift;
+    my $opt = $self->{options};
+    
+    my $clean_inc = '';
+    if ($opt->{B}) { # bundle core modules
+        # weed out all @INC entries
+        $clean_inc = <<'__CLEAN_INC__';
+# Remove everything but PAR hooks from @INC
+my %keep = (
+    \&PAR::find_par => 1,
+    \&PAR::find_par_last => 1,
+);
+@INC = grep { exists $keep{$_} } @INC;
+__CLEAN_INC__
+    };
+
+    return $clean_inc;
 }
 
 sub DESTROY {
