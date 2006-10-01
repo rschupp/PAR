@@ -23,7 +23,7 @@
 #
 #
 ########################################################################
-our $VERSION = 0.15;
+our $VERSION = 0.16;
 ########################################################################
 # Prior to each test
 #   . Remove any possible files that could exist from a previous
@@ -216,13 +216,13 @@ sub deltree {
    # Foreach file in directory...
    foreach $file (readdir($dir_handle)) {
       next if $file =~ /^\.+$/; # Skip . or ..
-      if (-d ("$dir/$file")) {
-        $error = deltree("$dir/$file", $level, $message_ref); # Recursion!
+      if (-d File::Spec->catfile($dir, $file)) {
+        $error = deltree(File::Spec->catfile($dir, $file), $level, $message_ref); # Recursion!
         if (!$ignore_errors) {
           return ($error) if ($error == EXIT_FAILURE);
         }
       } else {
-        if (!(unlink ("$dir/$file"))) {
+        if (!(unlink File::Spec->catfile($dir, $file))) {
           if (!$ignore_errors) {
             $$message_ref =
                  "deltree_msg050:Could not delete $dir/$file :$!:\n"       .
@@ -442,7 +442,7 @@ sub pp_minus_o_hello_hello_dot_pl {
   #--------------------------------------------------------------------
 
   my $error = EXIT_FAILURE;
-  my $test_file = $test_dir . "/$hello_pl_file";
+  my $test_file = File::Spec->catfile($test_dir, $hello_pl_file);
   my $pipe_command_string = "";
   my $cmd = "";
   my $sub_test = 0;
@@ -2136,7 +2136,7 @@ sub pp_minus_I_foo_hello {
   #--------------------------------------------------------------------
 
   my $error = EXIT_FAILURE;
-  my $hidden_dir = $test_dir . "/$SUBDIR1";
+  my $hidden_dir = File::Spec->catdir($test_dir, $SUBDIR1);
   my $pipe_command_string = "";
   my $cmd = "";
   my $sub_test = 0;
@@ -2175,7 +2175,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file(  $hidden_dir . "/hidden_print\.pm",
+  $error = create_file(  File::Spec->catfile($hidden_dir, "hidden_print\.pm"),
                          "",
                          $verbose,
                          $message_ref,
@@ -2188,7 +2188,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file( $test_dir . "/foo\.pl",
+  $error = create_file( File::Spec->catfile($test_dir, "foo\.pl"),
                         "",
                         $verbose,
                         $message_ref,
@@ -2294,7 +2294,7 @@ sub hidden_print {
   print ("About to remove a file and try executable again\n") if ($verbose);
   $error = remove_file_and_try_executable_again
                                   (
-                                    "$test_dir/foo.pl", # File to remove
+                                    File::Spec->catfile($test_dir, "foo.pl"), # File to remove
                                     $test_number,
                                     $sub_test++,
                                     $test_name_string,
@@ -2359,7 +2359,7 @@ sub pp_minus_lib_foo_hello {
 
 
   my $error = EXIT_FAILURE;
-  my $foo_dir = $test_dir . "/$SUBDIR1";
+  my $foo_dir = File::Spec->catdir($test_dir, $SUBDIR1);
   my $pipe_command_string = "";
   my $cmd = "";
   my $sub_test = 0;
@@ -2397,7 +2397,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file(  $foo_dir . "/hidden_print\.pm",
+  $error = create_file(  File::Spec->catfile($foo_dir, "hidden_print\.pm"),
                          "",
                          $verbose,
                          $message_ref,
@@ -2410,7 +2410,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file( $test_dir . "/foo\.pl",
+  $error = create_file( File::Spec->catfile($test_dir, "foo\.pl"),
                         "",
                         $verbose,
                         $message_ref,
@@ -2517,7 +2517,7 @@ sub hidden_print {
   print ("About to remove a file and try executable again\n") if ($verbose);
   $error = remove_file_and_try_executable_again
                                   (
-                                    "$foo_dir/hidden_print\.pm",
+                                    File::Spec->catfile($foo_dir, "hidden_print\.pm"),
                                     $test_number,
                                     $sub_test++,
                                     $test_name_string,
@@ -2596,11 +2596,11 @@ sub pp_minus_I_foo_minus_I_bar_hello {
   #--------------------------------------------------------------------
 
   my $error = EXIT_FAILURE;
-  my $foo_dir = $test_dir . "/$SUBDIR1";
-  my $bar_dir = $test_dir . "/$SUBDIR2";
-  my $foo_dir_file = $foo_dir . "/hidden_print_caller\.pm";
-  my $bar_dir_file = $bar_dir . "/hidden_print\.pm";
-  my $foo_file = $test_dir . "/foo\.pl";
+  my $foo_dir = File::Spec->catdir($test_dir, $SUBDIR1);
+  my $bar_dir = File::Spec->catdir($test_dir, $SUBDIR2);
+  my $foo_dir_file = File::Spec->catfile($foo_dir, "hidden_print_caller\.pm");
+  my $bar_dir_file = File::Spec->catfile($bar_dir, "hidden_print\.pm");
+  my $foo_file = File::Spec->catfile($test_dir, "foo\.pl");
 
   my $further_subdir = "";
   my $further_file = "";
@@ -2866,8 +2866,8 @@ sub pp_minus_lib_foo_minus_lib_bar_hello {
   #--------------------------------------------------------------------
 
   my $error = EXIT_FAILURE;
-  my $foo_dir = $test_dir . "/$SUBDIR1";
-  my $bar_dir = $test_dir . "/$SUBDIR2";
+  my $foo_dir = File::Spec->catdir($test_dir, $SUBDIR1);
+  my $bar_dir = File::Spec->catdir($test_dir, $SUBDIR2);
   my $pipe_command_string = "";
   my $cmd = "";
   my $sub_test = 0;
@@ -2923,7 +2923,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file(  $bar_dir . "/hidden_print\.pm",
+  $error = create_file(  File::Spec->catfile($bar_dir, "hidden_print\.pm"),
                          "",
                          $verbose,
                          $message_ref,
@@ -2936,7 +2936,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file(  $foo_dir . "/hidden_print_caller\.pm",
+  $error = create_file( File::Spec->catfile($foo_dir, "hidden_print_caller\.pm"),
                          "",
                          $verbose,
                          $message_ref,
@@ -2949,7 +2949,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file( "$test_dir/foo\.pl",
+  $error = create_file( File::Spec->catfile($test_dir, "foo\.pl"),
                         "",
                         $verbose,
                         $message_ref,
@@ -3057,7 +3057,7 @@ sub hidden_print {
   print ("About to remove a file and try executable again\n") if ($verbose);
   $error = remove_file_and_try_executable_again
                                   (
-                                    "$test_dir/foo\.pl",
+                                    File::Spec->catfile($test_dir, "foo\.pl"),
                                     $test_number,
                                     $sub_test++,
                                     $test_name_string,
@@ -3125,11 +3125,11 @@ sub pp_minus_M_foo_hidden_print_foo {
   #--------------------------------------------------------------------
 
   my $error = EXIT_FAILURE;
-  my $foo_dir = $test_dir . "/$SUBDIR1";
+  my $foo_dir = File::Spec->catdir($test_dir, $SUBDIR1);
   my $pipe_command_string = "";
   my $cmd = "";
   my $sub_test = 0;
-  my $hidden_print_file = "$foo_dir/hidden_print\.pm";
+  my $hidden_print_file = File::Spec->catfile($foo_dir, "hidden_print\.pm");
   my $print_cannot_locate_message = $FALSE;
 
 #..............................................
@@ -3177,7 +3177,7 @@ sub hidden_print {
   }
 
   #..........................................................
-  $error = create_file( $test_dir . "/foo\.pl",
+  $error = create_file( File::Spec->catfile($test_dir, "foo\.pl"),
                         "",
                         $verbose,
                         $message_ref,
@@ -3359,9 +3359,9 @@ sub pp_minus_M_foo_minus_M_bar_hello {
   my $pipe_command_string = "";
   my $cmd = "";
   my $sub_test = 0;
-  my $foo_dir = $test_dir . "/$SUBDIR1";
-  my $bar_dir = $test_dir . "/$SUBDIR2";
-  my $subdir_foo_file =  "$foo_dir/foo_1\.pm";
+  my $foo_dir = File::Spec->catdir($test_dir, $SUBDIR1);
+  my $bar_dir = File::Spec->catdir($test_dir, $SUBDIR2);
+  my $subdir_foo_file =  File::Spec->catfile($foo_dir, "foo_1\.pm");
   my $print_cannot_locate_message = $FALSE;
 
 #..............................................
@@ -3424,7 +3424,7 @@ sub bar_1 {
   }
 
   #..........................................................
-  $error = create_file(  $bar_dir . "/bar_1\.pm",
+  $error = create_file(  File::Spec->catfile($bar_dir, "bar_1\.pm"),
                          "",
                          $verbose,
                          $message_ref,
@@ -3437,7 +3437,7 @@ sub bar_1 {
   }
 
   #..........................................................
-  $error = create_file( $test_dir . "/foo\.pl",
+  $error = create_file( File::Spec->catfile($test_dir, "foo\.pl"),
                         "",
                         $verbose,
                         $message_ref,
@@ -3632,7 +3632,7 @@ print $basename;
   }
 
   #..........................................................
-  $error = create_file(  $test_dir . "/$foo_pl_file",
+  $error = create_file( File::Spec->catfile($test_dir, $foo_pl_file),
                          "",
                          $verbose,
                          $message_ref,
@@ -3645,7 +3645,7 @@ print $basename;
   }
 
   #..........................................................
-  $cmd = 'pp ' . "\"$test_dir/$foo_pl_file\"";
+  $cmd = 'pp "' . File::Spec->catfile($test_dir, $foo_pl_file). '"';
   if (system("$cmd")) {
     $$message_ref = "\namsg284: sub $test_name_string cannot system $cmd\n";
     return (EXIT_FAILURE);
@@ -3680,7 +3680,8 @@ print $basename;
 
   #.................................................................
 
-  $cmd = 'pp -X File::Basename ' . "\"$test_dir/$foo_pl_file\"";
+  $cmd = 'pp -X File::Basename "'
+         . File::Spec->catfile($test_dir, $foo_pl_file) . '"';
   if (system("$cmd")) {
     $$message_ref = "\namsg286: sub $test_name_string cannot system $cmd\n";
     return (EXIT_FAILURE);
@@ -4490,7 +4491,7 @@ print "hello";
   }
 
   #..........................................................
-  $error = create_file(  $test_dir . "/$hello_pl_file",
+  $error = create_file(  File::Spec->catfile($test_dir, $hello_pl_file),
                          "",
                          $verbose,
                          $message_ref,
@@ -5720,7 +5721,7 @@ sub pp_gui_tests {
 
 
   #.................................................................
-  $file_to_copy = $orig_dir . '/hi.ico';
+  $file_to_copy = File::Spec->catfile($orig_dir, 'hi.ico');
   if(!(copy($file_to_copy, "$test_dir"))) {
       $$message_ref = "\namsg568: sub $test_name_string: cannot " .
                        "copy $file_to_copy to $test_dir:$!:\n";
@@ -6960,6 +6961,13 @@ $foo_executable = "foo$_out";
 $bar_executable = "bar$_out";
 
 $startdir ||= File::Spec->catdir(File::Spec->tmpdir, 'pp_switch_tests');
+File::Path::rmtree([$startdir]) if -d $startdir;
+
+# Clean up after us.
+END {
+    chdir(File::Spec->tmpdir);
+    File::Path::rmtree([$startdir]);
+}
 
 if ($debug) {
   # Open up a debug log to log the tests that passed
