@@ -1,4 +1,8 @@
 
+[Changes for 0.954 - Sep 26, 2006]
+* This release is equivalent to 0.953. The 0.953 CPAN upload is
+  broken!
+
 [Changes for 0.953 - Sep 18, 2006]
 * Bug fixes, etc.
 	- Added optional POD tests.

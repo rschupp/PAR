@@ -67,8 +67,9 @@ script/parl.pod
 script/pp
 script/tkpp
 SIGNATURE
-t/1-basic.t
-t/2-pp.t
+t/00-pod.t
+t/01-basic.t
+t/02-pp.t
 t/30-current_exec.t
 t/40-par-hashref.t
 t/hello.par
