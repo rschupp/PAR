@@ -17,12 +17,12 @@ my $EXEC = File::Spec->catfile( $FindBin::Bin, "test-10.exec" );
 my $TEMP = join '-', $FindBin::Bin, "tmp";
 my $SCRIPT = File::Spec->catdir( $FindBin::Bin, File::Spec->updir, "blib", "script" );
 my $PP = File::Spec->catfile( $SCRIPT, 'pp' );
-my $p = File::Spec->catdir("blib", "lib");
+my $blib_lib = File::Spec->catdir("blib", "lib");
 
 my $sep = $Config{path_sep};
 $sep = ':' if not defined $sep;
-$p .= $sep if $ENV{PERL5LIB};
-$ENV{PERL5LIB} = defined($ENV{PERL5LIB}) ? $p . $ENV{PERL5LIB} : $p;
+$blib_lib .= $sep if $ENV{PERL5LIB};
+$ENV{PERL5LIB} = defined($ENV{PERL5LIB}) ? $blib_lib . $ENV{PERL5LIB} : $blib_lib;
 
 
 
