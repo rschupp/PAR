@@ -1,5 +1,5 @@
 package PAR::Packer;
-$PAR::Packer::VERSION = '0.13';
+$PAR::Packer::VERSION = '0.14';
 
 use 5.006;
 use strict;
@@ -1481,11 +1481,18 @@ sub _main_pl_clean {
         # weed out all @INC entries
         $clean_inc = <<'__CLEAN_INC__';
 # Remove everything but PAR hooks from @INC
+use Data::Dumper;
 my %keep = (
     \&PAR::find_par => 1,
     \&PAR::find_par_last => 1,
 );
-@INC = grep { exists $keep{$_} } @INC;
+my $par_temp_dir = quotemeta( $ENV{PAR_TEMP} );
+@INC =
+    grep {
+        exists($keep{$_})
+        or $_ =~ /^$par_temp_dir/;
+    }
+    @INC;
 __CLEAN_INC__
     };
 

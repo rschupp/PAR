@@ -1,4 +1,11 @@
 
+[Changes for 0.955 - Oct  3, 2006]
+* Bug fixes, etc.
+	- 0.952 introduced removal of system module search paths if -B is in
+	  effect. This resulted in some valid PAR-related paths being removed
+	  as well. Fixed. Upgrading from 0.952 and 0.954 is suggested.
+	- Changed the use of hard-coded '/' as path-separator to using File::Spec.
+
 [Changes for 0.954 - Sep 26, 2006]
 * This release is equivalent to 0.953. The 0.953 CPAN upload is
   broken!

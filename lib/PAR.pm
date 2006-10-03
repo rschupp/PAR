@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.954';
+$PAR::VERSION = '0.955';
 
 use 5.006;
 use strict;
@@ -13,7 +13,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.953 of PAR, released September 18, 2006.
+This document describes version 0.955 of PAR, released October 3, 2006.
 
 =head1 SYNOPSIS
 
@@ -487,7 +487,8 @@ sub _extract_inc {
         rmdir("$inc.lock");
     }
 
-    unshift @INC, grep -d, map join('/', $inc, @$_),
+    require File::Spec;
+    unshift @INC, grep -d, map File::Spec->catdir($inc, @$_),
         [ 'lib' ], [ 'arch' ], [ $arch ], [ $ver ], [ $ver, $arch ], [];
 }
 
