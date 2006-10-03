@@ -15,7 +15,7 @@ provides:
     version: 0.91
   PAR: 
     file: lib/PAR.pm
-    version: 0.954
+    version: 0.956
   PAR::Filter: 
     file: lib/PAR/Filter.pm
     version: 0.02
@@ -34,7 +34,7 @@ provides:
     version: 0.09
   PAR::Packer: 
     file: lib/PAR/Packer.pm
-    version: 0.13
+    version: 0.15
 recommends: 
   Digest: Module::Signature
 requires: 
@@ -45,4 +45,4 @@ requires:
   Module::ScanDeps: 0.66
   PAR::Dist: 0.19
   perl: 5.6.0
-version: 0.954
+version: 0.956
