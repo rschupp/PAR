@@ -1,4 +1,9 @@
 
+[Changes for 0.957 - Oct  4, 2006]
+* Bug fixes, etc.
+	- Fix executable PARs top properly detect embedded scripts
+	  named the same as the executable. (Jesse Vincent)
+
 [Changes for 0.956 - Oct  3, 2006]
 * This is another hotfix release. Fixed a mindless bug introduced in 0.955.
 

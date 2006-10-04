@@ -13,7 +13,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.955 of PAR, released October 3, 2006.
+This document describes version 0.957 of PAR, released October 3, 2006.
 
 =head1 SYNOPSIS
 
@@ -303,6 +303,18 @@ sub import {
             "main.pl",
         );
 
+        if ($progname and !$member) {
+            require File::Spec;
+            my @path = File::Spec->splitdir($progname);
+            my $filename = pop @path;
+            $member = _first_member( $zip,
+                "script/".$filename,
+                "script/".$filename.".pl",
+                $filename,
+                $filename.".pl",
+            )
+        }
+
         # finally take $ARGV[0] as the hint for file to run
         if (defined $ARGV[0] and !$member) {
             $member = _first_member( $zip,
@@ -313,7 +325,9 @@ sub import {
             ) or die qq(PAR.pm: Can't open perl script "$ARGV[0]": No such file or directory);
             shift @ARGV;
         }
-        elsif (!$member) {
+
+
+        if (!$member) {
             die "Usage: $0 script_file_name.\n";
         }
 
