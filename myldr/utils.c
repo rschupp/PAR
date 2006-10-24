@@ -104,16 +104,23 @@ struct stat PL_statbuf;
         return(prog);
     }
 
-#if defined __linux__ || defined __FreeBSD__
+    /* I'm commenting out this block because using par_current_exec_proc()
+     * ends up breaking the PAR feature of inferring the script-to-be-run
+     * from the name of the executable in case of symlinks because /proc/
+     * has the name of the executable and not that of the symlink.
+     */
+/*
+  #if defined __linux__ || defined __FreeBSD__
     ret = par_current_exec_proc();
-#else
+  #else
     ret = NULL;
-#endif
+  #endif
 
     if( ret != NULL ) {
         par_setenv( "PAR_PROGNAME", ret );
         return ret;
     }
+*/
 
     /* Walk through PATH (path), looking for ourself (prog).
         This fails if we are invoked in an obscure manner;
