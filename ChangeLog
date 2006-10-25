@@ -1,21 +1,28 @@
 
+[Changes for 0.958 - Oct 25, 2006]
+* Bug fixes, etc.
+    - Modules included with the -M option to pp were previously scanned
+      for dependencies but not mapped through the
+      %Module::ScanDeps::Preload hash for custom dependencies. That's
+      fixed now.
+
 [Changes for 0.957 - Oct 24, 2006]
 * Bug fixes, etc.
-	- Fix executable PARs top properly detect embedded scripts
-	  named the same as the executable. (Jesse Vincent)
-	- Comment out the call to par_current_exec_proc (in the C loader)
-	  which breaks the use of symlinks to pp-ed executables when not
-	  called with a path. (I.e. using a search in $PATH).
+    - Fix executable PARs top properly detect embedded scripts
+      named the same as the executable. (Jesse Vincent)
+    - Comment out the call to par_current_exec_proc (in the C loader)
+      which breaks the use of symlinks to pp-ed executables when not
+      called with a path. (I.e. using a search in $PATH).
 
 [Changes for 0.956 - Oct  3, 2006]
 * This is another hotfix release. Fixed a mindless bug introduced in 0.955.
 
 [Changes for 0.955 - Oct  3, 2006]
 * Bug fixes, etc.
-	- 0.952 introduced removal of system module search paths if -B is in
-	  effect. This resulted in some valid PAR-related paths being removed
-	  as well. Fixed. Upgrading from 0.952 and 0.954 is suggested.
-	- Changed the use of hard-coded '/' as path-separator to using File::Spec.
+    - 0.952 introduced removal of system module search paths if -B is in
+      effect. This resulted in some valid PAR-related paths being removed
+      as well. Fixed. Upgrading from 0.952 and 0.954 is suggested.
+    - Changed the use of hard-coded '/' as path-separator to using File::Spec.
 
 [Changes for 0.954 - Sep 26, 2006]
 * This release is equivalent to 0.953. The 0.953 CPAN upload is
@@ -23,21 +30,21 @@
 
 [Changes for 0.953 - Sep 18, 2006]
 * Bug fixes, etc.
-	- Added optional POD tests.
-	- Modified -B so that if -B is in effect, all entries are stripped
-	  out of @INC except for the PAR hooks. This happens right before
-	  the script contained in the pp-ed binary is executed.
+    - Added optional POD tests.
+    - Modified -B so that if -B is in effect, all entries are stripped
+      out of @INC except for the PAR hooks. This happens right before
+      the script contained in the pp-ed binary is executed.
 
 [Changes for 0.952 - Aug 22, 2006]
 
 * New features
-	- Added the "install" option to the PAR loading syntax.
-	  If specified, the contents of the PAR distribution are
-	  permanently installed.
-	  This requires PAR::Repository::Client 0.04.
+    - Added the "install" option to the PAR loading syntax.
+      If specified, the contents of the PAR distribution are
+      permanently installed.
+      This requires PAR::Repository::Client 0.04.
 
 * Bug fixes, etc.
-	- Fixed broken META.yml in 0.951.
+    - Fixed broken META.yml in 0.951.
 
 [Changes for 0.951 - Aug 12, 2006]
 (This includes any changes up to 0.950.)

@@ -1,5 +1,5 @@
 package PAR::Packer;
-$PAR::Packer::VERSION = '0.15';
+$PAR::Packer::VERSION = '0.16';
 
 use 5.006;
 use strict;
@@ -675,8 +675,32 @@ sub pack_manifest_hash {
     else {
         %skip = (%skip, map { $_, 1 } @SharedLibs);
     }
-    my @files = (map (&$inc_find($_), @modules), @$input);
 
+    my $add_deps = $self->_obj_function($fe, 'add_deps');
+
+    my @files; # files to scan
+    # Apply %Preload to the -M'd modules and add them to the list of
+    # files to scan
+    foreach my $module (@modules) {
+        my $file = &$inc_find($module);
+        push @files, $file;
+        
+        my $preload = Module::ScanDeps::_get_preload($module) or next;
+        
+        $add_deps->(
+            used_by => $file,
+            rv      => \%map,
+            modules => $preload,
+            skip    => \%skip,
+#            warn_missing => $args->{warn_missing},
+        );
+        push @files, map {&$inc_find($_)} @$preload;
+    }
+    push @files, @$input;
+
+    # Search for scannable code in all -I'd paths
+    push @Module::ScanDeps::IncludeLibs, @{$opt->{I}} if $opt->{I};
+    
     my $scan_dispatch =
       $opt->{n}
       ? $self->_obj_function($fe, 'scan_deps_runtime')
@@ -696,8 +720,6 @@ sub pack_manifest_hash {
 
     %skip = map { $_, 1 } map &$inc_find($_), @exclude;
     %skip = (%skip, map { $_, 1 } @SharedLibs);
-
-    my $add_deps = $self->_obj_function($fe, 'add_deps');
 
     &$add_deps(
         rv      => \%map,
