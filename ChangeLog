@@ -6,6 +6,11 @@
       %Module::ScanDeps::Preload hash for custom dependencies. That's
       fixed now.
 
+* New features
+    - The "use PAR { repository => $url };" syntax now also supports
+      the use of user-constructed PAR::Repository::Client objects instead
+      of an URL.
+
 [Changes for 0.957 - Oct 24, 2006]
 * Bug fixes, etc.
     - Fix executable PARs top properly detect embedded scripts

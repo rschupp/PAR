@@ -106,7 +106,9 @@ If you have L<PAR::Repository::Client> installed, you can do this:
 
 And PAR will fetch any modules you don't have from the specified PAR
 repository. For details on how this works, have a look at the SEE ALSO
-section below. If you specify the C<install =E<gt> 1> option in the C<use PAR>
+section below. Instead of an URL or local path, you can construct an
+L<PAR::Repository::Client> object manually and pass that to PAR.
+If you specify the C<install =E<gt> 1> option in the C<use PAR>
 line above, the distribution containing C<Module> will be permanently
 installed on your system. (C<use PAR { repository =E<gt> 'http://foo/bar', install =E<gt> 1 };>)
 
@@ -427,10 +429,19 @@ sub _import_repository {
     if ($@ or not PAR::Repository::Client->VERSION >= 0.04) {
         croak "In order to use the 'use PAR { repository => 'url' };' syntax, you need to install the PAR::Repository::Client module (version 0.04 or later) from CPAN. This module does not seem to be installed as indicated by the following error message: $@";
     }
-    my $obj = PAR::Repository::Client->new(
-        uri => $url,
-        auto_install => $opt->{install},
-    );
+
+    my $obj;
+
+    # Support existing clients passed in as objects.
+    if (ref($url) and UNIVERSAL::isa($obj, PAR::Repository::Client)) {
+        $obj = $url;
+    }
+    else {
+        $obj = PAR::Repository::Client->new(
+            uri => $url,
+            auto_install => $opt->{install},
+        );
+    }
 
     push @RepositoryObjects, $obj;
     return $obj;
