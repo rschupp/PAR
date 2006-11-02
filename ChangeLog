@@ -10,6 +10,7 @@
     - The "use PAR { repository => $url };" syntax now also supports
       the use of user-constructed PAR::Repository::Client objects instead
       of an URL.
+    - Updated PAR/FAQ.pod with the new FAQ's from the PAR wiki.
 
 [Changes for 0.957 - Oct 24, 2006]
 * Bug fixes, etc.
