@@ -688,7 +688,7 @@ sub _set_par_temp {
     }
 
     foreach my $path (
-        (map $ENV{$_}, qw( TMPDIR TEMP TMP )),
+        (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMPDIR TEMP TMP )),
         qw( C:\\TEMP /tmp . )
     ) {
         next unless $path and -d $path and -w $path;

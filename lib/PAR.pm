@@ -202,7 +202,8 @@ Here is a description of the variables the previous paths.
 
 I<TEMP> is a temporary directory, which can be set via 
 C<$ENV{PAR_GLOBAL_TMPDIR}>,
-C<$ENV{TMPDIR}>, C<$ENV{TEMP}> or C<$ENV{TMP}>, in that order of priority.
+C<$ENV{PAR_TMPDIR}>, C<$ENV{TMPDIR}>, C<$ENV{TEMPDIR}>, C<$ENV{TEMP}>
+or C<$ENV{TMP}>, in that order of priority.
 If none of those are set, I<C:\TEMP>, I</tmp> are checked.  If neither
 of them exists, I<.> is used.
 
@@ -775,7 +776,7 @@ sub _set_par_temp {
     require File::Spec;
 
     foreach my $path (
-        (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMP TMP )),
+        (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMPDIR TEMP TMP )),
         qw( C:\\TEMP /tmp . )
     ) {
         next unless $path and -d $path and -w $path;

@@ -33,6 +33,7 @@ inc/Test/Builder/Module.pm
 inc/Test/More.pm
 lib/App/Packer/PAR.pm
 lib/PAR.pm
+lib/PAR/Environment.pod
 lib/PAR/FAQ.pod
 lib/PAR/Filter.pm
 lib/PAR/Filter/Bleach.pm

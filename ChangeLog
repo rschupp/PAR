@@ -5,12 +5,20 @@
       for dependencies but not mapped through the
       %Module::ScanDeps::Preload hash for custom dependencies. That's
       fixed now.
+    - $ENV{PAR_RUN} isn't set by PAR::Packer any more because nothing in
+      the PAR sources uses it. $ENV{PAR_RUN} is no longer used by PAR
+      at all.
+    - Unified the environment variables which are looked at for
+      finding the system's temporary directory.
 
 * New features
     - The "use PAR { repository => $url };" syntax now also supports
       the use of user-constructed PAR::Repository::Client objects instead
       of an URL.
     - Updated PAR/FAQ.pod with the new FAQ's from the PAR wiki.
+    - Added a POD file PAR/Environment.pod which is intended to become
+      an index of all environment variables PAR uses of its own or
+      recognizes from its users. Still mostly a stub.
 
 [Changes for 0.957 - Oct 24, 2006]
 * Bug fixes, etc.
