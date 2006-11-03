@@ -82,7 +82,14 @@ sub new {
     # exit gracefully and clean up after ourselves.
     # note.. in constructor because of conflict.
 
-    $ENV{PAR_RUN} = 1;
+    # Up to PAR 0.957, we set the following ENV variable, but
+    # it is never, ever used anywhere in the rest of the
+    # PAR or M::SD sources, so in order to remove clutter, we
+    # comment it out. This notice and the following commented
+    # out line should be removed in a future version if no
+    # breakage occurred.
+
+    # $ENV{PAR_RUN} = 1;
     my $self = bless {}, $class;
 
     $self->set_args($args)      if ($args);
