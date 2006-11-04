@@ -78,7 +78,7 @@ sub new {
     my ($class, $args, $opt, $frontend) = @_;
 
     $SIG{INT} = sub { exit() } if (!$SIG{INT});
-
+use Data::Dumper; warn Dumper $opt;
     # exit gracefully and clean up after ourselves.
     # note.. in constructor because of conflict.
 
