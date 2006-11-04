@@ -5,7 +5,7 @@ PAR::Environment - Index and reference of PAR environment variables
 =head1 DESCRIPTION
 
 PAR uses various environment variables both during the building process of
-executables or PAR archives and the I<use> of them. Since they wealth of
+executables or PAR archives and the I<use> of them. Since the wealth of
 combinations and settings might confuse one or the other (like me), this
 document is intended to document all environment variables which PAR uses.
 
@@ -100,7 +100,7 @@ the child process that it's the child.
 You should not rely on this variable outside of the PAR binary loader
 code. For a slightly more detailed discussion, please refer to the
 F<who_am_i.txt> documentation file in the PAR source distribution
-which was contributed by Alan Steward.
+which was contributed by Alan Stewart.
 
 =head2 PAR_TEMP
 
@@ -196,7 +196,7 @@ E<lt>cpan@audreyt.orgE<gt>.
 This document: Copyright 2006 by Steffen Mueller,
 E<lt>smueller@cpan.orgE<gt>
 
-Some information has been taken from Alan Steward's extra documentation in the
+Some information has been taken from Alan Stewart's extra documentation in the
 F<contrib/> folder of the PAR distribution.
 
 This program or documentation is free software; you can redistribute it and/or modify it
