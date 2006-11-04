@@ -15,6 +15,13 @@
     - The "use PAR { repository => $url };" syntax now also supports
       the use of user-constructed PAR::Repository::Client objects instead
       of an URL.
+    - The -F (module code filter) option now supports selective filtering
+      of modules. The syntax is "-F FILTER=REGEX" or - as before -
+      "-F FILTER". The regular expression is applied to the *file name*,
+      of the module inside the PAR (e.g. Foo/Bar.pm). This behaviour was
+      chosen over matching against the module name (e.g. Foo::Bar) because
+      the filters can be applied to module-like and script files as well
+      (.pl, .al, etc.).
     - Updated PAR/FAQ.pod with the new FAQ's from the PAR wiki.
     - Added a POD file PAR/Environment.pod which is intended to become
       an index of all environment variables PAR uses of its own or

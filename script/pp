@@ -287,10 +287,20 @@ multiple times.
 
 Log the output of packaging to a file rather than to stdout.
 
-=item B<-F>, B<--modfilter>=I<FILTER>
+=item B<-F>, B<--modfilter>=I<FILTER[=REGEX]>,
 
 Filter included perl module(s) with a L<PAR::Filter> subclass.
-You may specify multiple such filters.
+You may specify multiple such filters. By default, the I<PodStrip> filter
+is applied.
+
+Since PAR 0.958, you can use an optional regular expression (I<REGEX> above)
+to select the files in the archive which should be filtered. Example:
+
+  pp -o foo.exe -F Bleach=warnings\.pm$ foo.pl
+
+This creates a binary executable F<foo.exe> from F<foo.pl> packaging all files
+as usual except for files ending in C<warnings.pm> which are filtered with
+L<PAR::Filter::Bleach>.
 
 =item B<-M>, B<--module>=I<MODULE>
 
@@ -440,7 +450,8 @@ Jeff Goff for suggesting the name C<pp>.
 
 =head1 AUTHORS
 
-Audrey Tang E<lt>cpan@audreyt.orgE<gt>
+Audrey Tang E<lt>cpan@audreyt.orgE<gt>,
+Steffen Mueller E<lt>smueller@cpan.orgE<gt>
 
 L<http://par.perl.org/> is the official PAR website.  You can write
 to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty mail to

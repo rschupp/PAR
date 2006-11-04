@@ -1,5 +1,5 @@
 package PAR::Packer;
-$PAR::Packer::VERSION = '0.16';
+$PAR::Packer::VERSION = '0.17';
 
 use 5.006;
 use strict;
@@ -78,7 +78,7 @@ sub new {
     my ($class, $args, $opt, $frontend) = @_;
 
     $SIG{INT} = sub { exit() } if (!$SIG{INT});
-use Data::Dumper; warn Dumper $opt;
+
     # exit gracefully and clean up after ourselves.
     # note.. in constructor because of conflict.
 
@@ -762,12 +762,8 @@ sub pack_manifest_hash {
         $self->{pack_attrib}{old_member} = $old_member;
     }
 
-    my $verbatim = ($ENV{PAR_VERBATIM} || 0);
-
-    my $mod_filter =
-      PAR::Filter->new('PatchContent',
-        @{ $opt->{F} || ($verbatim ? [] : ['PodStrip']) },
-      );
+    # generate a selective set of filters from the options passed in via -F
+    my $mod_filter = _generate_filter($opt, 'F');
 
     (my $privlib = $Config{privlib}) =~ s{\\}{/}g;
     (my $archlib = $Config{archlib}) =~ s{\\}{/}g;
@@ -780,7 +776,7 @@ sub pack_manifest_hash {
         $self->_vprint(2, "... adding $map{$pfile} as ${root}lib/$pfile");
 
         if ($text{$pfile} or $pfile =~ /utf8_heavy\.pl$/i) {
-            my $content_ref = $mod_filter->apply($map{$pfile}, $pfile);
+            my $content_ref = $mod_filter->($map{$pfile}, $pfile);
 
             $full_manifest->{ $root . "lib/$pfile" } =
               [ string => $content_ref ];
@@ -810,7 +806,8 @@ sub pack_manifest_hash {
         }
     }
 
-    my $script_filter;
+    # For -f, we just accept normal filters - no selection of files.
+    my $script_filter = _generate_filter($opt, 'f');
     $script_filter = PAR::Filter->new(@{ $opt->{f} }) if ($opt->{f});
 
     my $in;
@@ -865,6 +862,52 @@ sub pack_manifest_hash {
     $dep_manifest->{'META.yml'} = [ string => "<<placeholder>>" ];
 
     return ($dep_manifest);
+}
+
+
+sub _generate_filter {
+    my $opt = shift; # options hash
+    my $key = shift; # F or f? modules or script?
+
+    my $verbatim = ($ENV{PAR_VERBATIM} || 0);
+
+    # List of filters. If the regex is undefined or matches the 
+    # file name (e.g. Foo/Bar.pm), apply filter to this module.
+    my @filters = (
+        { regex => undef, filter => PAR::Filter->new('PatchContent') },
+    );
+
+    foreach my $option (@{ $opt->{$key} }) {
+        my ($filter, $regex) = split /=/, $option, 2;
+        push @filters, {
+            regex => (defined $regex ? qr/$regex/ : $regex),
+            filter => PAR::Filter->new($filter)
+        };
+    }
+    my $podstrip = PAR::Filter->new('PodStrip');
+
+    my $filtersub = sub {
+        my $ref = shift;
+        my $name = shift;
+        my $filtered = 0;
+        foreach my $filterspec (@filters) {
+            if (
+                not defined $filterspec->{regex}
+                or $name =~ $filterspec->{regex}
+            ) {
+                $filtered++;
+                $ref = $filterspec->{filter}->apply($ref, $name);
+            }
+        }
+
+        # PodStrip by default, overridden by -F or $ENV{PAR_VERBATIM}
+        if ($filtered == 1 and not $verbatim) {
+            $ref = $podstrip->apply($ref, $name);
+        }
+        return $ref;
+    };
+
+    return $filtersub;
 }
 
 sub full_manifest_hash {
