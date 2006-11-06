@@ -38,6 +38,12 @@ my $static_exe = File::Spec->catfile('.', "static$exe");
 my $static_exe_link = File::Spec->catfile('.', "static$link_exe");
 my $parl_exe = File::Spec->catfile('..', 'script', "parl$exe");
 my $parldyn_exe = File::Spec->catfile('..', 'script', "parldyn$exe");
+my $strippedparl_mod = File::Spec->catfile(
+    '..', 'blib', 'lib', 'PAR', 'StrippedPARL', 'Static.pm'
+);
+my $strippedparldyn_mod = File::Spec->catfile(
+    '..', 'blib', 'lib', 'PAR', 'StrippedPARL', 'Dynamic.pm'
+);
 my $lib_path = join(' ', map qq(-I"$_"), @INC);
 
 my( $out, $ccdebug, $lddebug, $warn, $rm, $mv, $res, $long_literal );
@@ -128,7 +134,11 @@ else {
 }
 
 my $par = (($dynperl && $^O ne 'os2') ? $static_exe : $par_exe);
-my $all = ($dynperl ? "$parl_exe $parldyn_exe" : $parl_exe);
+my $all = (
+    $dynperl
+    ? "$parl_exe $parldyn_exe strippedparl strippedparldyn"
+    : "$parl_exe strippedparl"
+);
 
 $perl = Win32::GetShortPathName($perl)
     if $perl =~ / / and defined &Win32::GetShortPathName;
@@ -235,6 +245,16 @@ my_perl.c:
 
 my_par.c: $par_exe
 	\$(PERL) $f2c $par_exe \$@ load_me_1 $long_literal $chunk_size
+
+strippedparl: $static_exe
+	\$(PERL) -e 'chmod(oct("0600"), "$strippedparl_mod");'
+	\$(PERL) encode_append.pl $static_exe $strippedparl_mod
+	\$(PERL) -e 'chmod(oct("0444"), "$strippedparl_mod");'
+
+strippedparldyn: $par_exe
+	\$(PERL) -e 'chmod(oct("0600"), "$strippedparldyn_mod");'
+	\$(PERL) encode_append.pl $par_exe $strippedparldyn_mod
+	\$(PERL) -e 'chmod(oct("0444"), "$strippedparldyn_mod");'
 
 EOT
 # }
