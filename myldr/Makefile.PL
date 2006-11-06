@@ -224,7 +224,9 @@ EOT
 $parldyn_exe: $par_exe
 	$par_exe -I../myldr/.. -I../blib/lib $lib_path -q -B -O\$@
 
-$static_exe: sha1$o my_perl.c my_par.c static$o
+static$o: my_perl.c my_par.c mktmpdir.c
+
+$static_exe: sha1$o static$o
 	\$(LD) static$o \$(STATIC_LDFLAGS) $res $out$static_exe_link
 	\$(PERL) parlsig.pl $static_exe $par_exe $dynperl $chunk_size
 

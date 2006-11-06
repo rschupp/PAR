@@ -1,6 +1,8 @@
 
 [Changes for 0.958 - Oct 25, 2006]
 * Bug fixes, etc.
+    - myldr/Makefile.PL fix: make static.o depend on mktmpdir.c, my_perl.c,
+      my_par.c. (Roderich Schupp)
     - Modules included with the -M option to pp were previously scanned
       for dependencies but not mapped through the
       %Module::ScanDeps::Preload hash for custom dependencies. That's
