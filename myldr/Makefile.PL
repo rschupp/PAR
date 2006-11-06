@@ -107,16 +107,16 @@ elsif ($dynperl) {
     }
 
     foreach my $path (@paths) {
-	$libperl = File::Spec->catfile($path, $file);
-	last if -e $libperl;
-
-	# for MinGW
-	$libperl = File::Spec->catfile($path, $1) if $file =~ /^lib(.+)/;
-	last if -e $libperl;
-
+	    $libperl = File::Spec->catfile($path, $file);
+    	last if -e $libperl;
+        
+    	# for MinGW
+	    $libperl = File::Spec->catfile($path, $1) if $file =~ /^lib(.+)/;
+    	last if -e $libperl;
+        
        	# for Cygwin
-	$libperl = File::Spec->catfile($path, $file.$Config{_a});
-	last if -e $libperl;
+    	$libperl = File::Spec->catfile($path, $file.$Config{_a});
+    	last if -e $libperl;
     }
 
     # die "Can't find $file in (@paths) -- please contact the author!"
