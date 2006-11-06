@@ -83,7 +83,8 @@ char *par_current_exec( void )
 
 
 char *par_findprog(char *prog, char *path) {
-    char *p, *ret, filename[MAXPATHLEN];
+    char *p, filename[MAXPATHLEN];
+    /* char *ret; */ /* Commented out for reason described below */
     int proglen, plen;
     char *par_temp = par_getenv("PAR_TEMP");
 
