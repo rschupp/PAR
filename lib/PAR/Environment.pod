@@ -45,13 +45,22 @@ This works the same for executable binaries (F<.exe>, ...).
 If you are looking for the name and path of the pp-ed binary file,
 please refer to the C<PAR_PROGNAME> variable.
 
-=head2 PAR_ARGC
+=head2 PAR_ARGC, PAR_ARGV_0, PAR_ARGV_...
 
-# FIXME
+You should not rely on these variables outside of the PAR binary loader
+code.
 
-=head2 PAR_ARGV_0 ...
+These variables are set when a non-dependent pp-ed binary executable
+runs. The initially executed process extracts another binary and runs
+it as a child process. In order to pass its command line arguments to
+the child, the parent process sets C<PAR_ARG*> as they would be
+used in C programs: C<PAR_ARGC> has the number of arguments, C<PAR_ARGV_0>
+has the name of the executable, C<PAR_ARGV_*> are the command line arguments.
 
-# FIXME
+If you would like to access the name of the running program (script or binary),
+please refer to C<PAR_0> and C<PAR_PROGNAME> instead!
+
+Related: C<PAR_SPAWNED>, C<PAR_0>, C<PAR_PROGNAME>
 
 =head2 PAR_CLEAN
 
@@ -59,7 +68,12 @@ please refer to the C<PAR_PROGNAME> variable.
 
 =head2 PAR_DEBUG
 
-# FIXME
+If this variable is set to a true value and F<par.pl> is run,
+verbose output is sent to STDOUT or the logging filehandle.
+This is overridden by the C<-q> option to F<par.pl>.
+
+This currently onlys influences F<par.pl>. Whether this is the intended
+behaviour remains to be verified. # FIXME
 
 =head2 PAR_GLOBAL_CLEAN
 
@@ -100,7 +114,7 @@ the child process that it's the child.
 You should not rely on this variable outside of the PAR binary loader
 code. For a slightly more detailed discussion, please refer to the
 F<who_am_i.txt> documentation file in the PAR source distribution
-which was contributed by Alan Stewart.
+which was contributed by Alan Stewart. Related: C<PAR_ARGC>, C<PAR_ARGV_*>
 
 =head2 PAR_TEMP
 
