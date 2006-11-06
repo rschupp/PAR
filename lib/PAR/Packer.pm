@@ -1210,18 +1210,18 @@ sub _par_to_exe {
         $self->_fix_console() if $opt->{g};
     }
     elsif (eval { require Win32::Exe; 1 }) {
-	$self->_move_parl();
-	Win32::Exe->new($self->{parl})->update(
-	    icon => $opt->{i},
-	    info => $opt->{N},
-	);
+        $self->_move_parl();
+        Win32::Exe->new($self->{parl})->update(
+            icon => $opt->{i},
+            info => $opt->{N},
+        );
 
-	$self->_append_parl();
+        $self->_append_parl();
         $self->_generate_output();
 
         Win32::Exe->new($output)->update(
-	    icon => $opt->{i},
-	    info => $opt->{N},
+            icon => $opt->{i},
+            info => $opt->{N},
         );
 
         $self->_fix_console();
@@ -1230,7 +1230,7 @@ sub _par_to_exe {
         return;
     }
     else {
-	$self->_die("--icon and --info support needs Win32::Exe");
+        $self->_die("--icon and --info support needs Win32::Exe");
     }
 }
 
