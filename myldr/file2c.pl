@@ -90,38 +90,6 @@ sub print_chunk {
     print OUT $long_literal ? "\";\n" : "0\n};\n";
 }
 
-sub pod_strip {
-    my ($pl_text, $filename) = @_;
-
-    local $^W;
-
-    my $data = '';
-    $data = $1 if $pl_text =~ s/((?:^__DATA__\r?\n).*)//ms;
-
-    my $line = 1;
-    if ($pl_text =~ /^=(?:head\d|pod|begin|item|over|for|back|end)\b/) {
-        $pl_text = "\n$pl_text";
-        $line--;
-    }
-    $pl_text =~ s{(
-	(.*?\n)
-	=(?:head\d|pod|begin|item|over|for|back|end)\b
-	.*?\n
-	(?:=cut[\t ]*[\r\n]*?|\Z)
-	(\r?\n)?
-    )}{
-	my ($pre, $post) = ($2, $3);
-        "$pre#line " . (
-	    $line += ( () = ( $1 =~ /\n/g ) )
-	) . $post;
-    }gsex;
-    $pl_text = '#line 1 "' . ($filename) . "\"\n" . $pl_text
-        if length $filename;
-    $pl_text =~ s/^#line 1 (.*\n)(#!.*\n)/$2#line 2 $1/g;
-
-    return $pl_text . $data;
-}
-
 # local variables:
 # mode: cperl
 # end:
