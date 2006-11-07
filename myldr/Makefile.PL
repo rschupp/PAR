@@ -247,14 +247,14 @@ my_par.c: $par_exe
 	\$(PERL) $f2c $par_exe \$@ load_me_1 $long_literal $chunk_size
 
 strippedparl: $static_exe
-	\$(PERL) -e 'chmod(oct("0600"), "$strippedparl_mod");'
+	\$(PERL) -e "chmod(oct('0600'), '$strippedparl_mod');"
 	\$(PERL) encode_append.pl $static_exe $strippedparl_mod
-	\$(PERL) -e 'chmod(oct("0444"), "$strippedparl_mod");'
+	\$(PERL) -e "chmod(oct('0444'), '$strippedparl_mod');"
 
 strippedparldyn: $par_exe
-	\$(PERL) -e 'chmod(oct("0600"), "$strippedparldyn_mod");'
+	\$(PERL) -e "chmod(oct('0600'), '$strippedparldyn_mod');"
 	\$(PERL) encode_append.pl $par_exe $strippedparldyn_mod
-	\$(PERL) -e 'chmod(oct("0444"), "$strippedparldyn_mod");'
+	\$(PERL) -e "chmod(oct('0444'), '$strippedparldyn_mod');"
 
 EOT
 # }
