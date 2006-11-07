@@ -105,8 +105,9 @@ sub set_options {
     $self->{options} = \%opt;
     $self->_translate_options($self->{options});
 
-    $self->{parl} ||= $self->_can_run("parl$Config{_exe}")
-      or die("Can't find par loader");
+#    $self->{parl} ||= $self->_extract_parl('PAR::StrippedPARL::Static')
+#      or die("Can't find par loader");
+#   $self->{parl_is_temporary} = 1;
     $self->{dynperl} ||=
       $Config{useshrplib} && ($Config{useshrplib} ne 'false');
     $self->{script_name} = $opt{script_name} || $0;
@@ -1192,15 +1193,34 @@ sub _par_to_exe {
     my $dynperl  = $self->{dynperl};
     my $par_file = $self->{par_file};
 
-    my $parl = 'parl';
-    my $buf;
+    require PAR::StrippedPARL::Static;
+    require PAR::StrippedPARL::Dynamic;
 
-    $parl = 'parldyn' if ($opt->{d} and $dynperl);
+    my $parlclass = 'PAR::StrippedPARL::Static';
+    my $buf;
+    my $parl = 'parl';
+
+    if ($opt->{d} and $dynperl) {
+        $parlclass = 'PAR::StrippedPARL::Dynamic';
+        $parl = 'parldyn';
+    }
     $parl .= $Config{_exe};
 
-    $parl = 'par.pl' if ($opt->{P});
-    $self->{parl} = $self->_can_run($parl, $opt->{P})
-      or $self->_die("Can't find par loader");
+    if ($opt->{P}) {
+        # write as script
+        $parl = 'par.pl';
+        unless ( $parl = $self->_can_run($parl, $opt->{P}) ) {
+            $self->_die("par.pl not found");
+        }
+        $self->{parl} = $parl;
+    }
+    else {
+        # binary, either static or dynamic
+        $parl = $self->_extract_parl($parlclass)
+          or $self->_die("Can't find par loader");
+        $self->{parl_is_temporary} = 1;
+        $self->{parl} = $parl;
+    }
 
     if ($^O ne 'MSWin32' or $opt->{p} or $opt->{P}) {
         $self->_generate_output();
@@ -1233,6 +1253,34 @@ sub _par_to_exe {
         $self->_die("--icon and --info support needs Win32::Exe");
     }
 }
+
+# extracts a parl (static) or parldyn (dynamic) from the appropriate data class
+# using the class' write_data('file') method.
+# First argument must be the class name.
+# Returns the path and name of the file (or the empty list on failure).
+sub _extract_parl {
+    my $self = shift;
+    my $class = shift;
+
+    $self->_die("First argument to _extract_parl must be a class name")
+      if not defined $class;
+    $self->_die("Class '$class' is not a PAR(L) data class. Can't call '${class}->write_data()'")
+      if not $class->can('write_data');
+
+    my ($fh, $filename) = File::Temp::tempfile(
+        "parlXXXXXXX",
+        SUFFIX => $Config{_exe},
+    );
+    
+    my $success = $class->write_data($filename);
+    if (not $success) {
+        $self->_die("Failed to extract a parl from '$class' to file '$filename'");
+    }
+
+    chmod(oct('755'), $filename);
+    return $filename;
+}
+
 
 sub _fix_console {
     my ($self) = @_;
@@ -1322,7 +1370,15 @@ sub _generate_output {
         $self->{parl} = $^X;
     }
     $self->_vprint(0, "Running $self->{parl} @args");
-    system($self->{parl}, @args);
+
+    # Make sure the parl is callable. Prepend ./ if it's just a file name.
+    my $parl = $self->{parl};
+    my ($volume, $path, $file) = File::Spec->splitpath($parl);
+    if (not defined $path or $path eq '') {
+        $parl = File::Spec->catfile(File::Spec->curdir(), $parl);
+    }
+
+    system($parl, @args);
 }
 
 sub _strip_console {
@@ -1577,6 +1633,7 @@ sub DESTROY {
     my $opt      = $self->{options};
 
     unlink $par_file if ($par_file and !$opt->{S} and !$opt->{p});
+    unlink $self->{parl} if $self->{parl_is_temporary};
 }
 
 1;

@@ -4333,16 +4333,16 @@ sub pp_minus_v_tests {
   # 
   #      For v 1
   #           pp:\s+Packing\s+hello.pl
-  #           pp:\s+ Running.*parl.exe
+  #           pp:\s+ Running.*parl\w*.exe
   #      For v 2
   #           pp:\s+Packing\s+hello.pl
   #           pp:\s+Writing\s+PAR\s+on
-  #           pp:\s+ Running.*parl.exe
+  #           pp:\s+ Running.*parl\w*.exe
   #      For v 3
   #           pp:\s+Packing\s+hello.pl
   #           pp:\s+Writing\s+PAR\s+on
   #           pp:.* making\s+MANIFEST
-  #           pp:\s+ Running.*parl.exe
+  #           pp:\s+ Running.*parl\w*.exe
   # 
   # 
   #  . pipe the created executable and collect the results.
@@ -4430,20 +4430,20 @@ print "hello";
 
   my @results_to_expect_v = (
           'pp:\s+Packing\s+hello.pl',
-          'pp:\s+Running.*parl.exe',
+          'pp:\s+Running.*parl\w*\.exe',
   );
   
   my @results_to_expect_vv = (
           'pp:\s+Packing\s+hello.pl',
           'pp:\s+Writing\s+PAR\s+on',
-          'pp:\s+Running.*parl.exe',
+          'pp:\s+Running.*parl\w*\.exe',
   );
   
   my @results_to_expect_vvv = (
           'pp:\s+Packing\s+hello.pl',
           'pp:\s+Writing\s+PAR\s+on',
           'pp:.*ing\s+MANIFEST',
-          'pp:\s+Running.*parl.exe',
+          'pp:\s+Running.*parl\w*\.exe',
   );
 
 
@@ -4451,31 +4451,28 @@ print "hello";
   if ($os !~ m/^Win|cygwin/i) {
     @converted_array = ();
     foreach $line (@results_to_expect_v) {
-        $line =~ s/parl.exe/\/parl\\b/g;
+        $line =~ s/parl\\w\*\\\.exe/\\bparl\\w*\\b/g;
         push(@converted_array, ($line));
     }
-    @results_to_expect_v = ();
-    push(@results_to_expect_v, @converted_array);
+    @results_to_expect_v = @converted_array;
   }
     
   if ($os !~ m/^Win|cygwin/i) {
     @converted_array = ();
     foreach $line (@results_to_expect_vv) {
-        $line =~ s/parl.exe/\/parl\\b/g;
+        $line =~ s/parl\\w\*\\\.exe/\\bparl\\w*\\b/g;
         push(@converted_array, ($line));
     }
-    @results_to_expect_vv = ();
-    push(@results_to_expect_vv, @converted_array);
+    @results_to_expect_vv = @converted_array;
   }
     
   if ($os !~ m/^Win|cygwin/i) {
     @converted_array = ();
     foreach $line (@results_to_expect_vvv) {
-        $line =~ s/parl.exe/\/parl\\b/g;
+        $line =~ s/parl\\w\*\\\.exe/\\bparl\\w*\\b/g;
         push(@converted_array, ($line));
     }
-    @results_to_expect_vvv = ();
-    push(@results_to_expect_vvv, @converted_array);
+    @results_to_expect_vvv = @converted_array;
   }
 
   #..........................................................

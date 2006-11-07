@@ -14,6 +14,12 @@
       finding the system's temporary directory.
 
 * New features
+    - During the build process, PAR appends stripped down copies of parl
+      (and parldyn if applicable) to the data classes
+      PAR::StrippedPARL::Static and ::Dynamic. These
+      parls-without-embedded-modules are used for packaging so the formerly
+      embedded modules are now packaged from the packaging system. (Instead
+      of stemming from the system where PAR/parl was built.)
     - The "use PAR { repository => $url };" syntax now also supports
       the use of user-constructed PAR::Repository::Client objects instead
       of an URL.
