@@ -28,8 +28,9 @@ if (not defined $contents or $contents !~ /__DATA__\s*$/s) {
 }
 
 open my $ih, '<', $infile or die $!;
+binmode $ih;
 open $fh, '>>', $outfile or die $!;
-
+binmode $fh;
 print $fh pack 'u', <$ih>;
 close $ih;
 close $fh;
