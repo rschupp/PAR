@@ -73,7 +73,8 @@ script/tkpp
 SIGNATURE
 t/00-pod.t
 t/01-basic.t
-t/02-pp.t
+t/10-parl-generation.t
+t/20-pp.t
 t/30-current_exec.t
 t/40-par-hashref.t
 t/hello.par

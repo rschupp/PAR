@@ -52,12 +52,14 @@ sub write_parl {
     }
 
     # write out to a temporary file first
-    my (undef, $tfile) = File::Temp::tempfile(
+    my ($fh, $tfile) = File::Temp::tempfile(
         "parlXXXX",
         SUFFIX => $Config::Config{_exe}||'',
         DIR => File::Spec->tmpdir(),
-        OPEN => 0,
     );
+    close $fh;
+    # File::Temp, you suck!
+
     if (not $class->write_raw($tfile)) {
         unlink($tfile);
         warn "Could not write temporary parl (class $class) to file '$tfile'";
