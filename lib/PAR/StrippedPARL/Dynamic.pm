@@ -1,8 +1,12 @@
 package PAR::StrippedPARL::Dynamic;
+use strict;
+use warnings;
 use vars qw/$VERSION/;
 $VERSION = '0.958';
 
-my $Data_Pos = tell DATA;
+use base 'PAR::StrippedPARL::Base';
+
+our $Data_Pos = tell DATA;
 
 =head1 NAME
 
@@ -10,81 +14,34 @@ PAR::StrippedPARL::Dynamic - Data package containing a dynamic PARL
 
 =head1 SYNOPSIS
 
-  my $binary = PAR::StrippedPARL::Dynamic->get_data();
-  if (not defined $binary) {
-      die "Dynamic stripped PARL not available";
-  }
-  open my $fh, '>', 'parl' or die $!;
-  binmode $fh;
-  print $fh $binary;
-
-  # or:
-  unless( PAR::StrippedPARL::Dynamic->write_data('parldyn') ) {
-      die "Dynamic stripped PARL not available";
-  }
+  # For details, see PAR::StrippedPARL::Base.
+  PAR::StrippedPARL::Dynamic->write_parl($file) or die "Some error...";
 
 =head1 DESCRIPTION
 
 This class is internal to PAR. Do not use it outside of PAR.
 
 This class is basically just a container for a dynamic binary PAR loader
-which doesn't include the PAR code like the F<parldyn> or F<parldyn.exe>
+which doesn't include the PAR code like the F<parl> or F<parl.exe>
 you are used to. If you're really curious, I'll tell you it is
 just a copy of the F<myldr/par> (or F<myldr/par.exe>) file.
 
-The data is appended during the C<make> phase of the PAR build process.
+The data is appended during the C<make> phase of the PAR build process,
+but only if applicable: If you perl is static, you won't get the dynamic
+loader.
 
-If the binary data isn't appended during the build process, the two class
-methods will return the empty list. This is the case particularily if
-your perl was built statically.
+If the binary data isn't appended during the build process, the class
+methods will return the empty list.
 
 =head1 CLASS METHODS
 
-=head2 get_data
-
-Returns the binary data attached to this package or the empty list if
-the binary data could not be accessed.
-
-Returns the empty list on failure.
+Inherits the methods from L<PAR::StrippedPARL::Base>.
 
 =cut
 
-sub get_data {
+sub _data_pos {
     my $class = shift;
-    seek DATA, $Data_Pos, 0 or die $!;
-    binmode DATA;
-    local $/ = undef;
-    my $data = <DATA>;
-    $data =~ s/^\s*//;
-    my $binary = unpack 'u', $data;
-    return() if not defined $binary or $binary !~ /\S/;
-    return $binary;
-}
-
-=head2 write_data
-
-Takes a file name as argument and writes the binary data to the file.
-
-Returns true on success and the empty list on failure.
-
-=cut
-
-sub write_data {
-    my $class = shift;
-    my $file = shift;
-    if (not defined $file) {
-        warn "${class}->write_data() needs a file name as argument";
-        return();
-    }
-    my $binary = $class->get_data();
-    return() if not defined $binary;
-
-    open my $fh, '>', $file or die "Could not open file '$file' for writing: $!";
-    binmode $fh;
-    print $fh $binary;
-    close $fh;
-
-    return 1;
+    return $Data_Pos;
 }
 
 =head1 AUTHORS

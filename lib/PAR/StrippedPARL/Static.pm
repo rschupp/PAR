@@ -1,8 +1,12 @@
 package PAR::StrippedPARL::Static;
+use strict;
+use warnings;
 use vars qw/$VERSION/;
 $VERSION = '0.958';
 
-my $Data_Pos = tell DATA;
+use base 'PAR::StrippedPARL::Base';
+
+our $Data_Pos = tell DATA;
 
 =head1 NAME
 
@@ -10,18 +14,8 @@ PAR::StrippedPARL::Static - Data package containing a static PARL
 
 =head1 SYNOPSIS
 
-  my $binary = PAR::StrippedPARL::Static->get_data();
-  if (not defined $binary) {
-      die "Static stripped PARL not available";
-  }
-  open my $fh, '>', 'parl' or die $!;
-  binmode $fh;
-  print $fh $binary;
-
-  # or:
-  unless( PAR::StrippedPARL::Static->write_data('parl') ) {
-      die "Static stripped PARL not available";
-  }
+  # For details, see PAR::StrippedPARL::Base.
+  PAR::StrippedPARL::Static->write_parl($file) or die "Some error...";
 
 =head1 DESCRIPTION
 
@@ -34,56 +28,18 @@ just a copy of the F<myldr/static> (or F<myldr/static.exe>) file.
 
 The data is appended during the C<make> phase of the PAR build process.
 
-If the binary data isn't appended during the build process, the two class
+If the binary data isn't appended during the build process, the class
 methods will return the empty list.
 
 =head1 CLASS METHODS
 
-=head2 get_data
-
-Returns the binary data attached to this package or the empty list if
-the binary data could not be accessed.
-
-Returns the empty list on failure.
+Inherits the methods from L<PAR::StrippedPARL::Base>.
 
 =cut
 
-sub get_data {
+sub _data_pos {
     my $class = shift;
-    seek DATA, $Data_Pos, 0 or die $!;
-    binmode DATA;
-    local $/ = undef;
-    my $data = <DATA>;
-    $data =~ s/^\s*//;
-    my $binary = unpack 'u', $data;
-    return() if not defined $binary or $binary !~ /\S/;
-    return $binary;
-}
-
-=head2 write_data
-
-Takes a file name as argument and writes the binary data to the file.
-
-Returns true on success and the empty list on failure.
-
-=cut
-
-sub write_data {
-    my $class = shift;
-    my $file = shift;
-    if (not defined $file) {
-        warn "${class}->write_data() needs a file name as argument";
-        return();
-    }
-    my $binary = $class->get_data();
-    return() if not defined $binary;
-
-    open my $fh, '>', $file or die "Could not open file '$file' for writing: $!";
-    binmode $fh;
-    print $fh $binary;
-    close $fh;
-
-    return 1;
+    return $Data_Pos;
 }
 
 =head1 AUTHORS

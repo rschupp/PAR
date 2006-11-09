@@ -1255,7 +1255,9 @@ sub _par_to_exe {
 }
 
 # extracts a parl (static) or parldyn (dynamic) from the appropriate data class
-# using the class' write_data('file') method.
+# using the class' write_parl($file) method. Note that 'write_parl' extracts to
+# a temporary file first, then uses that plain parl to embed the core modules into
+# the file given as argument. This was taken from the PAR bootstrapping process.
 # First argument must be the class name.
 # Returns the path and name of the file (or the empty list on failure).
 sub _extract_parl {
@@ -1264,15 +1266,16 @@ sub _extract_parl {
 
     $self->_die("First argument to _extract_parl must be a class name")
       if not defined $class;
-    $self->_die("Class '$class' is not a PAR(L) data class. Can't call '${class}->write_data()'")
-      if not $class->can('write_data');
+    $self->_die("Class '$class' is not a PAR(L) data class. Can't call '${class}->write_parl()'")
+      if not $class->can('write_parl');
 
+    $self->_vprint(0, "Generating a fresh 'parl'.");
     my ($fh, $filename) = File::Temp::tempfile(
         "parlXXXXXXX",
         SUFFIX => $Config{_exe},
     );
     
-    my $success = $class->write_data($filename);
+    my $success = $class->write_parl($filename);
     if (not $success) {
         $self->_die("Failed to extract a parl from '$class' to file '$filename'");
     }
