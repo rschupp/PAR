@@ -75,9 +75,16 @@ struct stat PL_statbuf;
     }
 #endif
 
-    for ( i = 0 ; username == NULL && strlen(key = user_keys[i]) > 0 ; i++ ) {
-        if ( (val = (char *)par_getenv(key)) ) {
-            username = strdup(val);
+    /* Determine username */
+    username = get_username_from_getpwuid();
+    if ( username == NULL ) { /* fall back to env vars */
+        for (
+                i = 0 ;
+                username == NULL && strlen(key = user_keys[i]) > 0 ;
+                i++
+            )
+        {
+            if ( (val = (char *)par_getenv(key)) ) username = strdup(val);
         }
     }
 

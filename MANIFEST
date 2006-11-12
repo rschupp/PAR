@@ -54,6 +54,7 @@ META.yml
 myldr/encode_append.pl
 myldr/env.c
 myldr/file2c.pl
+myldr/usernamefrompwuid.c
 myldr/internals.c
 myldr/main.c
 myldr/Makefile.PL

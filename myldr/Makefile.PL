@@ -143,6 +143,21 @@ my $all = (
 $perl = Win32::GetShortPathName($perl)
     if $perl =~ / / and defined &Win32::GetShortPathName;
 
+
+# Determine whether we can find a config.h. If yes, include it in
+# usernamefrompwuid.h. If not, set I_PWD to undefined in that header.
+# -- Steffen
+my $configh = "$Config::Config{archlibexp}/CORE/config.h";
+open PWOUT, '> usernamefrompwuid.h' or die "open 'usernamefrompwuid.h': $!";
+if (not -f $configh) {
+    print PWOUT "#undef I_PWD\n";
+}
+else {
+    print PWOUT "#include \"$configh\"\n";
+}
+close PWOUT;
+
+
 print "Writing Makefile for the par$exe program\n";
 
 open OUT, "> Makefile" or die "open 'Makefile': $!";

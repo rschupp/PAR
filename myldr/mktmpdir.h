@@ -74,3 +74,5 @@ static const char *path_sep = ":";
 
 #include "utils.c"
 #include "sha1.c"
+#include "usernamefrompwuid.c"
+

@@ -780,9 +780,20 @@ sub _set_par_temp {
         qw( C:\\TEMP /tmp . )
     ) {
         next unless $path and -d $path and -w $path;
-        my $username = defined(&Win32::LoginName)
-            ? &Win32::LoginName()
-            : $ENV{USERNAME} || $ENV{USER} || 'SYSTEM';
+        my $username;
+        my $pwuid;
+        # does not work everywhere:
+        eval {($pwuid) = getpwuid($>) if defined $>;};
+
+        if ( defined(&Win32::LoginName) ) {
+            $username = &Win32::LoginName;
+        }
+        elsif (defined $pwuid) {
+            $username = $pwuid;
+        }
+        else {
+            $username = $ENV{USERNAME} || $ENV{USER} || 'SYSTEM';
+        }
         $username =~ s/\W/_/g;
 
         my $stmpdir = File::Spec->catdir($path, "par-$username");
