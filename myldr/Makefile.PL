@@ -13,6 +13,47 @@ use File::Basename;
 
 xsinit(undef);
 
+# used for searching libperls.
+sub find_file {
+    my $file = shift;
+
+    my @paths = (
+	    $Config{bin},
+    	File::Spec->catdir($Config{'archlibexp'}, 'CORE'),
+	    split(/\Q$Config{path_sep}\E/, $ENV{$Config{ldlibpthname}} || ''),
+    	split(/ /, $Config{libpth}),
+    );
+
+    my $libperl;
+    if ($libperl = DynaLoader::dl_findfile("-lperl")) {
+        if (-l $libperl) {
+            my $realpath = readlink($libperl);
+            if (!File::Spec->file_name_is_absolute($realpath)) {
+                $realpath = File::Spec->rel2abs(
+                    File::Spec->catfile(
+                        dirname($libperl) => $realpath
+                    )
+                );
+            }
+            $libperl = $realpath;
+        }
+        return $libperl if -e $libperl;
+    }
+
+    foreach my $path (@paths) {
+	    $libperl = File::Spec->catfile($path, $file);
+    	return $libperl if -e $libperl;
+        
+    	# for MinGW
+	    $libperl = File::Spec->catfile($path, $1) if $file =~ /^lib(.+)/;
+    	return $libperl if -e $libperl;
+        
+       	# for Cygwin
+    	$libperl = File::Spec->catfile($path, $file.$Config{_a});
+    	return $libperl if -e $libperl;
+    }
+}
+
 my $debug = $ENV{DEBUG};
 my $chunk_size = 30000;
 my $perl = $^X;
@@ -90,46 +131,21 @@ elsif ($dynperl) {
 
     $file =~ s/\.(?!\d)[^.]*$/.$Config{so}/;
 
-    my @paths = (
-	$Config{bin},
-	File::Spec->catdir($Config{'archlibexp'}, 'CORE'),
-	split(/\Q$Config{path_sep}\E/, $ENV{$Config{ldlibpthname}} || ''),
-	split(/ /, $Config{libpth}),
-    );
-
-    if ($libperl = DynaLoader::dl_findfile("-lperl")) {
-        if (-l $libperl) {
-            my $realpath = readlink($libperl);
-            if (!File::Spec->file_name_is_absolute($realpath)) {
-                $realpath = File::Spec->rel2abs(
-                    File::Spec->catfile(
-                        dirname($libperl) => $realpath
-                    )
-                );
-            }
-            $libperl = $realpath;
-        }
-        @paths = () if $libperl and -e $libperl;
-    }
-
-    foreach my $path (@paths) {
-	    $libperl = File::Spec->catfile($path, $file);
-    	last if -e $libperl;
-        
-    	# for MinGW
-	    $libperl = File::Spec->catfile($path, $1) if $file =~ /^lib(.+)/;
-    	last if -e $libperl;
-        
-       	# for Cygwin
-    	$libperl = File::Spec->catfile($path, $file.$Config{_a});
-    	last if -e $libperl;
+    $libperl = find_file($file);
+    if (not -e $libperl) {
+        $file =~ s/\.(?!\d)[^.]*$/.a/;
+        $libperl = find_file($file);
     }
 
     # die "Can't find $file in (@paths) -- please contact the author!"
     # 	unless -e $libperl;
     undef $dynperl if !-e $libperl;
 }
-else {
+
+if (not $dynperl) {
+    my $file = $Config{libperl};
+    $file = 'libperl.a' if $file eq 'libper'; # same redhat bug? Just making sure...
+    $libperl = find_file($file);
     $ldflags = $static_ldflags;
 }
 
