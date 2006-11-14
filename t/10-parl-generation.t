@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 31;
+use constant TEST_NO => 31;
+use Test::More tests => TEST_NO;
 
 use File::Spec;
 use File::Temp ();
@@ -23,6 +24,14 @@ my $parldyn  = File::Spec->catfile($builddir, 'script', 'parldyn' . $Config{_exe
 
 # static(.exe), parl(.exe) must exist
 ok(-f $static, 'Found the static build of parl in myldr');
+
+if (not -f $static) {
+    SKIP: {
+        skip "No static parl found. Test script cannot continue!", TEST_NO()-4;
+    }
+    exit();
+}
+
 ok(-f $parl,   'Found parl in script');
 
 
@@ -209,8 +218,10 @@ SKIP: {
 
 
 END {
-    unlink($static_tmp_file);
-    unlink($parl_tmp_file);
-    unlink($dyn_tmp_file);
-    unlink($parldyn_tmp_file);
+    for (
+        grep defined,
+        $static_tmp_file, $parl_tmp_file, $dyn_tmp_file, $parldyn_tmp_file
+    ) {
+        unlink($_);
+    }
 }
