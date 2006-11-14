@@ -11,6 +11,7 @@ XS(XS_Internals_PAR_BOOT) {
     GV* tmpgv;
     AV* tmpav;
     SV** svp;
+    SV* tmpsv;
     int i;
     int ok = 0;
     char *buf;
@@ -31,7 +32,7 @@ XS(XS_Internals_PAR_BOOT) {
         }
         if (ok == options_count - 1) {
             for (i = 1; i < options_count; i++) {
-                av_shift(tmpav);
+                tmpsv = av_shift(tmpav);
             }
         }
     }
