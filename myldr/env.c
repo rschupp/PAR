@@ -50,12 +50,12 @@ static const char sccsid[] = "@(#)setenv.c	8.1 (Berkeley) 6/4/93";
  */
 static char *
 __findenv(name, offset)
-	register char *name;
+	register const char *name;
 	int *offset;
 {
 	extern char **environ;
 	register int len;
-	register char *np;
+	register const char *np;
 	register char **p, *c;
 
 	if (name == NULL || environ == NULL)
