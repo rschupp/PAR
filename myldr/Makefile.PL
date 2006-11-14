@@ -205,6 +205,7 @@ clean:
 	-\$(RM) main$o my_par_pl$o static$o
 	-\$(RM) sha1$o sha1.c
 	-\$(RM) *.opt *.pdb perlxsi.c
+	-\$(RM) usernamefrompwuid.h
 	\$(MV) Makefile Makefile.old
 
 realclean: clean
