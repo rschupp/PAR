@@ -278,9 +278,9 @@ my_perl.c:
 my_par.c: $par_exe
 	\$(PERL) $f2c $par_exe \$@ load_me_1 $long_literal $chunk_size
 
-strippedparl: $static_exe
+strippedparl: $par
 	\$(PERL) -e "chmod(oct('0600'), '$strippedparl_mod');"
-	\$(PERL) encode_append.pl $static_exe $strippedparl_mod
+	\$(PERL) encode_append.pl $par $strippedparl_mod
 	\$(PERL) -e "chmod(oct('0444'), '$strippedparl_mod');"
 
 strippedparldyn: $par_exe
