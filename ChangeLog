@@ -1,5 +1,5 @@
 
-[Changes for 0.960 - Nov 12, 2006]
+[Changes for 0.960 - Nov 21, 2006]
 * Bug fixes, etc.
     - myldr/Makefile.PL fix: Clean up myldr/usernamefrompwuid.h.
     - Silence warning in myldr/internals.c.
@@ -7,6 +7,8 @@
     - Skip most tests in 10-parl-generation.t if there is no parl.
     - Skip loading ActiveState Perl's "sitecustomize.pl" in par.pl.
     - Load modules via require and other files via do.
+    - The parl-regeneration-for-every-pp-call addition of the 0.958 release
+      should now also work for static perls.
 
 * New features
     - Adressing RT ticket #6612: Now using getpwuid() to determine the
