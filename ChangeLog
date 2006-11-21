@@ -5,6 +5,8 @@
     - Silence warning in myldr/internals.c.
     - Silence warnings seen on Irix from myldr/env.c.
     - Skip most tests in 10-parl-generation.t if there is no parl.
+    - Skip loading ActiveState Perl's "sitecustomize.pl" in par.pl.
+    - Load modules via require and other files via do.
 
 * New features
     - Adressing RT ticket #6612: Now using getpwuid() to determine the

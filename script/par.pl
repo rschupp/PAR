@@ -315,7 +315,16 @@ my ($start_pos, $data_pos);
     # load rest of the group in
     while (my $filename = (sort keys %require_list)[0]) {
         #local $INC{'Cwd.pm'} = __FILE__ if $^O ne 'MSWin32';
-        require $filename unless $INC{$filename} or $filename =~ /BSDPAN/;
+        unless ($INC{$filename} or $filename =~ /BSDPAN/) {
+            # require modules, do other executable files
+            if ($filename =~ /\.pmc?$/i) {
+                require $filename;
+            }
+            else {
+                # Skip ActiveState's sitecustomize.pl file:
+                do $filename unless $filename =~ /sitecustomize\.pl$/;
+            }
+        }
         delete $require_list{$filename};
     }
 
