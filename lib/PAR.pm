@@ -170,7 +170,7 @@ attributes in F<META.yml>:
       verbatim: 0       # was packed prerequisite's PODs preserved?
       version: x.xx     # PAR.pm version that generated this PAR
 
-User-defined environment variables, like I<PAR_CLEAN>, always
+User-defined environment variables, like I<PAR_GLOBAL_CLEAN>, always
 overrides the ones set in F<META.yml>.  The algorithm for generating
 caching/temporary directory is as follows:
 
@@ -202,7 +202,7 @@ Here is a description of the variables the previous paths.
 
 I<TEMP> is a temporary directory, which can be set via 
 C<$ENV{PAR_GLOBAL_TMPDIR}>,
-C<$ENV{PAR_TMPDIR}>, C<$ENV{TMPDIR}>, C<$ENV{TEMPDIR}>, C<$ENV{TEMP}>
+C<$ENV{TMPDIR}>, C<$ENV{TEMPDIR}>, C<$ENV{TEMP}>
 or C<$ENV{TMP}>, in that order of priority.
 If none of those are set, I<C:\TEMP>, I</tmp> are checked.  If neither
 of them exists, I<.> is used.
