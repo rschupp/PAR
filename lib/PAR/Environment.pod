@@ -154,7 +154,7 @@ to see a value initialized by the user.
 
 Users should set C<PAR_GLOBAL_TEMP> instead.
 C<PAR_TEMP> is calculated from a variety of other variables.
-See the C<NOTES> section in the pod for par.pm for
+See the C<NOTES> section in the pod for PAR.pm for
 a complete description of how the calculation proceeds.
 C<PAR_TEMP>, once calculated, is used as the location
 where PAR stores its extracted, temporary file cache.
