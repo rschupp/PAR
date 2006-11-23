@@ -619,21 +619,23 @@ if ($out) {
     $quiet = !$ENV{PAR_DEBUG};
     outs(qq(\$ENV{PAR_TEMP} = "$ENV{PAR_TEMP}"));
 
-    foreach my $member ( $zip->members ) {
-        next if $member->isDirectory or !$ENV{PAR_TEMP};
-        my $member_name = $member->fileName;
-        next unless $member_name =~ m{
-            ^
-            /?shlib/
-            (?:$Config::Config{version}/)?
-            (?:$Config::Config{archname}/)?
-            ([^/]+)
-            $
-        }x;
-        my $extract_name = $1;
-        my $dest_name = File::Spec->catfile($ENV{PAR_TEMP}, $extract_name);
-        $member->extractToFileNamed($dest_name);
-        outs(qq(Extracting "$member_name" to "$dest_name"));
+    if (defined $ENV{PAR_TEMP}) { # should be set at this point!
+        foreach my $member ( $zip->members ) {
+            next if $member->isDirectory;
+            my $member_name = $member->fileName;
+            next unless $member_name =~ m{
+                ^
+                /?shlib/
+                (?:$Config::Config{version}/)?
+                (?:$Config::Config{archname}/)?
+                ([^/]+)
+                $
+            }x;
+            my $extract_name = $1;
+            my $dest_name = File::Spec->catfile($ENV{PAR_TEMP}, $extract_name);
+            $member->extractToFileNamed($dest_name);
+            outs(qq(Extracting "$member_name" to "$dest_name"));
+        }
     }
     # }}}
 }
