@@ -1,4 +1,11 @@
 
+[Changes for 0.961 - Nov 23, 2006]
+* Bug fixes, etc.
+    - PAR::StrippedPARL::Base->write_parl() failed to work if the @INC
+      directories contained spaces in 0.960. (Steven Mackenzie)
+    - Much improved documentation of the environment variables
+      (Glenn Linderman)
+
 [Changes for 0.960 - Nov 21, 2006]
 * Bug fixes, etc.
     - myldr/Makefile.PL fix: Clean up myldr/usernamefrompwuid.h.

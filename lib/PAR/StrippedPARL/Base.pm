@@ -68,7 +68,7 @@ sub write_parl {
     chmod(oct('755'), $tfile);
 
     # Use this to generate a real parl
-    my @libs = (map {"-I$_"} @INC);
+    my @libs = (map {"-I\"$_\""} @INC);
     my @args = (@libs, qw/-q -B/);
 
     # prepend ./ if applicable
