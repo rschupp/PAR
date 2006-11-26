@@ -5,6 +5,8 @@
       directories contained spaces in 0.960. (Steven Mackenzie)
     - Much improved documentation of the environment variables
       (Glenn Linderman)
+    - Fix for a spaces-in-pathname problem on Windows for
+      t/30-current_exec.t. (Malcolm Nooning)
 
 [Changes for 0.960 - Nov 21, 2006]
 * Bug fixes, etc.
