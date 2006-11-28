@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+package pp; # Now people can say "install pp" in the CPAN shell.
+
 use 5.006;
 use PAR ();
 use PAR::Packer ();
@@ -26,7 +28,7 @@ App::Packer::PAR->new(
 )->go;
 
 sub help {
-    print "Perl Packager, version $VERSION (PAR version $PAR::VERSION)\n\n";
+    print "PAR Packager, version $VERSION (PAR version $PAR::VERSION)\n\n";
     {
         no warnings;
         exec "perldoc $0";
@@ -37,7 +39,7 @@ sub help {
 
 sub version {
     print << ".";
-Perl Packager, version $VERSION (PAR version $PAR::VERSION)
+PAR Packager, version $VERSION (PAR version $PAR::VERSION)
 Copyright 2002, 2003, 2004, 2005, 2006 by Audrey Tang <autrijus\@autrijus.org>
 
 Neither this program nor the associated "parl" program impose any
@@ -66,7 +68,7 @@ __END__
 
 =head1 NAME
 
-pp - Perl Packager
+pp - PAR Packager
 
 =head1 SYNOPSIS
 
