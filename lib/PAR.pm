@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.961';
+$PAR::VERSION = '0.97';
 
 use 5.006;
 use strict;
@@ -13,15 +13,16 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.961 of PAR, released November 26, 2006.
+This document describes version 0.97 of PAR, released November 29, 2006.
 
 =head1 SYNOPSIS
 
 (If you want to make an executable that contains all module, scripts and
-data files, please consult the bundled L<pp> utility instead.)
+data files, please consult the L<pp> utility instead. L<pp> used to be
+part of the PAR distribution but is not shipped as part of the L<PAR::Packer>
+distribution instead.)
 
-Following examples assume a F<foo.par> file in Zip format; support for
-compressed tar (F<*.tgz>/F<*.tbz2>) format is under consideration.
+Following examples assume a F<foo.par> file in Zip format.
 
 To use F<Hello.pm> from F<./foo.par>:
 
@@ -121,15 +122,16 @@ the C<install> option, too.)
 
 =head1 DESCRIPTION
 
-This module lets you easily bundle a typical F<blib/> tree into a zip
-file, called a Perl Archive, or C<PAR>.
+This module lets you use special zip files, called B<P>erl B<Ar>chives, as
+libraries from which Perl modules can be loaded. 
 
 It supports loading XS modules by overriding B<DynaLoader> bootstrapping
 methods; it writes shared object file to a temporary file at the time it
 is needed.
 
-To generate a F<.par> file, all you have to do is compress the modules
-under F<arch/> and F<lib/>, e.g.:
+A F<.par> file is mostly a zip of the F<blib/> directory after the build
+process of a CPAN distribution. To generate a F<.par> file yourself, all
+you have to do is compress the modules under F<arch/> and F<lib/>, e.g.:
 
     % perl Makefile.PL
     % make
@@ -137,19 +139,21 @@ under F<arch/> and F<lib/>, e.g.:
     % zip -r mymodule.par arch/ lib/
 
 Afterward, you can just use F<mymodule.par> anywhere in your C<@INC>,
-use B<PAR>, and it will Just Work.
+use B<PAR>, and it will Just Work. Support for generating F<.par> files
+is going to be in the next (beyond 0.2805) release of Module::Build.
 
 For convenience, you can set the C<PERL5OPT> environment variable to
 C<-MPAR> to enable C<PAR> processing globally (the overhead is small
 if not used); setting it to C<-MPAR=/path/to/mylib.par> will load a
 specific PAR file.  Alternatively, consider using the F<par.pl> utility
-bundled with this module, or using the self-contained F<parl> utility
+bundled with the L<PAR::Packer> distribution, or using the
+self-contained F<parl> utility which is also distributed with L<PAR::Packer>
 on machines without PAR.pm installed.
 
 Note that self-containing scripts and executables created with F<par.pl>
 and F<pp> may also be used as F<.par> archives:
 
-    % pp -o packed.exe source.pl        # generate packed.exe
+    % pp -o packed.exe source.pl        # generate packed.exe (see PAR::Packer)
     % perl -MPAR=packed.exe other.pl    # this also works
     % perl -MPAR -Ipacked.exe other.pl  # ditto
 
@@ -907,7 +911,8 @@ The PAR homepage at L<http://par.perl.org>.
 L<PAR::Tutorial>, L<PAR::FAQ> (For a more
 current FAQ, refer to the homepage.)
 
-L<par.pl>, L<parl>, L<pp>
+The L<PAR::Packer> distribution which contains the packaging utilities:
+L<par.pl>, L<parl>, L<pp>.
 
 L<PAR::Dist> for details on PAR distributions.
 

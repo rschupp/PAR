@@ -1,4 +1,13 @@
 
+[Changes for 0.97 - Nov 28, 2006]
+* This release introduces some rather radical changes, so read carefully:
+* All PAR::Packer related logic has been moved to a separate distribution,
+  PAR-Packer. This includes pp, parl and all packaging tools. This way,
+  PAR becomes a pure-Perl distribution that can be most easily installed by
+  users of software which requires PAR.
+  Developers who want to use the PAR packager, pp, need to install the
+  PAR-Packer distribution from CPAN.
+
 [Changes for 0.961 - Nov 23, 2006]
 * Bug fixes, etc.
     - PAR::StrippedPARL::Base->write_parl() failed to work if the @INC
