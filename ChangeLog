@@ -1,5 +1,5 @@
 
-[Changes for 0.97 - Nov 28, 2006]
+[Changes for 0.970 - Dec  3, 2006]
 * This release introduces some rather radical changes, so read carefully:
 * All PAR::Packer related logic has been moved to a separate distribution,
   PAR-Packer. This includes pp, parl and all packaging tools. This way,
