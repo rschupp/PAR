@@ -1,4 +1,8 @@
 
+[Changes for 0.971 - Dec 31, 2006]
+* Bug fixes, etc.
+    - Fixed typo in the POD. (Jerrad Pierce)
+
 [Changes for 0.970 - Dec  3, 2006]
 * This release introduces some rather radical changes, so read carefully:
 * All PAR::Packer related logic has been moved to a separate distribution,
