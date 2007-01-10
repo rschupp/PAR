@@ -13,7 +13,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.971 of PAR, released December 31, 2006.
+This document describes version 0.971 of PAR, released January 10, 2007.
 
 =head1 SYNOPSIS
 
@@ -252,6 +252,20 @@ my $is_insensitive_fs = (
         and (-s lc($progname) || -1) == -s $progname
 );
 my $par_temp;
+
+
+# The following section overrides a bug in AutoLoader which results in
+# infinite recursion in case of AUTOLOAD and re-named files.
+# See http://www.nntp.perl.org/group/perl.par/2796 et al.
+require AutoLoader;
+if ($AutoLoader::VERSION <= 5.61) {
+    no strict;
+    no warnings;
+    # If the following doesn't scare you then you scare me.
+    delete $INC{"AutoLoader.pm"};
+    require PAR::AutoLoaderFix;
+    $INC{"AutoLoader.pm"} = $INC{"PAR/AutoLoaderFix.pm"};
+}
 
 
 # called on "use PAR"
@@ -903,6 +917,8 @@ sub _set_progname {
 
 
 1;
+
+__END__
 
 =head1 SEE ALSO
 

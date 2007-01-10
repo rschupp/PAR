@@ -1,7 +1,12 @@
 
-[Changes for 0.971 - Dec 31, 2006]
+[Changes for 0.971 - Jan 10, 2007]
 * Bug fixes, etc.
     - Fixed typo in the POD. (Jerrad Pierce)
+    - Included fix for a bug in AutoLoader.pm as shipped with all
+      perl versions up to and including 5.8.8 as PAR::AutoLoaderFix.
+      This cures a problem of endless looping when the %INC entry of a
+      module doesn't point to a file of the same name.
+      This may happen during "use PAR 'foo.par'".
 
 [Changes for 0.970 - Dec  3, 2006]
 * This release introduces some rather radical changes, so read carefully:

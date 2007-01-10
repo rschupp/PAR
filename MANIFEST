@@ -15,6 +15,7 @@ inc/Test/Builder.pm
 inc/Test/Builder/Module.pm
 inc/Test/More.pm
 lib/PAR.pm
+lib/PAR/AutoLoaderFix.pm
 lib/PAR/Environment.pod
 lib/PAR/FAQ.pod
 lib/PAR/Heavy.pm
@@ -27,6 +28,7 @@ SIGNATURE
 t/00-pod.t
 t/01-basic.t
 t/40-par-hashref.t
+t/50-autoloaderfix.t
 t/hello.par
 t/Hello.pm
 TODO
