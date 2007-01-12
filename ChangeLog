@@ -1,5 +1,5 @@
 
-[Changes for 0.971 - Jan 10, 2007]
+[Changes for 0.971 - Jan 12, 2007]
 * Bug fixes, etc.
     - Fixed typo in the POD. (Jerrad Pierce)
     - Included fix for a bug in AutoLoader.pm as shipped with all
