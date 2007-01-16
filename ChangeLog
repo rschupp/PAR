@@ -1,4 +1,12 @@
 
+[Changes for 0.972 - Jan 16, 2007]
+* Bug fixes, etc.
+    - Removed PAR::AutoLoaderFix again. It wasn't working as expected
+      all the time.
+    - To fix the problem AutoLoaderFix was supposed to fix, we now
+      require AutoLoader 5.62 or newer which was just recently released
+      to CPAN. (Previously only available from blead perl.)
+
 [Changes for 0.971 - Jan 12, 2007]
 * Bug fixes, etc.
     - Fixed typo in the POD. (Jerrad Pierce)
