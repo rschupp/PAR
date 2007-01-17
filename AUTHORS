@@ -1,7 +1,12 @@
 Here is a list of people and their CPAN id, extracted from the Changes
 file and the mailing list archives.  These people have either submitted
 patches or suggestions, or their bug reports or comments have inspired
-the appropriate patches.  Corrections, additions, deletions welcome:
+the appropriate patches.  
+
+Note that this list applies to both PAR and the now separate PAR-Packer
+distribution.
+
+Corrections, additions, deletions welcome:
 
 Abe Timmerman                 (ABELTJE)
 Abhijit Menon-Sen             (AMS)
@@ -40,6 +45,7 @@ Doug Miles
 Edward S. Peschko
 Edward Wildgoose
 Eric Paulson
+Gaal Yahas                    (GAAL)
 Gerald Richter                (GRICHTER)
 Germain Garand                (GGARAND)
 Glenn Mabbutt
