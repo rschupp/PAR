@@ -630,6 +630,7 @@ sub unpar {
     local $PAR::__unpar = 1;
 
     unless ($zip) {
+        # URL use case ==> download
         if ($par =~ m!^\w+://!) {
             require File::Spec;
             require LWP::Simple;
@@ -637,6 +638,7 @@ sub unpar {
             # reflector support
             $par .= "pm=$file" if $par =~ /[?&;]/;
 
+            # prepare cache directory
             $ENV{PAR_CACHE} ||= '_par';
             mkdir $ENV{PAR_CACHE}, 0777;
             if (!-d $ENV{PAR_CACHE}) {
@@ -645,6 +647,12 @@ sub unpar {
                 return unless -d $ENV{PAR_CACHE};
             }
 
+            # Munge URL into local file name
+            # FIXME: This might result in unbelievably long file names!
+            # I have run into the file/path length limitations of linux
+            # with similar code in PAR::Repository::Client.
+            # I suspect this is even worse on Win32.
+            # -- Steffen
             my $file = $par;
             if (!%escapes) {
                 $escapes{chr($_)} = sprintf("%%%02X", $_) for 0..255;
@@ -653,16 +661,20 @@ sub unpar {
                 use bytes;
                 $file =~ s/([^\w\.])/$escapes{$1}/g;
             }
+
             $file = File::Spec->catfile( $ENV{PAR_CACHE}, $file);
             LWP::Simple::mirror( $par, $file );
-            return unless -e $file;
+            return unless -e $file and -f _;
             $par = $file;
         }
+        # Got the .par as a string. (reference to scalar, of course)
         elsif (ref($par) eq 'SCALAR') {
             my ($fh) = _tempfile();
             print $fh $$par;
             $par = $fh;
         }
+        # If the par is not a valid .par file name and we're being strict
+        # about this, then also check whether "$par.par" exists
         elsif (!(($allow_other_ext or $par =~ /\.par\z/i) and -f $par)) {
             $par .= ".par";
             return unless -f $par;
