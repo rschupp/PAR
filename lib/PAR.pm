@@ -456,7 +456,7 @@ sub _first_member {
     my $zip = shift;
     my %names = map { ( $_->fileName => $_ ) } $zip->members;
     my %lc_names;
-    %lc_names = map { ( lc($_->fileName) => $_ ) } $zip->members if $is_insensitive_fs;
+    %lc_names = map { lc($_) => $_ } keys %names if $is_insensitive_fs;
     foreach my $name (@_) {
         return $names{$name} if $names{$name};
         return $lc_names{lc($name)} if $is_insensitive_fs and $lc_names{lc($name)};
