@@ -1,4 +1,9 @@
 
+[Changes for 0.973 - Jan 16, 2007]
+* Bug fixes, etc.
+    - Applied an optimization of the unpacking process on case insensitive
+      file systems.
+
 [Changes for 0.972 - Jan 16, 2007]
 * Bug fixes, etc.
     - Removed PAR::AutoLoaderFix again. It wasn't working as expected
