@@ -68,6 +68,7 @@ sub _bootstrap {
     }
 
     # XXX: Multi-platform .dll support in PARs needs better than $Config.
+    # FIXME: Config is always loaded by PAR.pm!
     $dlext ||= do {
         require Config;
         (defined %Config::Config) ? $Config::Config{dlext} : '';

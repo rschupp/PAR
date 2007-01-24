@@ -7,6 +7,23 @@ use warnings;
 use Config '%Config';
 use Carp qw/croak/;
 
+# If the 'prefork' module is available, we
+# register various run-time loaded modules with it.
+# That way, there is more shared memory in a forking
+# environment.
+BEGIN {
+    if (eval 'require prefork') {
+        prefork->import($_) for qw/
+            Archive::Zip
+            File::Glob
+            File::Spec
+            File::Temp
+            LWP::Simple
+            PAR::Heavy
+        /;
+    }
+}
+
 =head1 NAME
 
 PAR - Perl Archive Toolkit
@@ -493,6 +510,12 @@ sub _run_member {
 sub _extract_inc {
     my $file = shift;
     my $inc = "$par_temp/inc";
+    # FIXME: What the hell is the following code doing?
+    # There is a "use Config '%Config'" at the top of PAR.pm
+    # I'll probably replace it by
+    # my $dlext = defined($Config{dlext}) ? $Config{dlext} : '';
+    # eventually!
+    # -- Steffen
     my $dlext = do {
         require Config;
         (defined %Config::Config) ? $Config::Config{dlext} : '';
