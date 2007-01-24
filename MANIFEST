@@ -15,7 +15,6 @@ inc/Test/Builder.pm
 inc/Test/Builder/Module.pm
 inc/Test/More.pm
 lib/PAR.pm
-lib/PAR/AutoLoaderFix.pm
 lib/PAR/Environment.pod
 lib/PAR/FAQ.pod
 lib/PAR/Heavy.pm
