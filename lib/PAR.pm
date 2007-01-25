@@ -259,6 +259,9 @@ use vars qw(@LibCache %LibCache);   # I really miss pseudohash.
 use vars qw($LastAccessedPAR $LastTempFile);
 use vars qw(@RepositoryObjects);    # If we have PAR::Repository::Client support, we
                                     # put the ::Client objects in here.
+use vars qw(%FileCache);            # The Zip-file file-name-cache
+                                    # Layout:
+                                    # $FileCache{$ZipObj}{$FileName} = $Member
 
 my $ver  = $Config{version};
 my $arch = $Config{archname};
@@ -363,6 +366,7 @@ sub import {
 # import() helper for the "use PAR {...};" syntax.
 sub _import_hash_ref {
     my $opt = shift;
+
     # check for incompatible options:
     if ( exists $opt->{repository} and exists $opt->{file} ) {
         croak("Invalid PAR loading options. Cannot have a 'repository' and 'file' option at the same time.");
@@ -469,14 +473,15 @@ sub _import_repository {
     return $obj;
 }
 
+# Given an Archive::Zip obj and a list of files/paths,
+# this function returns the Archive::Zip::Member for the
+# first of the files found in the ZIP. If none is found,
+# returns the empty list.
 sub _first_member {
     my $zip = shift;
-    my %names = map { ( $_->fileName => $_ ) } $zip->members;
-    my %lc_names;
-    %lc_names = map { lc($_) => $_ } keys %names if $is_insensitive_fs;
     foreach my $name (@_) {
-        return $names{$name} if $names{$name};
-        return $lc_names{lc($name)} if $is_insensitive_fs and $lc_names{lc($name)};
+        my $member = _cached_member_named($zip, $name);
+        return $member if $member;
     }
     return;
 }
@@ -619,6 +624,7 @@ sub reload_libs {
     foreach my $par (@par_files) {
         my $inc_ref = $PAR_INC{$par} or next;
         delete $LibCache{$par};
+        delete $FileCache{$par};
         foreach my $file (sort keys %$inc_ref) {
             delete $INC{$file};
             require $file;
@@ -724,8 +730,9 @@ sub unpar {
 
         push @LibCache, $zip;
         $LibCache{$_[0]} = $zip;
+        $FileCache{$_[0]} = _make_file_cache($zip);
 
-        foreach my $member ( $zip->membersMatching(
+        foreach my $member ( _cached_members_matching($zip, 
             "^par/(?:$Config{version}/)?(?:$Config{archname}/)?"
         ) ) {
             next if $member->isDirectory;
@@ -738,7 +745,7 @@ sub unpar {
         # XXX is this correct?
         # Intended to fix problem with Alien::wxWidgets/Wx...
         # for all zip members that end in .dll/.so (depending on platform)
-        foreach my $member ( $zip->membersMatching(
+        foreach my $member ( _cached_members_matching( $zip, 
             '\.'.quotemeta($Config{dlext}).'$'
         ) ) {
             next if $member->isDirectory or !$ENV{PAR_TEMP};
@@ -937,6 +944,55 @@ sub _set_progname {
 }
 
 
+# Given an Archive::Zip object, this generates a hash of
+#   file_name_in_zip => file object
+# and returns a reference to that.
+# If we broke the encapsulation of A::Zip::Member and
+# accessed $member->{fileName} directly, that would be
+# *significantly* faster.
+sub _make_file_cache {
+    my $zip = shift;
+    if (not ref($zip)) {
+        croak("_make_file_cache needs an Archive::Zip object as argument.");
+    }
+    my $cache = {};
+    foreach my $member ($zip->members) {
+        $cache->{$member->fileName()} = $member;
+    }
+    return $cache;
+}
+
+# given an Archive::Zip object, this finds the cached hash
+# of Archive::Zip member names => members,
+# and returns all member objects whose file names match
+# a regexp
+# Without file caching, it just uses $zip->membersMatching
+sub _cached_members_matching {
+    my $zip = shift;
+    my $regex = shift;
+
+    my $cache = $FileCache{$zip};
+    $cache = $FileCache{$zip} = _make_file_cache($zip) if not $cache;
+
+    return map {$cache->{$_}}
+        grep { $_ =~ $regex }
+        keys %$cache;
+}
+
+# access named zip file member through cache. Fall
+# back to using Archive::Zip (slow)
+sub _cached_member_named {
+    my $zip = shift;
+    my $name = shift;
+
+    my $cache = $FileCache{$zip};
+    $cache = $FileCache{$zip} = _make_file_cache($zip) if not $cache;
+    return $cache->{$name};
+}
+
+
+
+
 1;
 
 __END__
@@ -959,6 +1015,10 @@ L<PAR::Repository> for details on how to set up such a repository.
 L<Archive::Zip>, L<perlfunc/require>
 
 L<ex::lib::zip>, L<Acme::use::strict::with::pride>
+
+PAR supports the L<prefork> module. It declares various run-time
+dependencies so you can use the L<prefork> module to get streamlined
+processes in a forking environment.
 
 =head1 ACKNOWLEDGMENTS
 
