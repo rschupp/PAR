@@ -1,5 +1,13 @@
 
 [Changes for 0.973 - Jan 16, 2007]
+* New features
+    - If available, the prefork.pm module will be used to declare
+      run-time dependencies for better memory use in forking
+      environments.
+    - PAR now uses a caching mechanism to speed up the extraction process.
+      This should particularly impact users of the "use PAR {file =>...}"
+      form.
+
 * Bug fixes, etc.
     - Applied an optimization of the unpacking process on case insensitive
       file systems.
