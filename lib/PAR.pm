@@ -655,6 +655,7 @@ sub unpar {
     my $zip = $LibCache{$par};
     my @rv = $par;
 
+    # a guard against (currently unimplemented) recursion
     return if $PAR::__unpar;
     local $PAR::__unpar = 1;
 
@@ -732,6 +733,7 @@ sub unpar {
         $LibCache{$_[0]} = $zip;
         $FileCache{$_[0]} = _make_file_cache($zip);
 
+        # only recursive case -- appears to be unused and unimplemented
         foreach my $member ( _cached_members_matching($zip, 
             "^par/(?:$Config{version}/)?(?:$Config{archname}/)?"
         ) ) {
