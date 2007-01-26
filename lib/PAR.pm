@@ -741,24 +741,33 @@ sub unpar {
             push @rv, unpar(\$content, undef, undef, 1);
         }
         
-        # extract all dlls from the .par to $ENV{PAR_TEMP}!
-        # XXX is this correct?
+        # extract all shlib dlls from the .par to $ENV{PAR_TEMP}
         # Intended to fix problem with Alien::wxWidgets/Wx...
-        # for all zip members that end in .dll/.so (depending on platform)
-        foreach my $member ( _cached_members_matching( $zip, 
-            '\.'.quotemeta($Config{dlext}).'$'
-        ) ) {
-            next if $member->isDirectory or !$ENV{PAR_TEMP};
-            my $member_name = $member->fileName;
-            next unless $member_name =~ m{
-                    \/([^/]+)$
-                }x
-                or $member_name =~ m{
-                    ^([^/]+)$
-                };
-            my $extract_name = $1;
-            my $dest_name = File::Spec->catfile($ENV{PAR_TEMP}, $extract_name);
-            $member->extractToFileNamed($dest_name);
+        # NOTE auto/foo/foo.so|dll will get handled by the dynaloader
+        # hook, so no need to pull it out here
+        # also, allow this to be disabled so caller can
+        # do their own caching (e.g. copy or symlink is faster)
+        # (TODO document, or replace with something better)
+        unless($ENV{PAR_NO_SHLIB_UNPACK}) {
+            my @members = _cached_members_matching( $zip,
+              qr#^shlib/$Config{archname}/.*\.\Q$Config{dlext}\E(?:\.|$)#
+            );
+            foreach my $member (@members) {
+                next if $member->isDirectory or !$ENV{PAR_TEMP};
+                my $member_name = $member->fileName;
+                next unless $member_name =~ m{
+                        \/([^/]+)$
+                    }x
+                    or $member_name =~ m{
+                        ^([^/]+)$
+                    };
+                my $extract_name = $1;
+                my $dest_name =
+                    File::Spec->catfile($ENV{PAR_TEMP}, $extract_name);
+                # but don't extract it if we've already got one
+                $member->extractToFileNamed($dest_name)
+                    unless(-e $dest_name);
+            }
         }
 
         # Now push this path into usual library search paths
