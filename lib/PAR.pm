@@ -115,7 +115,7 @@ F<script/myscript> exits, so does your main program. To make this more useful,
 you can defer this to runtime: (otherwise equivalent)
 
     require PAR;
-    PAR->import( { file => 'foo.par', run => 'myscript' };
+    PAR->import( { file => 'foo.par', run => 'myscript' } );
 
 If you have L<PAR::Repository::Client> installed, you can do this:
 
@@ -250,6 +250,47 @@ By default, PAR strips POD sections from bundled modules. In case
 that causes trouble, you can turn this off by setting the
 environment variable C<PAR_VERBATIM> to C<1>.
 
+=head2 import options
+
+When you "use PAR {...}" or call PAR->import({...}), the following
+options are available.
+
+  PAR->import({ file => 'foo.par' });
+  # or
+  PAR->import({ repository => 'http://foo/bar/' });
+
+=over
+
+=item file
+
+The par filename.
+
+You must pass I<one> option of either 'file' or 'repository'.
+
+=item repository
+
+A par repository (exclusive of file)
+
+=item fallback
+
+Search the system @INC before the par.
+
+=item run
+
+The name of a script to run in the par.  Exits when done.
+
+=item no_shlib_unpack
+
+Skip unpacking bundled dynamic libraries from shlib/$archname.  The
+client may have them installed, or you may wish to cache them yourself.
+In either case, they must end up in the standard install location (such
+as /usr/local/lib/) or in $ENV{PAR_TEMP} I<before> you require the
+module which needs them.  If they are not accessible before you require
+the dependent module, perl will die with a message such as "cannot open
+shared object file..." 
+
+=back
+
 =cut
 
 use vars qw(@PAR_INC);              # explicitly stated PAR library files (prefered)
@@ -273,6 +314,8 @@ my $is_insensitive_fs = (
 );
 my $par_temp;
 
+# lexical for import(), and _import_foo() functions to control unpar()
+my %unpar_options;
 
 # called on "use PAR"
 sub import {
@@ -366,6 +409,9 @@ sub import {
 # import() helper for the "use PAR {...};" syntax.
 sub _import_hash_ref {
     my $opt = shift;
+
+    # hash slice assignment -- pass all of the options into unpar
+    local @unpar_options{keys(%$opt)} = values(%$opt);
 
     # check for incompatible options:
     if ( exists $opt->{repository} and exists $opt->{file} ) {
@@ -746,11 +792,10 @@ sub unpar {
         # extract all shlib dlls from the .par to $ENV{PAR_TEMP}
         # Intended to fix problem with Alien::wxWidgets/Wx...
         # NOTE auto/foo/foo.so|dll will get handled by the dynaloader
-        # hook, so no need to pull it out here
-        # also, allow this to be disabled so caller can
-        # do their own caching (e.g. copy or symlink is faster)
-        # (TODO document, or replace with something better)
-        unless($ENV{PAR_NO_SHLIB_UNPACK}) {
+        # hook, so no need to pull it out here.
+        # Allow this to be disabled so caller can do their own caching
+        # via import({no_shlib_unpack => 1, file => foo.par})
+        unless($unpar_options{no_shlib_unpack}) {
             my @members = _cached_members_matching( $zip,
               qr#^shlib/$Config{archname}/.*\.\Q$Config{dlext}\E(?:\.|$)#
             );
