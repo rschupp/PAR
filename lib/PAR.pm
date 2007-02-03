@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.972';
+$PAR::VERSION = '0.973';
 
 use 5.006;
 use strict;

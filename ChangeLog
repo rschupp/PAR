@@ -1,6 +1,15 @@
 
-[Changes for 0.973 - Jan 16, 2007]
+[Changes for 0.973 - Feb  3, 2007]
 * New features
+    - A new option for the "use PAR { ... };" use case:
+      "no_shlib_unpack" signals that for this particular .par file,
+      shared libraries that were added with the --lib option should
+      not be extracted. This allows users to do their own cache
+      handling for these libraries.
+    - PAR no longer unpacks *all* shared libraries by default but only
+      those in the shlib/ directory (i.e. added with --lib).
+      The shared libraries in auto/ should be picked up by the DynaLoader
+      hack.
     - If available, the prefork.pm module will be used to declare
       run-time dependencies for better memory use in forking
       environments.
