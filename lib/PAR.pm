@@ -561,16 +561,7 @@ sub _run_member {
 sub _extract_inc {
     my $file = shift;
     my $inc = "$par_temp/inc";
-    # FIXME: What the hell is the following code doing?
-    # There is a "use Config '%Config'" at the top of PAR.pm
-    # I'll probably replace it by
-    # my $dlext = defined($Config{dlext}) ? $Config{dlext} : '';
-    # eventually!
-    # -- Steffen
-    my $dlext = do {
-        require Config;
-        (defined %Config::Config) ? $Config::Config{dlext} : '';
-    };
+    my $dlext = (defined %Config) ? $Config{dlext} : '';
 
     if (!-d $inc) {
         for (1 .. 10) { mkdir("$inc.lock", 0755) and last; sleep 1 }
@@ -759,9 +750,9 @@ sub unpar {
         require Archive::Zip;
         $zip = Archive::Zip->new;
 
-    	my @file;
+        my @file;
         if (!ref $par) {
-	        @file = $par;
+            @file = $par;
 
             open my $fh, '<', $par;
             binmode($fh);
