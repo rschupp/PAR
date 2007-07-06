@@ -561,7 +561,7 @@ sub _run_member {
 sub _extract_inc {
     my $file = shift;
     my $inc = "$par_temp/inc";
-    my $dlext = (defined %Config) ? $Config{dlext} : '';
+    my $dlext = defined($Config{dlext}) ? $Config::Config{dlext} : '';
 
     if (!-d $inc) {
         for (1 .. 10) { mkdir("$inc.lock", 0755) and last; sleep 1 }
