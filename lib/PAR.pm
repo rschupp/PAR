@@ -30,7 +30,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.972 of PAR, released January 16, 2007.
+This document describes version 0.973 of PAR, released January 16, 2007.
 
 =head1 SYNOPSIS
 
