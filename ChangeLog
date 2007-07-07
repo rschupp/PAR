@@ -1,4 +1,9 @@
 
+[Changes for 0.976 - Jul  7, 2007]
+* Bug fixes, etc.
+    - Removed the auto_install feature from Makefile.PL. auto_install
+      is conceptually broken.
+
 [Changes for 0.973 - Feb  3, 2007]
 * New features
     - A new option for the "use PAR { ... };" use case:
