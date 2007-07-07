@@ -1,5 +1,5 @@
-#!/usr/bin/perl
 
+use strict;
 use inc::Module::Install;
 
 name        'PAR';
