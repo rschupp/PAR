@@ -29,7 +29,6 @@ if (can_use('Crypt::OpenPGP') or can_run('gpg')) {
 
 include_deps        'Test::More';
 no_index            directory => 'contrib';
-auto_install_now    -default => 0;
 auto_provides;
 
 WriteAll sign => 1;
