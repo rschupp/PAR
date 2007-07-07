@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 
-use 5.006;
 use inc::Module::Install;
 
 name        'PAR';
