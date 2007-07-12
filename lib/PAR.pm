@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.973';
+$PAR::VERSION = '0.974_01';
 
 use 5.006;
 use strict;
@@ -21,6 +21,8 @@ BEGIN {
             LWP::Simple
             PAR::Heavy
         /;
+        # not including Archive::Unzip::Burst which only makes sense
+        # in the context of a PAR::Packer'ed executable anyway.
     }
 }
 
@@ -30,7 +32,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.973 of PAR, released January 16, 2007.
+This document describes version 0.974_01 of PAR, released January 16, 2007.
 
 =head1 SYNOPSIS
 
@@ -565,20 +567,36 @@ sub _extract_inc {
 
     if (!-d $inc) {
         for (1 .. 10) { mkdir("$inc.lock", 0755) and last; sleep 1 }
+        
+        # First try to unzip the *fast* way.
+        eval {
+          require Archive::Unzip::Burst;
+          Archive::Unzip::Burst::unzip($file, $inc)
+            and die "Could not unzip into '$inc'. Error: $!";
+        };
 
-        open my $fh, '<', $file or die "Cannot find '$file': $!";
-        binmode($fh);
-        bless($fh, 'IO::File');
-
-        my $zip = Archive::Zip->new;
-        ( $zip->readFromFileHandle($fh, $file) == Archive::Zip::AZ_OK() )
-            or die "Read '$file' error: $!";
-
-        for ( $zip->memberNames() ) {
-            next if m{\.\Q$dlext\E[^/]*$};
-            s{^/}{};
-            $zip->extractMember($_, "$inc/" . $_);
+        # This means the fast module is there, but didn't work.
+        if ($@ =~ /^Could not unzip/) {
+          die $@;
         }
+
+        # failed to load Archive::Unzip::Burst. Default to slow way.
+        elsif ($@) {
+          open my $fh, '<', $file or die "Cannot find '$file': $!";
+          binmode($fh);
+          bless($fh, 'IO::File');
+
+          my $zip = Archive::Zip->new;
+          ( $zip->readFromFileHandle($fh, $file) == Archive::Zip::AZ_OK() )
+              or die "Read '$file' error: $!";
+
+          for ( $zip->memberNames() ) {
+              next if m{\.\Q$dlext\E[^/]*$};
+              s{^/}{};
+              $zip->extractMember($_, "$inc/" . $_);
+          }
+        }
+        
         rmdir("$inc.lock");
     }
 
