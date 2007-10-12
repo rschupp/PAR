@@ -1,5 +1,5 @@
 package PAR::Heavy;
-$PAR::Heavy::VERSION = '0.09';
+$PAR::Heavy::VERSION = '0.10';
 
 =head1 NAME
 
@@ -126,7 +126,7 @@ sub _dl_extract {
         ($fh, $filename) = File::Temp::tempfile(
             DIR         => ($ENV{PAR_TEMP} || File::Spec->tmpdir),
             SUFFIX      => ".$dlext",
-            UNLINK      => ($^O ne 'MSWin32'),
+            UNLINK      => ($^O ne 'MSWin32' and $^O !~ /hpux/),
         );
 		($filename) = $filename =~ /^([\x20-\xff]+)$/;
     }
@@ -170,7 +170,7 @@ Please submit bug reports to E<lt>bug-par@rt.cpan.orgE<gt>.
 
 =head1 COPYRIGHT
 
-Copyright 2002, 2003, 2004, 2005, 2006 by Audrey Tang
+Copyright 2002-2007 by Audrey Tang
 E<lt>cpan@audreyt.orgE<gt>.
 
 This program is free software; you can redistribute it and/or modify it

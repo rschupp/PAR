@@ -957,7 +957,7 @@ sub _tempfile {
             # delete it has the only effect of giving ugly warnings
             ($fh, $filename) = File::Temp::tempfile(
                 DIR     => $par_temp,
-                UNLINK  => ($^O ne 'MSWin32'),
+                UNLINK  => ($^O ne 'MSWin32' and $^O !~ /hpux/),
             ) or die "Cannot create temporary file: $!";
             binmode($fh);
             return ($fh, 1, $filename);
