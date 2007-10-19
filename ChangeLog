@@ -1,3 +1,4 @@
+[Changes for 0.977 - Oct 19, 2007]
 * Bug fixes, etc.
   - HPUX doesn't like shared libraries being unlinked while in use. So don't
     try to do this even in clean mode. (Workaround will be in par.pl)
