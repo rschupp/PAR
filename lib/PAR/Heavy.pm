@@ -139,8 +139,8 @@ sub _dl_extract {
         ($filename) = $filename =~ /^([\x20-\xff]+)$/;
 
         open $fh, '>', $filename or die $!
-            unless -r $filename and -e $filename
-                and -s $filename == $member->uncompressedSize;
+            unless -r $filename and -e _
+                and -s _ == $member->uncompressedSize;
     }
 
     if ($fh) {
