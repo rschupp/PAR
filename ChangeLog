@@ -3,6 +3,7 @@
   - HPUX doesn't like shared libraries being unlinked while in use. So don't
     try to do this even in clean mode. (Workaround will be in par.pl)
     (Scott Stanton)
+  - Fix DLL extraction file name matching in PAR::Heavy
 
 [Changes for 0.976 - Jul 29, 2007]
 * New features
