@@ -5,7 +5,7 @@ PAR::FAQ - Frequently Asked Questions about PAR
 =head1 SYNOPSIS
 
 This is the Frequently Asked Questions list for the Perl Archive Toolkit.
-You can edit this document at L<http://par.perl.org/?FAQ> online.
+You can edit this document at L<http://par.perl.org/wiki/FAQ> online.
 This (included) FAQ list might be outdated. The Wiki version at the above URL
 is guaranteed to be up to date.
 
@@ -98,13 +98,13 @@ Answer from: Steffen Mueller, 16 August 2006
 
 I<Note:> Is this still a problem?
 
-Comment out the line that starts with " unless (caller) ", and compile it again. Note that this is considered a bug; clearing the caller stack is a development in progress. See: L<http://par.perl.org/?DevelopmentInProgress>
+Comment out the line that starts with " unless (caller) ", and compile it again. Note that this is considered a bug; clearing the caller stack is a development in progress. See: L<http://par.perl.org/wiki/Development_in_progress>
 
 =head2 I get a link error '/usr/bin/ld: cannot find -lperl' during the 'make' step of the installation on Debian. What's wrong?
 
 This is a common problem when building compiled libraries on Debian distribution installations with the default perl package. To fix this problem, create a symbolic link from libperl.so.5.6.1 to libperl.so in /usr/lib (cd /usr/lib; ln -s libperl.so.5.6.1 libperl.so) and re-run the 'make' step of the installation. Or install libperl-dev
 
-=head2 I specify a .ico file with –icon for Win32, but the icon is still the black and white camel. What's wrong?
+=head2 I specify a .ico file with --icon for Win32, but the icon is still the black and white camel. What's wrong?
 
 Unlike Perl2EXE, which can use a standard 16-color bitmap as an application icon, PAR requires a true Windows icon file. Download a trial version of Microangelo and use that to create your .ico file. The latest Netpbm tools at L<http://netpbm.sourceforge.net/> has ppmtowinicon, which can tack a pbm and convert it to a windows icon. It is open source and has win32 ports.
 
@@ -169,7 +169,8 @@ L<http://www.mail-archive.com/par@perl.org/msg00670.html>
 =head2 Perl Tk tips
 
 On Windows XP start your script with
-use strict; use Encode::Unicode; use Tk;
+
+  use strict; use Encode::Unicode; use Tk;
 
 Some widgets use xbm bitmaps which don't get picked up by PAR. The error is:
 
