@@ -1,3 +1,8 @@
+[Changes for 0.979 - May 13, 2008]
+* New features
+  - New function PAR::get_filehandle() returns a file handle for a file
+    in any open .par files. Similar to read_file().
+
 [Changes for 0.977 - Oct 19, 2007]
 * Bug fixes, etc.
   - HPUX doesn't like shared libraries being unlinked while in use. So don't
