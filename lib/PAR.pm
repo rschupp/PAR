@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.979';
+$PAR::VERSION = '0.980';
 
 use 5.006;
 use strict;
@@ -32,7 +32,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.979 of PAR, released May 13, 2008.
+This document describes version 0.980 of PAR, released May 21, 2008.
 
 =head1 SYNOPSIS
 
@@ -690,16 +690,16 @@ sub reload_libs {
     }
 }
 
-sub get_filehandle {
-    my $file = pop;
-
-    foreach my $zip (@LibCache) {
-        my $member = _first_member($zip, $file) or next;
-        return $member->fh();
-    }
-
-    return;
-}
+#sub find_zip_member {
+#    my $file = pop;
+#
+#    foreach my $zip (@LibCache) {
+#        my $member = _first_member($zip, $file) or next;
+#        return $member;
+#    }
+#
+#    return;
+#}
 
 sub read_file {
     my $file = pop;

@@ -1,3 +1,12 @@
+[Changes for 0.980 - May 21, 2008]
+* Bug fixes
+  - The function PAR::get_filehandle() that was introduced in 0.979
+    is really broken because Archive::Zip is broken. Turns out calling
+    Archive::Zip::Member->fh() returns a file handle to the zip file,
+    not a virtual/tied/whatever file handle to the member file.
+    Therefore, the get_filehandle() function has been removed again until
+    we work around this issue.
+
 [Changes for 0.979 - May 13, 2008]
 * New features
   - New function PAR::get_filehandle() returns a file handle for a file
