@@ -88,9 +88,6 @@ Use in a program:
     # PAR::read_file() returns a file inside any loaded PARs
     my $conf = PAR::read_file('data/MyConfig.yaml');
 
-    # PAR::get_filehandle() returns an fh for a file inside any loaded PARs
-    my $largeFile = PAR::get_filehandle('data/MyConfig.xml');
-
     # PAR::par_handle() returns an Archive::Zip handle
     my $zip = PAR::par_handle('foo.par')
     my $src = $zip->memberNamed('lib/Hello.pm')->contents;
