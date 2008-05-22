@@ -572,7 +572,7 @@ sub _extract_inc {
         eval {
           require Archive::Unzip::Burst;
           Archive::Unzip::Burst::unzip($file, $inc)
-            and die "Could not unzip into '$inc'. Error: $!";
+            and die "Could not unzip '$file' into '$inc'. Error: $!";
         };
 
         # This means the fast module is there, but didn't work.
