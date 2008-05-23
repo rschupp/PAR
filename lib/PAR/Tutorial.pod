@@ -6,7 +6,7 @@ PAR::Tutorial - Cross-Platform Packaging and Deployment with PAR
 
 This is a tutorial on PAR, first appeared at the 7th Perl Conference.
 The HTML version of this tutorial is available online as
-L<http://aut.dyndns.org/par-tutorial/>.
+L<http://search.cpan.org/perldoc?PAR::Tutorial>
 
 =head1 DESCRIPTION
 
@@ -1087,12 +1087,6 @@ L<http://aut.dyndns.org/par-tutorial/>.
 
 
 =head1 SEE ALSO
-
-L<http://www.autrijus.org/par-tutorial/>
-
-L<http://www.autrijus.org/par-intro/> (English version)
-
-L<http://www.autrijus.org/par-intro.zh/> (Chinese version)
 
 L<PAR>, L<pp>, L<par.pl>, L<parl>
 
