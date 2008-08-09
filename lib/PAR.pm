@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.980';
+$PAR::VERSION = '0.982';
 
 use 5.006;
 use strict;
@@ -26,13 +26,16 @@ BEGIN {
     }
 }
 
+use PAR::SetupProgname;
+use PAR::SetupTemp;
+
 =head1 NAME
 
 PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes version 0.980 of PAR, released May 22, 2008.
+This document describes version 0.982 of PAR, released May 22, 2008.
 
 =head1 SYNOPSIS
 
@@ -314,7 +317,6 @@ my $is_insensitive_fs = (
         and (-s lc($progname) || -1) == (-s uc($progname) || -1)
         and (-s lc($progname) || -1) == -s $progname
 );
-my $par_temp;
 
 # lexical for import(), and _import_foo() functions to control unpar()
 my %unpar_options;
@@ -323,8 +325,8 @@ my %unpar_options;
 sub import {
     my $class = shift;
 
-    _set_progname();
-    _set_par_temp();
+    PAR::SetupProgname::set_progname();
+    PAR::SetupTemp::set_par_temp_env();
 
     $progname = $ENV{PAR_PROGNAME} ||= $0;
     $is_insensitive_fs = (-s $progname and (-s lc($progname) || -1) == (-s uc($progname) || -1));
@@ -562,7 +564,7 @@ sub _run_member {
 
 sub _extract_inc {
     my $file = shift;
-    my $inc = "$par_temp/inc";
+    my $inc = "$PAR::SetupTemp::PARTemp/inc";
     my $dlext = defined($Config{dlext}) ? $Config::Config{dlext} : '';
 
     if (!-d $inc) {
@@ -888,75 +890,6 @@ sub unpar {
     return $fh;
 }
 
-# The C version of this code appears in myldr/mktmpdir.c
-sub _set_par_temp {
-    if ($ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/) {
-        $par_temp = $1;
-        return;
-    }
-
-    require File::Spec;
-
-    foreach my $path (
-        (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMPDIR TEMP TMP )),
-        qw( C:\\TEMP /tmp . )
-    ) {
-        next unless $path and -d $path and -w $path;
-        my $username;
-        my $pwuid;
-        # does not work everywhere:
-        eval {($pwuid) = getpwuid($>) if defined $>;};
-
-        if ( defined(&Win32::LoginName) ) {
-            $username = &Win32::LoginName;
-        }
-        elsif (defined $pwuid) {
-            $username = $pwuid;
-        }
-        else {
-            $username = $ENV{USERNAME} || $ENV{USER} || 'SYSTEM';
-        }
-        $username =~ s/\W/_/g;
-
-        my $stmpdir = File::Spec->catdir($path, "par-$username");
-        ($stmpdir) = $stmpdir =~ /^(.*)$/s;
-        mkdir $stmpdir, 0755;
-        if (!$ENV{PAR_CLEAN} and my $mtime = (stat($progname))[9]) {
-            my $ctx = eval { require Digest::SHA; Digest::SHA->new(1) }
-                   || eval { require Digest::SHA1; Digest::SHA1->new }
-                   || eval { require Digest::MD5; Digest::MD5->new };
-
-            # Workaround for bug in Digest::SHA 5.38 and 5.39
-            my $sha_version = eval { $Digest::SHA::VERSION } || 0;
-            if ($sha_version eq '5.38' or $sha_version eq '5.39') {
-                $ctx->addfile($progname, "b") if ($ctx);
-            }
-            else {
-                if ($ctx and open(my $fh, "<$progname")) {
-                    binmode($fh);
-                    $ctx->addfile($fh);
-                    close($fh);
-                }
-            }
-
-            $stmpdir = File::Spec->catdir(
-                $stmpdir,
-                "cache-" . ( $ctx ? $ctx->hexdigest : $mtime )
-            );
-        }
-        else {
-            $ENV{PAR_CLEAN} = 1;
-            $stmpdir = File::Spec->catdir($stmpdir, "temp-$$");
-        }
-
-        $ENV{PAR_TEMP} = $stmpdir;
-        mkdir $stmpdir, 0755;
-        last;
-    }
-
-    $par_temp = $1 if $ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/;
-}
-
 sub _tempfile {
     my ($fh, $filename);
     if ($ENV{PAR_CLEAN} or !@_) {
@@ -967,7 +900,7 @@ sub _tempfile {
             # and will be deleted by the C runtime; having File::Temp
             # delete it has the only effect of giving ugly warnings
             ($fh, $filename) = File::Temp::tempfile(
-                DIR     => $par_temp,
+                DIR     => $PAR::SetupTemp::PARTemp,
                 UNLINK  => ($^O ne 'MSWin32' and $^O !~ /hpux/),
             ) or die "Cannot create temporary file: $!";
             binmode($fh);
@@ -978,7 +911,7 @@ sub _tempfile {
     require File::Spec;
 
     # untainting tempfile path
-    local $_ = File::Spec->catfile( $par_temp, $_[0] );
+    local $_ = File::Spec->catfile( $PAR::SetupTemp::PARTemp, $_[0] );
     /^(.+)$/ and $filename = $1;
 
     if (-r $filename) {
@@ -991,34 +924,6 @@ sub _tempfile {
     binmode($fh);
     return ($fh, 1, $filename);
 }
-
-sub _set_progname {
-    require File::Spec;
-
-    if ($ENV{PAR_PROGNAME} and $ENV{PAR_PROGNAME} =~ /(.+)/) {
-        $progname = $1;
-    }
-    $progname ||= $0;
-
-    if (( () = File::Spec->splitdir($progname) ) > 1 or !$ENV{PAR_PROGNAME}) {
-        if (open my $fh, $progname) {
-            return if -s $fh;
-        }
-        if (-s "$progname$Config{_exe}") {
-            $progname .= $Config{_exe};
-            return;
-        }
-    }
-
-    foreach my $dir (split /\Q$Config{path_sep}\E/, $ENV{PATH}) {
-        next if exists $ENV{PAR_TEMP} and $dir eq $ENV{PAR_TEMP};
-        my $name = File::Spec->catfile($dir, "$progname$Config{_exe}");
-        if (-s $name) { $progname = $name; last }
-        $name = File::Spec->catfile($dir, "$progname");
-        if (-s $name) { $progname = $name; last }
-    }
-}
-
 
 # Given an Archive::Zip object, this generates a hash of
 #   file_name_in_zip => file object
