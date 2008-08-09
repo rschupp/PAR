@@ -815,12 +815,12 @@ sub unpar {
         # hook, so no need to pull it out here.
         # Allow this to be disabled so caller can do their own caching
         # via import({no_shlib_unpack => 1, file => foo.par})
-        unless($unpar_options{no_shlib_unpack}) {
+        if(not $unpar_options{no_shlib_unpack} and defined $ENV{PAR_TEMP}) {
             my @members = _cached_members_matching( $zip,
               qr#^shlib/$Config{archname}/.*\.\Q$Config{dlext}\E(?:\.|$)#
             );
             foreach my $member (@members) {
-                next if $member->isDirectory or !$ENV{PAR_TEMP};
+                next if $member->isDirectory;
                 my $member_name = $member->fileName;
                 next unless $member_name =~ m{
                         \/([^/]+)$
