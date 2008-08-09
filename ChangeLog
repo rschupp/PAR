@@ -1,4 +1,4 @@
-[Changes for 0.981_01 - Aug 10, 2008]
+[Changes for 0.982 - Aug 10, 2008]
 * New features
   - Moved the routines that setup the PAR_TEMP environment variable
     to a separate module in the distribution so it's possible to
