@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.982';
+$PAR::VERSION = '0.983';
 
 use 5.006;
 use strict;
@@ -35,7 +35,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes release 0.982 of PAR, released August 10, 2008.
+This document describes release 0.983 of PAR, released September 12, 2008.
 
 =head1 SYNOPSIS
 
@@ -583,39 +583,63 @@ sub _run_member {
     }
 }
 
+# extract the contents of a .par (or .exe) or any
+# Archive::Zip handle to the PAR_TEMP/inc directory.
+# returns that directory.
 sub _extract_inc {
-    my $file = shift;
+    my $file_or_azip_handle = shift;
+    my $force_extract = shift;
     my $inc = "$PAR::SetupTemp::PARTemp/inc";
     my $dlext = defined($Config{dlext}) ? $Config::Config{dlext} : '';
+    my $inc_exists = -d $inc;
+    my $is_handle = ref($file_or_azip_handle) && $file_or_azip_handle->isa('Archive::Zip::Archive');
 
-    if (!-d $inc) {
+    require File::Spec;
+
+    if (!$inc_exists or $force_extract) {
         for (1 .. 10) { mkdir("$inc.lock", 0755) and last; sleep 1 }
         
-        # First try to unzip the *fast* way.
-        eval {
-          require Archive::Unzip::Burst;
-          Archive::Unzip::Burst::unzip($file, $inc)
-            and die "Could not unzip '$file' into '$inc'. Error: $!";
-        };
+        undef $@;
+        if (!$is_handle) {
+          # First try to unzip the *fast* way.
+          eval {
+            require Archive::Unzip::Burst;
+            Archive::Unzip::Burst::unzip($file_or_azip_handle, $inc)
+              and die "Could not unzip '$file_or_azip_handle' into '$inc'. Error: $!";
+              die;
+          };
 
-        # This means the fast module is there, but didn't work.
-        if ($@ =~ /^Could not unzip/) {
-          die $@;
+          # This means the fast module is there, but didn't work.
+          if ($@ =~ /^Could not unzip/) {
+            die $@;
+          }
         }
 
-        # failed to load Archive::Unzip::Burst. Default to slow way.
-        elsif ($@) {
-          open my $fh, '<', $file or die "Cannot find '$file': $!";
-          binmode($fh);
-          bless($fh, 'IO::File');
+        # either failed to load Archive::Unzip::Burst or got an A::Zip handle
+        # fallback to slow way.
+        if ($is_handle || $@) {
+          my $zip;
+          if (!$is_handle) {
+            open my $fh, '<', $file_or_azip_handle
+              or die "Cannot find '$file_or_azip_handle': $!";
+            binmode($fh);
+            bless($fh, 'IO::File');
 
-          my $zip = Archive::Zip->new;
-          ( $zip->readFromFileHandle($fh, $file) == Archive::Zip::AZ_OK() )
-              or die "Read '$file' error: $!";
+            $zip = Archive::Zip->new;
+            ( $zip->readFromFileHandle($fh, $file_or_azip_handle) == Archive::Zip::AZ_OK() )
+                or die "Read '$file_or_azip_handle' error: $!";
+          }
+          else {
+            $zip = $file_or_azip_handle;
+          }
+
+          mkdir($inc) if not -d $inc;
 
           for ( $zip->memberNames() ) {
               next if m{\.\Q$dlext\E[^/]*$};
               s{^/}{};
+              my $outfile =  File::Spec->catfile($inc, $_);
+              next if -e $outfile and not -w _;
               $zip->extractMember($_, "$inc/" . $_);
           }
         }
@@ -623,9 +647,16 @@ sub _extract_inc {
         rmdir("$inc.lock");
     }
 
-    require File::Spec;
-    unshift @INC, grep -d, map File::Spec->catdir($inc, @$_),
-        [ 'lib' ], [ 'arch' ], [ $arch ], [ $ver ], [ $ver, $arch ], [];
+    # add the freshly extracted directories to @INC,
+    # but make sure there's no duplicates
+    my %inc_exists = map { ($_, 1) } @INC;
+    unshift @INC, grep !exists($inc_exists{$_}),
+                  grep -d,
+                  map File::Spec->catdir($inc, @$_),
+                  [ 'lib' ], [ 'arch' ], [ $arch ],
+                  [ $ver ], [ $ver, $arch ], [];
+
+    return $inc;
 }
 
 
