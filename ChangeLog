@@ -1,3 +1,20 @@
+[Changes for 0.983 - Sep 12, 2008]
+* Dependencies
+  - Require AutoLoader 5.67 which contains a PAR-related
+    bug-fix.
+  - Require PAR::Dist 0.32.
+
+* Internal changes
+  - The full extraction process _extract_inc
+    (which is triggered when a non--clean pp packaged
+    executable is run) can now be forced to do the
+    extraction (instead of doing if !-d).
+  - That same extraction routine now accepts Archive::Zip
+    handles or file names.
+  - When, during the full extraction, the extracted paths
+    are to be added to @INC, we now make sure they're not
+    in @INC yet.
+
 [Changes for 0.982 - Aug 10, 2008]
 * New features
   - Moved the routines that setup the PAR_TEMP environment variable
