@@ -9,8 +9,8 @@ all_from    'lib/PAR.pm';
 requires    'File::Temp'        => 0.05;
 requires    'Compress::Zlib'    => ($^O eq 'MSWin32') ? 1.16 : 1.30;
 requires    'Archive::Zip'      => 1.00;
-requires    'PAR::Dist'         => 0.22;
-requires    'AutoLoader'        => 5.66_02;
+requires    'PAR::Dist'         => 0.32;
+requires    'AutoLoader'        => '5.66_02';
 
 if (can_use('Crypt::OpenPGP') or can_run('gpg')) {
     my $has_sha1 = (
