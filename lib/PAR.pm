@@ -1049,6 +1049,9 @@ L<Archive::Zip>, L<perlfunc/require>
 
 L<ex::lib::zip>, L<Acme::use::strict::with::pride>
 
+Steffen Mueller has detailed slides on using PAR for application
+deployment at L<http://steffen-mueller.net/talks/appdeployment/>.
+
 PAR supports the L<prefork> module. It declares various run-time
 dependencies so you can use the L<prefork> module to get streamlined
 processes in a forking environment.
