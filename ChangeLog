@@ -1,3 +1,5 @@
+  - Implemented the auto-upgrading option for loading and installing
+    from PAR::Repositories.
   - Fix issue with PAR::Repository::Client development versions.
 
 [Changes for 0.983 - Sep 12, 2008]

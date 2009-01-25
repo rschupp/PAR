@@ -135,6 +135,10 @@ If you specify the C<install =E<gt> 1> option in the C<use PAR>
 line above, the distribution containing C<Module> will be permanently
 installed on your system. (C<use PAR { repository =E<gt> 'http://foo/bar', install =E<gt> 1 };>)
 
+Furthermore, there is an C<upgrade =E<gt> 1> option that checks for upgrades
+in the repository in addition to installing. Please note that an upgraded
+version of a module is only loaded on the next run of your application.
+
 Finally, you can combine the C<run> and C<repository>
 options to run an application directly from a repository! (And you can add
 the C<install> option, too.)
