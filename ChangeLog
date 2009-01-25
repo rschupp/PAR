@@ -1,3 +1,5 @@
+  - Fix issue with PAR::Repository::Client development versions.
+
 [Changes for 0.983 - Sep 12, 2008]
 * Dependencies
   - Require AutoLoader 5.67 which contains a PAR-related
