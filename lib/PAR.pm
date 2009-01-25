@@ -511,6 +511,10 @@ sub _import_repository {
     if ($@ or not eval PAR::Repository::Client->VERSION >= 0.04) {
         croak "In order to use the 'use PAR { repository => 'url' };' syntax, you need to install the PAR::Repository::Client module (version 0.04 or later) from CPAN. This module does not seem to be installed as indicated by the following error message: $@";
     }
+    
+    if ($opt->{upgrade} and not eval PAR::Repository::Client->VERSION >= 0.22) {
+        croak "In order to use the 'upgrade' option, you need to install the PAR::Repository::Client module (version 0.22 or later) from CPAN";
+    }
 
     my $obj;
 
