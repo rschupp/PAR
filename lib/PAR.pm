@@ -305,6 +305,8 @@ use vars qw(@LibCache %LibCache);   # I really miss pseudohash.
 use vars qw($LastAccessedPAR $LastTempFile);
 use vars qw(@RepositoryObjects);    # If we have PAR::Repository::Client support, we
                                     # put the ::Client objects in here.
+use vars qw(@UpgradeRepositoryObjects); # If we have PAR::Repository::Client's in upgrade mode
+                                        # put the ::Client objects in here *as well*.
 use vars qw(%FileCache);            # The Zip-file file-name-cache
                                     # Layout:
                                     # $FileCache{$ZipObj}{$FileName} = $Member
@@ -502,7 +504,7 @@ sub _import_repository {
     my $url = $opt->{repository};
 
     eval "require PAR::Repository::Client; 1;";
-    if ($@ or not eval PAR::Repository::Client->VERSION >= 0.04) {                            
+    if ($@ or not eval PAR::Repository::Client->VERSION >= 0.04) {
         croak "In order to use the 'use PAR { repository => 'url' };' syntax, you need to install the PAR::Repository::Client module (version 0.04 or later) from CPAN. This module does not seem to be installed as indicated by the following error message: $@";
     }
 
@@ -516,10 +518,14 @@ sub _import_repository {
         $obj = PAR::Repository::Client->new(
             uri => $url,
             auto_install => $opt->{install},
+            auto_upgrade => $opt->{upgrade},
         );
     }
 
     push @RepositoryObjects, $obj;
+    # these are tracked separately so we can check for upgrades early
+    push @UpgradeRepositoryObjects, $obj if $opt->{upgrade};
+
     return $obj;
 }
 
@@ -663,7 +669,35 @@ sub _extract_inc {
 # This is the hook placed in @INC for loading PAR's
 # before any other stuff in @INC
 sub find_par {
-    return _find_par_internals(\@PAR_INC, @_);
+    my @args = @_;
+
+    # if there are repositories win upgrade mode, check them
+    # first. If so, this is expensive, of course!
+    if (@UpgradeRepositoryObjects) {
+        my $module = $args[1];
+        $module =~ s/\.pm$//;
+        $module =~ s/\//::/g;
+        foreach my $client (@UpgradeRepositoryObjects) {
+            my $local_file = $client->upgrade_module($module);
+
+            # break the require if upgrade_module has been required already
+            # to avoid infinite recursion
+            if (exists $INC{$args[1]}) {
+                # Oh dear. Check for the possible return values of the INC sub hooks in
+                # perldoc -f require before trying to understand this.
+                # Then, realize that if you pass undef for the file handle, perl (5.8.9)
+                # does NOT use the subroutine. Thus the hacky GLOB ref.
+                my $line = 1;
+                return (\*I_AM_NOT_HERE, sub {$line ? ($_="1;",$line=0,return(1)) : ($_="",return(0))});
+            }
+
+            if ($local_file) {
+                return _find_par_internals([$PAR_INC_LAST[-1]], @args);
+            }
+        }
+    }
+
+    return _find_par_internals(\@PAR_INC, @args);
 }
 
 # This is the hook placed in @INC for loading PAR's
@@ -683,7 +717,7 @@ sub find_par_last {
     $module =~ s/\.pm$//;
     $module =~ s/\//::/g;
     foreach my $client (@RepositoryObjects) {
-        my $local_file = $client->get_module($module, 1);
+        my $local_file = $client->get_module($module, 1); # 1 == fallback
         if ($local_file) {
             return _find_par_internals([$PAR_INC_LAST[-1]], @args);
         }
@@ -1077,6 +1111,8 @@ have sent helpful patches, ideas or comments.
 
 Audrey Tang E<lt>cpan@audreyt.orgE<gt>
 
+Steffen Mueller E<lt>smueller@cpan.orgE<gt>
+
 L<http://par.perl.org/> is the official PAR website.  You can write
 to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty mail to
 E<lt>par-subscribe@perl.orgE<gt> to participate in the discussion.
@@ -1087,8 +1123,9 @@ preferred.
 
 =head1 COPYRIGHT
 
-Copyright 2002-2008 by Audrey Tang
+Copyright 2002-2009 by Audrey Tang
 E<lt>cpan@audreyt.orgE<gt>.
+Copyright 2005-2009 by Steffen Mueller E<lt>smueller@cpan.orgE<gt>
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
