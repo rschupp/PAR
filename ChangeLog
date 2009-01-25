@@ -1,5 +1,10 @@
+
+[Changes for 0.984 - Jan 25, 2009]
+* New features
   - Implemented the auto-upgrading option for loading and installing
     from PAR::Repositories.
+
+* Bug fixes, etc.
   - Fix issue with PAR::Repository::Client development versions.
 
 [Changes for 0.983 - Sep 12, 2008]

@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.983';
+$PAR::VERSION = '0.984';
 
 use 5.006;
 use strict;
@@ -35,7 +35,7 @@ PAR - Perl Archive Toolkit
 
 =head1 VERSION
 
-This document describes release 0.983 of PAR, released September 12, 2008.
+This document describes release 0.984 of PAR, released January 25, 2008.
 
 =head1 SYNOPSIS
 
