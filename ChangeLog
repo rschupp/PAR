@@ -1,4 +1,8 @@
 
+* New features
+  - Support for the brand new static dependency resolution
+    of PAR::Repository::Client 0.23.
+
 [Changes for 0.984 - Jan 25, 2009]
 * New features
   - Implemented the auto-upgrading option for loading and installing

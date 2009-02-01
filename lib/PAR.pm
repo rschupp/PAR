@@ -139,6 +139,9 @@ Furthermore, there is an C<upgrade =E<gt> 1> option that checks for upgrades
 in the repository in addition to installing. Please note that an upgraded
 version of a module is only loaded on the next run of your application.
 
+Adding the C<dependencies =E<gt> 1> option will enable PAR::Repository::Client's
+static dependency resolution (PAR::Repository::Client 0.23 and up).
+
 Finally, you can combine the C<run> and C<repository>
 options to run an application directly from a repository! (And you can add
 the C<install> option, too.)
@@ -516,6 +519,10 @@ sub _import_repository {
         croak "In order to use the 'upgrade' option, you need to install the PAR::Repository::Client module (version 0.22 or later) from CPAN";
     }
 
+    if ($opt->{dependencies} and not eval PAR::Repository::Client->VERSION >= 0.23) {
+        croak "In order to use the 'dependencies' option, you need to install the PAR::Repository::Client module (version 0.23 or later) from CPAN";
+    }
+
     my $obj;
 
     # Support existing clients passed in as objects.
@@ -524,9 +531,10 @@ sub _import_repository {
     }
     else {
         $obj = PAR::Repository::Client->new(
-            uri => $url,
-            auto_install => $opt->{install},
-            auto_upgrade => $opt->{upgrade},
+            uri                 => $url,
+            auto_install        => $opt->{install},
+            auto_upgrade        => $opt->{upgrade},
+            static_dependencies => $opt->{dependencies},
         );
     }
 
