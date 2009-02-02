@@ -1,7 +1,13 @@
 
+[Changes for 0.985_01 - Feb  2, 2009]
 * New features
   - Support for the brand new static dependency resolution
     of PAR::Repository::Client 0.23.
+
+* Bug fixes, etc.
+  - Fix issue with running scripts from repositories:
+    The INC hooks used to be set up too late for this to
+    automatically pick up dependencies.
 
 [Changes for 0.984 - Jan 25, 2009]
 * New features
