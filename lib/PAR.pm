@@ -342,6 +342,10 @@ sub import {
 
     my @args = @_;
     
+    # Insert PAR hook in @INC.
+    unshift @INC, \&find_par   unless grep { $_ eq \&find_par }      @INC;
+    push @INC, \&find_par_last unless grep { $_ eq \&find_par_last } @INC;
+
     # process args to use PAR 'foo.par', { opts }, ...;
     foreach my $par (@args) {
         if (ref($par) eq 'HASH') {
@@ -363,10 +367,6 @@ sub import {
 
     return if $PAR::__import;
     local $PAR::__import = 1;
-
-    # Insert PAR hook in @INC.
-    unshift @INC, \&find_par   unless grep { $_ eq \&find_par }      @INC;
-    push @INC, \&find_par_last unless grep { $_ eq \&find_par_last } @INC;
 
     require PAR::Heavy;
     PAR::Heavy::_init_dynaloader();
