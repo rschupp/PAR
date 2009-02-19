@@ -1,4 +1,7 @@
 
+[Changes for 0.986 - Feb 19, 2009]
+  - Promote to stable release.
+
 [Changes for 0.985_01 - Feb  2, 2009]
 * New features
   - Support for the brand new static dependency resolution
