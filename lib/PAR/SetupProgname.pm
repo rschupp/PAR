@@ -31,7 +31,7 @@ our $Progname = $ENV{PAR_PROGNAME} || $0;
 sub set_progname {
     require File::Spec;
 
-    if ($ENV{PAR_PROGNAME} and $ENV{PAR_PROGNAME} =~ /(.+)/) {
+    if (defined $ENV{PAR_PROGNAME} and $ENV{PAR_PROGNAME} =~ /(.+)/) {
         $Progname = $1;
     }
     $Progname = $0 if not defined $Progname;
