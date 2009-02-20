@@ -100,7 +100,7 @@ sub set_par_temp_env {
         last;
     }
 
-    $PARTemp = $1 if $ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/;
+    $PARTemp = $1 if defined $ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/;
 }
 
 1;
