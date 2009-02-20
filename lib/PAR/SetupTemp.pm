@@ -36,7 +36,7 @@ sub set_par_temp_env {
     PAR::SetupProgname::set_progname()
       unless defined $PAR::SetupProgname::Progname;
 
-    if ($ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/) {
+    if (defined $ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/) {
         $PARTemp = $1;
         return;
     }
@@ -47,7 +47,7 @@ sub set_par_temp_env {
         (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMPDIR TEMP TMP )),
         qw( C:\\TEMP /tmp . )
     ) {
-        next unless $path and -d $path and -w $path;
+        next unless defined $path and -d $path and -w $path;
         my $username;
         my $pwuid;
         # does not work everywhere:
