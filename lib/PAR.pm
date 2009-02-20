@@ -1083,6 +1083,7 @@ END {
   if (exists $ENV{PAR_CLEAN} and $ENV{PAR_CLEAN}
       and exists $ENV{PAR_TEMP} and defined $ENV{PAR_TEMP} and -d $ENV{PAR_TEMP}
   ) {
+    local($!); # paranoid: ignore potential errors without clobbering a global variable!
     rmdir($ENV{PAR_TEMP});
   }
 }
