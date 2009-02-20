@@ -41,8 +41,6 @@ sub set_par_temp_env {
         return;
     }
 
-    return if $ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/;
-
     require File::Spec;
 
     foreach my $path (
