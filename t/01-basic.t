@@ -1,9 +1,13 @@
 #!/usr/bin/perl
+use strict;
+use warnings;
+use Test::More tests => 8;
+use File::Spec;
+use File::Path;
 
-use Test;
-BEGIN { plan tests => 8 }
-
-$ENV{PAR_CLEAN} = 1;
+BEGIN {
+  $ENV{PAR_CLEAN} = 1;
+}
 
 ok(
     `"$^X" -Mblib -MPAR -It/hello -MHello -e Hello::hello`,
