@@ -41,66 +41,89 @@ sub set_par_temp_env {
         return;
     }
 
+    my $stmpdir = _get_par_user_tempdir();
     require File::Spec;
+    if (defined $stmpdir) { # it'd be quite bad if this was not the case
+      if (!$ENV{PAR_CLEAN} and my $mtime = (stat($PAR::SetupProgname::Progname))[9]) {
+          my $ctx = _get_digester();
 
-    foreach my $path (
-        (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMPDIR TEMP TMP )),
-        qw( C:\\TEMP /tmp . )
-    ) {
-        next unless defined $path and -d $path and -w $path;
-        my $username;
-        my $pwuid;
-        # does not work everywhere:
-        eval {($pwuid) = getpwuid($>) if defined $>;};
+          # Workaround for bug in Digest::SHA 5.38 and 5.39
+          my $sha_version = eval { $Digest::SHA::VERSION } || 0;
+          if ($sha_version eq '5.38' or $sha_version eq '5.39') {
+              $ctx->addfile($PAR::SetupProgname::Progname, "b") if ($ctx);
+          }
+          else {
+              if ($ctx and open(my $fh, "<$PAR::SetupProgname::Progname")) {
+                  binmode($fh);
+                  $ctx->addfile($fh);
+                  close($fh);
+              }
+          }
 
-        if ( defined(&Win32::LoginName) ) {
-            $username = &Win32::LoginName;
-        }
-        elsif (defined $pwuid) {
-            $username = $pwuid;
-        }
-        else {
-            $username = $ENV{USERNAME} || $ENV{USER} || 'SYSTEM';
-        }
-        $username =~ s/\W/_/g;
+          $stmpdir = File::Spec->catdir(
+              $stmpdir,
+              "cache-" . ( $ctx ? $ctx->hexdigest : $mtime )
+          );
+      }
+      else {
+          $ENV{PAR_CLEAN} = 1;
+          $stmpdir = File::Spec->catdir($stmpdir, "temp-$$");
+      }
 
-        my $stmpdir = File::Spec->catdir($path, "par-$username");
-        ($stmpdir) = $stmpdir =~ /^(.*)$/s;
-        mkdir $stmpdir, 0755;
-        if (!$ENV{PAR_CLEAN} and my $mtime = (stat($PAR::SetupProgname::Progname))[9]) {
-            my $ctx = eval { require Digest::SHA; Digest::SHA->new(1) }
-                   || eval { require Digest::SHA1; Digest::SHA1->new }
-                   || eval { require Digest::MD5; Digest::MD5->new };
-
-            # Workaround for bug in Digest::SHA 5.38 and 5.39
-            my $sha_version = eval { $Digest::SHA::VERSION } || 0;
-            if ($sha_version eq '5.38' or $sha_version eq '5.39') {
-                $ctx->addfile($PAR::SetupProgname::Progname, "b") if ($ctx);
-            }
-            else {
-                if ($ctx and open(my $fh, "<$PAR::SetupProgname::Progname")) {
-                    binmode($fh);
-                    $ctx->addfile($fh);
-                    close($fh);
-                }
-            }
-
-            $stmpdir = File::Spec->catdir(
-                $stmpdir,
-                "cache-" . ( $ctx ? $ctx->hexdigest : $mtime )
-            );
-        }
-        else {
-            $ENV{PAR_CLEAN} = 1;
-            $stmpdir = File::Spec->catdir($stmpdir, "temp-$$");
-        }
-
-        $ENV{PAR_TEMP} = $stmpdir;
-        mkdir $stmpdir, 0755;
-        last;
-    }
+      $ENV{PAR_TEMP} = $stmpdir;
+      mkdir $stmpdir, 0755;
+    } # end if found a temp dir
 
     $PARTemp = $1 if defined $ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/;
+}
+
+# Find any digester
+# Used in PAR::Repository::Client!
+sub _get_digester {
+  my $ctx = eval { require Digest::SHA; Digest::SHA->new(1) }
+         || eval { require Digest::SHA1; Digest::SHA1->new }
+         || eval { require Digest::MD5; Digest::MD5->new };
+  return $ctx;
+}
+
+# find the per-user temporary directory (eg /tmp/par-$USER)
+# Used in PAR::Repository::Client!
+sub _get_par_user_tempdir {
+  my $username = _find_username();
+  my $temp_path;
+  foreach my $path (
+    (map $ENV{$_}, qw( PAR_TMPDIR TMPDIR TEMPDIR TEMP TMP )),
+      qw( C:\\TEMP /tmp . )
+  ) {
+    next unless defined $path and -d $path and -w $path;
+    $temp_path = File::Spec->catdir($path, "par-$username");
+    ($temp_path) = $temp_path =~ /^(.*)$/s;
+    mkdir $temp_path, 0755;
+
+    last;
+  }
+  return $temp_path;
+}
+
+# tries hard to find out the name of the current user
+sub _find_username {
+  my $username;
+  my $pwuid;
+  # does not work everywhere:
+  eval {($pwuid) = getpwuid($>) if defined $>;};
+
+  if ( defined(&Win32::LoginName) ) {
+    $username = &Win32::LoginName;
+  }
+  elsif (defined $pwuid) {
+    $username = $pwuid;
+  }
+  else {
+    $username = $ENV{USERNAME} || $ENV{USER} || 'SYSTEM';
+  }
+  $username =~ s/\W/_/g;
+
+  return $username;
 }
 
 1;

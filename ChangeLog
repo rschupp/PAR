@@ -6,6 +6,7 @@
 * Bug fixes, etc.
   - Very slightly more careful handling of PAR-specific environment
     variables.
+  - Cleanup of PAR::SetupTemp
 
 [Changes for 0.986 - Feb 19, 2009]
   - Promote to stable release.
