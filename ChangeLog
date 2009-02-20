@@ -1,4 +1,12 @@
 
+* New features
+  - Better cleanup of the $TMPDIR/par-$USER/temp-$$ directories
+    that are typically used as caches in the "use PAR 'foo.par'" use case.
+
+* Bug fixes, etc.
+  - Very slightly more careful handling of PAR-specific environment
+    variables.
+
 [Changes for 0.986 - Feb 19, 2009]
   - Promote to stable release.
 
