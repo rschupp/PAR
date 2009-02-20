@@ -1,4 +1,5 @@
 
+[Changes for 0.987_01 - Feb 20, 2009]
 * New features
   - Better cleanup of the $TMPDIR/par-$USER/temp-$$ directories
     that are typically used as caches in the "use PAR 'foo.par'" use case.
