@@ -1,4 +1,7 @@
 
+[Changes for 0.988 - Mar  1, 2009]
+  - Promote previous release to stable release.
+
 [Changes for 0.987_01 - Feb 20, 2009]
 * New features
   - Better cleanup of the $TMPDIR/par-$USER/temp-$$ directories
