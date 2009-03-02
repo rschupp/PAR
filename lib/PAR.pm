@@ -317,6 +317,7 @@ use vars qw(@UpgradeRepositoryObjects); # If we have PAR::Repository::Client's i
 use vars qw(%FileCache);            # The Zip-file file-name-cache
                                     # Layout:
                                     # $FileCache{$ZipObj}{$FileName} = $Member
+use vars qw(%ArchivesExtracted);    # Associates archive-zip-object => full extraction path
 
 my $ver  = $Config{version};
 my $arch = $Config{archname};
@@ -379,6 +380,11 @@ sub import {
         push @PAR_INC, unpar($progname, undef, undef, 1);
 
         _extract_inc($progname) unless $ENV{PAR_CLEAN};
+        if ($LibCache{$progname}) {
+          # XXX bad: this us just a good guess
+          require File::Spec;
+          $ArchivesExtracted{$progname} = File::Spec->catdir($ENV{PAR_TEMP}, 'inc');
+        }
 
         my $zip = $LibCache{$progname};
         my $member = _first_member( $zip,
@@ -558,6 +564,26 @@ sub _first_member {
     return;
 }
 
+# Given an Archive::Zip object, this finds the first 
+# Archive::Zip member whose file name matches the
+# regular expression
+sub _first_member_matching {
+    my $zip = shift;
+    my $regex = shift;
+
+    my $cache = $FileCache{$zip};
+    $cache = $FileCache{$zip} = _make_file_cache($zip) if not $cache;
+
+    foreach my $name (keys %$cache) {
+      if ($name =~ $regex) {
+        return $cache->{$name};
+      }
+    }
+
+    return();
+}
+
+
 sub _run_member_from_par {
     my $member = shift;
     my $clear_stack = shift;
@@ -667,6 +693,8 @@ sub _extract_inc {
         }
         
         rmdir("$inc.lock");
+
+        $ArchivesExtracted{$is_handle ? $file_or_azip_handle->fileName() : $file_or_azip_handle} = $inc;
     }
 
     # add the freshly extracted directories to @INC,
