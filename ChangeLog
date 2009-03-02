@@ -1,4 +1,9 @@
 
+[Changes for 0.989_01 - Mar  2, 2009]
+* Bug fixes, etc.
+  - Track the locations of all archives that have been extracted to
+    $ENV{PAR_TEMP}/inc in this run.
+
 [Changes for 0.988 - Mar  1, 2009]
   - Promote previous release to stable release.
 
