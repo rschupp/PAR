@@ -1,4 +1,7 @@
 
+[Changes for 0.991 - Mar 10, 2009]
+  - Promote previous release to stable release.
+
 [Changes for 0.989_01 - Mar  2, 2009]
 * Bug fixes, etc.
   - Track the locations of all archives that have been extracted to
