@@ -33,10 +33,6 @@ use PAR::SetupTemp;
 
 PAR - Perl Archive Toolkit
 
-=head1 VERSION
-
-This document describes release 0.989_01 of PAR, released March 2, 2009.
-
 =head1 SYNOPSIS
 
 (If you want to make an executable that contains all module, scripts and
