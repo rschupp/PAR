@@ -30,7 +30,7 @@ BEGIN {
 	# This is not enforced yet, but will be some time in the next few
 	# releases once we can make sure it won't clash with custom
 	# Module::Install extensions.
-	$VERSION = '0.79';
+	$VERSION = '0.81';
 
 	*inc::Module::Install::VERSION = *VERSION;
 	@inc::Module::Install::ISA     = __PACKAGE__;
@@ -69,16 +69,26 @@ END_DIE
 # again. This is bad. Rather than taking action to touch it (which
 # is unreliable on some platforms and requires write permissions)
 # for now we should catch this and refuse to run.
-if ( -f $0 and (stat($0))[9] > time ) { die <<"END_DIE" }
+if ( -f $0 ) {
+	my $s = (stat($0))[9];
 
-Your installer $0 has a modification time in the future.
+	# If the modification time is only slightly in the future,
+	# sleep briefly to remove the problem.
+	my $a = $s - time;
+	if ( $a > 0 and $a < 5 ) { sleep 5 }
+
+	# Too far in the future, throw an error.
+	my $t = time;
+	if ( $s > $t ) { die <<"END_DIE" }
+
+Your installer $0 has a modification time in the future ($s > $t).
 
 This is known to create infinite loops in make.
 
 Please correct this, then run $0 again.
 
 END_DIE
-
+}
 
 
 
@@ -314,7 +324,7 @@ sub find_extensions {
 
 
 #####################################################################
-# Utility Functions
+# Common Utility Functions
 
 sub _caller {
 	my $depth = 0;
@@ -328,29 +338,68 @@ sub _caller {
 
 sub _read {
 	local *FH;
-	open FH, "< $_[0]" or die "open($_[0]): $!";
-	my $str = do { local $/; <FH> };
+	if ( $] >= 5.006 ) {
+		open( FH, '<', $_[0] ) or die "open($_[0]): $!";
+	} else {
+		open( FH, "< $_[0]"  ) or die "open($_[0]): $!";	
+	}
+	my $string = do { local $/; <FH> };
 	close FH or die "close($_[0]): $!";
-	return $str;
+	return $string;
+}
+
+sub _readperl {
+	my $string = Module::Install::_read($_[0]);
+	$string =~ s/(?:\015{1,2}\012|\015|\012)/\n/sg;
+	$string =~ s/(\n)\n*__(?:DATA|END)__\b.*\z/$1/s;
+	$string =~ s/\n\n=\w+.+?\n\n=cut\b.+?\n+/\n\n/sg;
+	return $string;
+}
+
+sub _readpod {
+	my $string = Module::Install::_read($_[0]);
+	$string =~ s/(?:\015{1,2}\012|\015|\012)/\n/sg;
+	return $string if $_[0] =~ /\.pod\z/;
+	$string =~ s/(^|\n=cut\b.+?\n+)[^=\s].+?\n(\n=\w+|\z)/$1$2/sg;
+	$string =~ s/\n*=pod\b[^\n]*\n+/\n\n/sg;
+	$string =~ s/\n*=cut\b[^\n]*\n+/\n\n/sg;
+	$string =~ s/^\n+//s;
+	return $string;
 }
 
 sub _write {
 	local *FH;
-	open FH, "> $_[0]" or die "open($_[0]): $!";
-	foreach ( 1 .. $#_ ) { print FH $_[$_] or die "print($_[0]): $!" }
+	if ( $] >= 5.006 ) {
+		open( FH, '>', $_[0] ) or die "open($_[0]): $!";
+	} else {
+		open( FH, "> $_[0]"  ) or die "open($_[0]): $!";	
+	}
+	foreach ( 1 .. $#_ ) {
+		print FH $_[$_] or die "print($_[0]): $!";
+	}
 	close FH or die "close($_[0]): $!";
 }
 
 # _version is for processing module versions (eg, 1.03_05) not
 # Perl versions (eg, 5.8.1).
-
 sub _version ($) {
 	my $s = shift || 0;
-	   $s =~ s/^(\d+)\.?//;
+	my $d =()= $s =~ /(\.)/g;
+	if ( $d >= 2 ) {
+		# Normalise multipart versions
+		$s =~ s/(\.)(\d{1,3})/sprintf("$1%03d",$2)/eg;
+	}
+	$s =~ s/^(\d+)\.?//;
 	my $l = $1 || 0;
-	my @v = map { $_ . '0' x (3 - length $_) } $s =~ /(\d{1,3})\D?/g;
-	   $l = $l . '.' . join '', @v if @v;
+	my @v = map {
+		$_ . '0' x (3 - length $_)
+	} $s =~ /(\d{1,3})\D?/g;
+	$l = $l . '.' . join '', @v if @v;
 	return $l + 0;
+}
+
+sub _cmp ($$) {
+	_version($_[0]) <=> _version($_[1]);
 }
 
 # Cloned from Params::Util::_CLASS
@@ -360,7 +409,7 @@ sub _CLASS ($) {
 		and
 		! ref $_[0]
 		and
-		$_[0] =~ m/^[^\W\d]\w*(?:::\w+)*$/s
+		$_[0] =~ m/^[^\W\d]\w*(?:::\w+)*\z/s
 	) ? $_[0] : undef;
 }
 
