@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.991';
+$PAR::VERSION = '0.992';
 
 use 5.006;
 use strict;
@@ -281,7 +281,15 @@ A par repository (exclusive of file)
 
 =item fallback
 
-Search the system @INC before the par.
+Search the system C<@INC> before the par.
+
+Off by default for loading F<.par> files via C<file => ...>.
+On by default for PAR repositories.
+
+To prefer loading modules from a repository over the locally
+installed modules, you can load the repository as follows:
+
+  use PAR { repository => 'http://foo/bar/', fallback => 0 };
 
 =item run
 

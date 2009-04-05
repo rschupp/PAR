@@ -1,3 +1,5 @@
+[Changes for 0.992 - Apr  5, 2009]
+  - Support for non-fallback repositories.
 
 [Changes for 0.991 - Mar 10, 2009]
   - Promote previous release to stable release.
