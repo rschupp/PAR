@@ -301,15 +301,16 @@ shared object file..."
 
 =cut
 
-use vars qw(@PAR_INC);              # explicitly stated PAR library files (prefered)
+use vars qw(@PAR_INC);              # explicitly stated PAR library files (preferred)
 use vars qw(@PAR_INC_LAST);         # explicitly stated PAR library files (fallback)
 use vars qw(%PAR_INC);              # sets {$par}{$file} for require'd modules
 use vars qw(@LibCache %LibCache);   # I really miss pseudohash.
 use vars qw($LastAccessedPAR $LastTempFile);
 use vars qw(@RepositoryObjects);    # If we have PAR::Repository::Client support, we
                                     # put the ::Client objects in here.
-use vars qw(@UpgradeRepositoryObjects); # If we have PAR::Repository::Client's in upgrade mode
-                                        # put the ::Client objects in here *as well*.
+use vars qw(@PriorityRepositoryObjects); # repositories which are preferred over local stuff
+use vars qw(@UpgradeRepositoryObjects);  # If we have PAR::Repository::Client's in upgrade mode
+                                         # put the ::Client objects in here *as well*.
 use vars qw(%FileCache);            # The Zip-file file-name-cache
                                     # Layout:
                                     # $FileCache{$ZipObj}{$FileName} = $Member
@@ -540,7 +541,11 @@ sub _import_repository {
         );
     }
 
-    push @RepositoryObjects, $obj;
+    if (exists($opt->{fallback}) and not $opt->{fallback}) {
+        push @PriorityRepositoryObjects, $obj; # repository beats local stuff
+    } else {
+        push @RepositoryObjects, $obj; # local stuff beats repository
+    }
     # these are tracked separately so we can check for upgrades early
     push @UpgradeRepositoryObjects, $obj if $opt->{upgrade};
 
@@ -736,8 +741,21 @@ sub find_par {
             }
         }
     }
+    my $rv = _find_par_internals(\@PAR_INC, @args);
 
-    return _find_par_internals(\@PAR_INC, @args);
+    return $rv if defined $rv or not @PriorityRepositoryObjects;
+
+    # the repositories that are prefered over locally installed modules
+    my $module = $args[1];
+    $module =~ s/\.pm$//;
+    $module =~ s/\//::/g;
+    foreach my $client (@PriorityRepositoryObjects) {
+        my $local_file = $client->get_module($module, 1); # 1 == fallback
+        if ($local_file) {
+            return _find_par_internals([$PAR_INC_LAST[-1]], @args);
+        }
+    }
+    return();
 }
 
 # This is the hook placed in @INC for loading PAR's
