@@ -711,7 +711,7 @@ sub _extract_inc {
 sub find_par {
     my @args = @_;
 
-    # if there are repositories win upgrade mode, check them
+    # if there are repositories in upgrade mode, check them
     # first. If so, this is expensive, of course!
     if (@UpgradeRepositoryObjects) {
         my $module = $args[1];
