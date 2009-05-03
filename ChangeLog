@@ -1,3 +1,6 @@
+  - Band-aid fix for the loading priority of shared librares from
+    PAR files: Try PAR's first, the local stuff, then fallback-PARs.
+
 [Changes for 0.992 - Apr  5, 2009]
   - Support for non-fallback repositories.
 
