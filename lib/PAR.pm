@@ -792,14 +792,6 @@ sub find_par_last {
 }
 
 
-# This is a conjunction of the early find_par and the late
-# find_par_last. It's called by PAR::Heavy for Dynaloader stuff.
-sub _find_par_any {
-    return _find_par_internals([@PAR_INC, @PAR_INC_LAST], @_);
-}
-
-
-
 # This routine implements loading modules from PARs
 # both for loading PARs preferably or as fallback.
 # To distinguish the cases, the first parameter should
