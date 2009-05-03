@@ -1,3 +1,5 @@
+  - The priority (fallback=>0) repositories should look at @PAR_INC
+    for the loaded PARs instead of @PAR_INC_LAST.
   - Band-aid fix for the loading priority of shared librares from
     PAR files: Try PAR's first, the local stuff, then fallback-PARs.
 

@@ -745,6 +745,7 @@ sub find_par {
             }
 
             if ($local_file) {
+                # XXX load with fallback - is that right?
                 return _find_par_internals([$PAR_INC_LAST[-1]], @args);
             }
         }
@@ -760,7 +761,9 @@ sub find_par {
     foreach my $client (@PriorityRepositoryObjects) {
         my $local_file = $client->get_module($module, 1); # 1 == fallback
         if ($local_file) {
-            return _find_par_internals([$PAR_INC_LAST[-1]], @args);
+            # Not loaded as fallback (cf. PRIORITY) thus look at PAR_INC
+            # instead of PAR_INC_LAST
+            return _find_par_internals([$PAR_INC[-1]], @args);
         }
     }
     return();
@@ -785,6 +788,7 @@ sub find_par_last {
     foreach my $client (@RepositoryObjects) {
         my $local_file = $client->get_module($module, 1); # 1 == fallback
         if ($local_file) {
+            # Loaded as fallback thus look at PAR_INC_LAST
             return _find_par_internals([$PAR_INC_LAST[-1]], @args);
         }
     }
