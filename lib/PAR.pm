@@ -759,7 +759,7 @@ sub find_par {
     $module =~ s/\.pm$//;
     $module =~ s/\//::/g;
     foreach my $client (@PriorityRepositoryObjects) {
-        my $local_file = $client->get_module($module, 1); # 1 == fallback
+        my $local_file = $client->get_module($module, 0); # 1 == fallback
         if ($local_file) {
             # Not loaded as fallback (cf. PRIORITY) thus look at PAR_INC
             # instead of PAR_INC_LAST
