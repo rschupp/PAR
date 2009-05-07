@@ -85,7 +85,7 @@ sub _bootstrap {
 
     my $member;
     # First, try to find things in the peferentially loaded PARs:
-    $member = _find_par_internals([@PAR_INC], undef, $file, 1) if defined &PAR::_find_par_internals;
+    $member = PAR::_find_par_internals([@PAR_INC], undef, $file, 1) if defined &PAR::_find_par_internals;
 
     # If that failed to find the dll, let DynaLoader (try or) throw an error
     unless ($member) { 
@@ -94,7 +94,7 @@ sub _bootstrap {
     }
 
     # Now try the fallback pars
-    $member = _find_par_internals([@PAR_INC_LAST], undef, $file, 1) if defined &PAR::_find_par_internals;
+    $member = PAR::_find_par_internals([@PAR_INC_LAST], undef, $file, 1) if defined &PAR::_find_par_internals;
 
     # If that fails, let dynaloader have another go JUST to throw an error
     # While this may seem wasteful, nothing really matters once we fail to
