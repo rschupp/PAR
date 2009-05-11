@@ -744,10 +744,16 @@ sub find_par {
                 return (\*I_AM_NOT_HERE, sub {$line ? ($_="1;",$line=0,return(1)) : ($_="",return(0))});
             }
 
-            if ($local_file) {
-                # XXX load with fallback - is that right?
-                return _find_par_internals([$PAR_INC_LAST[-1]], @args);
-            }
+            # Note: This is likely not necessary as the module has been installed
+            # into the system by upgrade_module if it was available at all.
+            # If it was already loaded, this will not be reached (see return right above).
+            # If it could not be loaded from the system and neither found in the repository,
+            # we simply want to have the normal error message, too!
+            #
+            #if ($local_file) {
+            #    # XXX load with fallback - is that right?
+            #    return _find_par_internals([$PAR_INC_LAST[-1]], @args);
+            #}
         }
     }
     my $rv = _find_par_internals(\@PAR_INC, @args);
