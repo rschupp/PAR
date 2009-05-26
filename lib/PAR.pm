@@ -812,7 +812,7 @@ sub _find_par_internals {
     my $scheme;
     foreach (@$INC_ARY ? @$INC_ARY : @INC) {
         my $path = $_;
-        if ($[ < 5.008001) {
+        if ($] < 5.008001) {
             # reassemble from "perl -Ischeme://path" autosplitting
             $path = "$scheme:$path" if !@$INC_ARY
                 and $path and $path =~ m!//!
