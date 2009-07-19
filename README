@@ -4,7 +4,7 @@ and modules stored inside compressed .par files.
 Please type "perldoc PAR" after installation to see the module usage
 information, and "perldoc PAR::FAQ" for frequently answered questions.
 
-As of version 0.97 of PAR, the logic for generating stand-alone executables
+With version 0.97 of PAR, the logic for generating stand-alone executables
 has been refactored into the PAR-Packer distribution. It should be available
 from the same source you got PAR from. Hence, for packing scripts with
 prerequisite modules into stand-alone scripts or executables
@@ -76,7 +76,9 @@ Please submit bug reports to <bug-par@rt.cpan.org>.
 
 * Copyright
 
-Copyright 2002, 2003, 2004, 2005, 2006 by Audrey Tang <cpan@audreyt.org>.
+Copyright 2002-2009 by Audrey Tang <cpan@audreyt.org>.
+
+Copyright 2002-2009 by Steffen Mueller <smueller@cpan.org>.
 
 All rights reserved.  You can redistribute and/or modify
 this bundle under the same terms as Perl itself.
