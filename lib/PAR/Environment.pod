@@ -131,6 +131,19 @@ or the unqualified file name given is qualified by walking the path.
 This is reasonably reliable given normal program spawning conventions,
 but cannot be guaranteed to be correct in all circumstances.
 
+=head2 PAR_APP_REUSE
+
+Strictly internal. Skip this section if you're not a PAR developer.
+
+The variable shouldn't ever be exposed to user code and packaged
+applications should not depend on it being set or not.
+
+If an application has been packaged with the C<--reusable> option, the
+bootstrapping code will set this environment variable to the name of
+the program that is to be run instead of the packaged program.
+The F<main.pl> loader script fetches the file name, deletes the
+environment variable, and then runs the given program.
+
 =head2 PAR_RUN
 
 This environment variable was set during constructions of C<PAR::Packer>
