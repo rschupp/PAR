@@ -640,6 +640,34 @@ sub _run_member {
     }
 }
 
+sub _run_external_file {
+    my $filename = shift;
+    my $clear_stack = shift;
+    require 5.008;
+    open my $ffh, '<', $filename
+      or die "Can't open perl script \"$filename\": $!";
+
+    my $clearstack = '';
+    if (defined &Internals::PAR::CLEARSTACK and $clear_stack) {
+        $clear_stack = "Internals::PAR::CLEARSTACK();\n";
+    }
+    my $string = "package main; shift \@INC;\n$clearstack#line 1 \"$filename\"\n"
+                 . do { local $/ = undef; <$ffh> };
+    close $ffh;
+
+    open my $fh, '<', \$string
+      or die "Can't open file handle to string: $!";
+
+    unshift @INC, sub { $fh };
+
+    $ENV{PAR_0} = $filename; # for Pod::Usage
+    { do 'main';
+      CORE::exit($1) if ($@ =~/^_TK_EXIT_\((\d+)\)/);
+      die $@ if $@;
+      exit;
+    }
+}
+
 # extract the contents of a .par (or .exe) or any
 # Archive::Zip handle to the PAR_TEMP/inc directory.
 # returns that directory.
