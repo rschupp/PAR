@@ -188,8 +188,11 @@ Please submit bug reports to E<lt>bug-par@rt.cpan.orgE<gt>.
 
 =head1 COPYRIGHT
 
-Copyright 2002-2008 by Audrey Tang
+Copyright 2002-2009 by Audrey Tang
 E<lt>cpan@audreyt.orgE<gt>.
+
+Copyright 2006-2009 by Steffen Mueller
+E<lt>smueller@cpan.orgE<gt>.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
