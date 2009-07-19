@@ -741,6 +741,7 @@ sub find_par {
                 # Then, realize that if you pass undef for the file handle, perl (5.8.9)
                 # does NOT use the subroutine. Thus the hacky GLOB ref.
                 my $line = 1;
+                no warnings;
                 return (\*I_AM_NOT_HERE, sub {$line ? ($_="1;",$line=0,return(1)) : ($_="",return(0))});
             }
 
