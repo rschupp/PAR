@@ -1,3 +1,6 @@
+[Changes for 0.994 - Jul 23, 2009]
+  - Fix for the PAR::Heavy fix to the INC priority handling.
+
 [Changes for 0.993 - Jul 19, 2009]
   - The priority (fallback=>0) repositories should look at @PAR_INC
     for the loaded PARs instead of @PAR_INC_LAST.
