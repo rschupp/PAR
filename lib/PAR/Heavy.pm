@@ -71,7 +71,7 @@ sub _bootstrap {
     # FIXME: Config is always loaded by PAR.pm!
     $dlext ||= do {
         require Config;
-        (defined %Config::Config) ? $Config::Config{dlext} : '';
+        (%Config::Config) ? $Config::Config{dlext} : '';
     };
 
     my $modpname = join((($^O eq 'MacOS') ? ':' : '/'), @modparts);
