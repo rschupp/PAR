@@ -1,5 +1,5 @@
 package PAR;
-$PAR::VERSION = '0.994';
+$PAR::VERSION = '1.000';
 
 use 5.006;
 use strict;
@@ -1232,9 +1232,9 @@ preferred.
 
 =head1 COPYRIGHT
 
-Copyright 2002-2009 by Audrey Tang
+Copyright 2002-2010 by Audrey Tang
 E<lt>cpan@audreyt.orgE<gt>.
-Copyright 2005-2009 by Steffen Mueller E<lt>smueller@cpan.orgE<gt>
+Copyright 2005-2010 by Steffen Mueller E<lt>smueller@cpan.orgE<gt>
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

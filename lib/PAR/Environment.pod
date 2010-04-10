@@ -239,10 +239,10 @@ preferred.
 
 =head1 COPYRIGHT
 
-PAR: Copyright 2003-2008 by Audrey Tang,
+PAR: Copyright 2003-2010 by Audrey Tang,
 E<lt>cpan@audreyt.orgE<gt>.
 
-This document: Copyright 2006-2008 by Steffen Mueller,
+This document: Copyright 2006-2010 by Steffen Mueller,
 E<lt>smueller@cpan.orgE<gt>
 
 Some information has been taken from Alan Stewart's extra documentation in the

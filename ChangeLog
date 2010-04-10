@@ -1,3 +1,6 @@
+[Changes for 1.000 - Apr 10, 2010]
+  - Fix defined(%hash) deprecation warning in PAR::Heavy
+
 [Changes for 0.994 - Jul 23, 2009]
   - Fix for the PAR::Heavy fix to the INC priority handling.
 
