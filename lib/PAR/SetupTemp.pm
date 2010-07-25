@@ -1,5 +1,5 @@
 package PAR::SetupTemp;
-$PAR::VERSION = '0.982';
+$PAR::SetupTemp::VERSION = '1.002';
 
 use 5.006;
 use strict;

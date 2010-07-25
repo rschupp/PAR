@@ -1,5 +1,5 @@
 package PAR::SetupProgname;
-$PAR::VERSION = '1.000';
+$PAR::SetupProgname::VERSION = '1.002';
 
 use 5.006;
 use strict;
