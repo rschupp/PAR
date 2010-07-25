@@ -1,3 +1,7 @@
+[Changes for 1.002 - Jul 25, 2010]
+  - Fixes to VERSIONs of PAR::Setup*.
+  - No change in behaviour since 1.001
+
 [Changes for 1.001 - Jul 25, 2010]
   - RT #57399: extract everything (including DLLs) in File::ShareDir
     directories. Module::ScanDeps classifies everything in
