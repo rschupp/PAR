@@ -19,7 +19,6 @@ No user-serviceable parts inside.
 # Dynamic inclusion of XS modules
 
 my ($bootstrap, $dl_findfile);  # Caches for code references
-my ($dlext);                    # Cache for $Config{dlext}
 my ($cache_key);                # The current file to find
 my $is_insensitive_fs = (
     -s $0
@@ -67,15 +66,8 @@ sub _bootstrap {
         $modfname = substr($modfname, 0, 8);
     }
 
-    # XXX: Multi-platform .dll support in PARs needs better than $Config.
-    # FIXME: Config is always loaded by PAR.pm!
-    $dlext ||= do {
-        require Config;
-        (%Config::Config) ? $Config::Config{dlext} : '';
-    };
-
     my $modpname = join((($^O eq 'MacOS') ? ':' : '/'), @modparts);
-    my $file = $cache_key = "auto/$modpname/$modfname.$dlext";
+    my $file = $cache_key = "auto/$modpname/$modfname.$DynaLoader::dl_dlext";
 
     if ($FullCache{$file}) {
         # TODO: understand
@@ -118,7 +110,7 @@ sub _bootstrap {
 
             my $name = $member->fileName;
             next if $name eq $first;
-            next unless $name =~ m{^/?\Q$path_pattern\E\/[^/]*\.\Q$dlext\E[^/]*$};
+            next unless $name =~ m{^/?\Q$path_pattern\E\/[^/]*\.\Q$DynaLoader::dl_dlext\E[^/]*$};
             $name =~ s{.*/}{};
             _dl_extract($member, $file, $name);
         }
@@ -145,7 +137,7 @@ sub _dl_extract {
     if ($ENV{PAR_CLEAN} and !$name) {
         ($fh, $filename) = File::Temp::tempfile(
             DIR         => ($ENV{PAR_TEMP} || File::Spec->tmpdir),
-            SUFFIX      => ".$dlext",
+            SUFFIX      => ".$DynaLoader::dl_dlext",
             UNLINK      => ($^O ne 'MSWin32' and $^O !~ /hpux/),
         );
         ($filename) = $filename =~ /^([\x20-\xff]+)$/;
@@ -153,7 +145,7 @@ sub _dl_extract {
     else {
         $filename = File::Spec->catfile(
             ($ENV{PAR_TEMP} || File::Spec->tmpdir),
-            ($name || ($member->crc32String . ".$dlext"))
+            ($name || ($member->crc32String . ".$DynaLoader::dl_dlext"))
         );
         ($filename) = $filename =~ /^([\x20-\xff]+)$/;
 
