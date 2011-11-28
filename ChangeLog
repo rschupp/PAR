@@ -1,3 +1,18 @@
+[Changes for 1.003 - Nov 28, 2011]
+  -  RT #69560/CVE-2011-4114: PAR packed files are extracted to unsafe
+     and predictable temporary directories
+     (Note: this bug was originally reported against PAR::Packer, but
+     it applies to PAR as well)
+     - create parent of cache directory (i.e. /tmp/par-USER) with mode 0700
+     - if it already exists, make sure that (and bail out if not)
+       - it's not a symlink
+       - it's mode 0700
+       - it's owned by USER
+  - Fix a problem packing XML::LibXSLT on Windows (see the thread starting 
+    with http://www.nntp.perl.org/group/perl.par/2011/02/msg4919.html)
+  - Die (with a hopefully useful message) if any error is encountered 
+    during an Archive::Zip extract operation
+
 [Changes for 1.002 - Jul 25, 2010]
   - Fixes to VERSIONs of PAR::Setup*.
   - No change in behaviour since 1.001
