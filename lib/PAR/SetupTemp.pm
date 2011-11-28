@@ -5,6 +5,8 @@ use 5.006;
 use strict;
 use warnings;
 
+use Fcntl ':mode';
+
 use PAR::SetupProgname;
 
 =head1 NAME
@@ -42,8 +44,9 @@ sub set_par_temp_env {
     }
 
     my $stmpdir = _get_par_user_tempdir();
+    die "unable to create cache directory" unless $stmpdir;
+
     require File::Spec;
-    if (defined $stmpdir) { # it'd be quite bad if this was not the case
       if (!$ENV{PAR_CLEAN} and my $mtime = (stat($PAR::SetupProgname::Progname))[9]) {
           my $ctx = _get_digester();
 
@@ -71,8 +74,7 @@ sub set_par_temp_env {
       }
 
       $ENV{PAR_TEMP} = $stmpdir;
-      mkdir $stmpdir, 0755;
-    } # end if found a temp dir
+    mkdir $stmpdir, 0700;
 
     $PARTemp = $1 if defined $ENV{PAR_TEMP} and $ENV{PAR_TEMP} =~ /(.+)/;
 }
@@ -98,7 +100,24 @@ sub _get_par_user_tempdir {
     next unless defined $path and -d $path and -w $path;
     $temp_path = File::Spec->catdir($path, "par-$username");
     ($temp_path) = $temp_path =~ /^(.*)$/s;
-    mkdir $temp_path, 0755;
+    unless (mkdir($temp_path, 0700) || $!{EEXIST}) {
+      warn "creation of private subdirectory $temp_path failed (errno=$!)"; 
+      return;
+    }
+
+    unless ($^O eq 'MSWin32') {
+        my @st;
+        unless (@st = lstat($temp_path)) {
+          warn "stat of private subdirectory $temp_path failed (errno=$!)";
+          return;
+        }
+        if (!S_ISDIR($st[2])
+            || $st[4] != $<
+            || ($st[2] & 0777) != 0700 ) {
+          warn "private subdirectory $temp_path is unsafe";
+          return;
+        }
+    }
 
     last;
   }
