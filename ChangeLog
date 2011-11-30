@@ -1,3 +1,11 @@
+[Changes for 1.004 - Nov 30, 2011]
+  - back out r1241: it causes errors in PAR::Packer's test suite
+  - change "unsafe directory" error message to match the wording 
+    used by PAR::Packer
+  - remove "debian" sub directory: it isn't released to CPAN and
+    Debian will supply its own anyway
+  - remove some cruft from MANIFEST.SKIP
+
 [Changes for 1.003 - Nov 28, 2011]
   -  RT #69560/CVE-2011-4114: PAR packed files are extracted to unsafe
      and predictable temporary directories
@@ -1221,4 +1229,3 @@ This release comes with several significant improvements:
       didn't work properly when bundling perl modules for self-
       contained executables, rendering 'pp' useless on machines
       without core perl.
-
