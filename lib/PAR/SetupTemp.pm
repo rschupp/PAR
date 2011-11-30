@@ -114,7 +114,7 @@ sub _get_par_user_tempdir {
         if (!S_ISDIR($st[2])
             || $st[4] != $<
             || ($st[2] & 0777) != 0700 ) {
-          warn "private subdirectory $temp_path is unsafe";
+          warn "private subdirectory $temp_path is unsafe (please remove it and retry your operation)";
           return;
         }
     }
