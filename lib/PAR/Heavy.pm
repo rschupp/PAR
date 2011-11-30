@@ -156,9 +156,7 @@ sub _dl_extract {
 
     if ($fh) {
         binmode($fh);
-        Archive::Zip::setErrorHandler(sub { die $_[0] });
         $member->extractToFileHandle($fh);
-        Archive::Zip::setErrorHandler(undef);
         close $fh;
         chmod 0755, $filename;
     }

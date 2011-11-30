@@ -602,9 +602,7 @@ sub _run_member_from_par {
         my $file = $member->fileName;
         print $fh "package main;\n";
         print $fh "#line 1 \"$file\"\n";
-        Archive::Zip::setErrorHandler(sub { die $_[0] });
         $member->extractToFileHandle($fh);
-        Archive::Zip::setErrorHandler(undef);
         seek ($fh, 0, 0);
     }
 
@@ -628,9 +626,7 @@ sub _run_member {
             print $fh "Internals::PAR::CLEARSTACK();\n";
         }
         print $fh "#line 1 \"$file\"\n";
-        Archive::Zip::setErrorHandler(sub { die $_[0] });
         $member->extractToFileHandle($fh);
-        Archive::Zip::setErrorHandler(undef);
         seek ($fh, 0, 0);
     }
 
@@ -716,7 +712,7 @@ sub _extract_inc {
 
             $zip = Archive::Zip->new;
             ( $zip->readFromFileHandle($fh, $file_or_azip_handle) == Archive::Zip::AZ_OK() )
-                or die "Error reading '$file_or_azip_handle': $!";
+                or die "Read '$file_or_azip_handle' error: $!";
           }
           else {
             $zip = $file_or_azip_handle;
@@ -724,7 +720,6 @@ sub _extract_inc {
 
           mkdir($inc) if not -d $inc;
 
-          Archive::Zip::setErrorHandler(sub { die $_[0] });
           for ( $zip->memberNames() ) {
               s{^/}{};
 
@@ -736,7 +731,6 @@ sub _extract_inc {
               next if -e $outfile and not -w _;
               $zip->extractMember($_, "$inc/" . $_);
           }
-          Archive::Zip::setErrorHandler(undef);
         }
         
         rmdir("$inc.lock");
@@ -1014,7 +1008,6 @@ sub unpar {
             my @members = _cached_members_matching( $zip,
               qr#^shlib/$Config{archname}/.*\.\Q$Config{dlext}\E(?:\.|$)#
             );
-            Archive::Zip::setErrorHandler(sub { die $_[0] });
             foreach my $member (@members) {
                 next if $member->isDirectory;
                 my $member_name = $member->fileName;
@@ -1031,7 +1024,6 @@ sub unpar {
                 $member->extractToFileNamed($dest_name)
                     unless(-e $dest_name);
             }
-            Archive::Zip::setErrorHandler(undef);
         }
 
         # Now push this path into usual library search paths
@@ -1078,9 +1070,7 @@ sub unpar {
     die "Bad Things Happened..." unless $fh;
 
     if ($is_new) {
-        Archive::Zip::setErrorHandler(sub { die $_[0] });
         $member->extractToFileHandle($fh);
-        Archive::Zip::setErrorHandler(undef);
         seek ($fh, 0, 0);
     }
 
