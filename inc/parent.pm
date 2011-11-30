@@ -2,7 +2,7 @@
 package parent;
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.223';
+$VERSION = '0.225';
 
 sub import {
     my $class = shift;
@@ -24,14 +24,14 @@ sub import {
 
     {
         no strict 'refs';
-        # This is more efficient than push for the new MRO
-        # at least until the new MRO is fixed
-        @{"$inheritor\::ISA"} = (@{"$inheritor\::ISA"} , @_);
+        push @{"$inheritor\::ISA"}, @_;
     };
 };
 
 "All your base are belong to us"
 
 __END__
+
+=encoding utf8
 
 #line 136

@@ -1,7 +1,7 @@
 #line 1
 package PerlIO;
 
-our $VERSION = '1.04';
+our $VERSION = '1.07';
 
 # Map layer name to package that defines it
 our %alias;
@@ -30,4 +30,4 @@ sub F_UTF8 () { 0x8000 }
 1;
 __END__
 
-#line 344
+#line 332
