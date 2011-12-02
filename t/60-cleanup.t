@@ -6,9 +6,11 @@ use warnings;
 # the /tmp/par-$USER/temp-$$ directories get cleaned up when
 # in CLEAN mode.
 
+use File::Temp ();
 use Test::More tests => 5;
 
 BEGIN {
+  $ENV{PAR_TMPDIR} = File::Temp::tempdir(TMPDIR => 1, CLEANUP => 1);
   $ENV{PAR_CLEAN} = 1;
   delete $ENV{PAR_TEMP};
 }

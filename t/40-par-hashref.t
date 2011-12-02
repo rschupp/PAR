@@ -3,8 +3,11 @@ use strict;
 use Test::More tests => 7;
 
 use File::Spec;
+use File::Temp ();
 use FindBin;
 use vars qw/@INC %INC/;
+
+$ENV{PAR_TMPDIR} = File::Temp::tempdir(TMPDIR => 1, CLEANUP => 1);
 
 unshift @INC, ($FindBin::Bin);
 use_ok('PAR');

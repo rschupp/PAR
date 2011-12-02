@@ -1,6 +1,10 @@
 #!/usr/bin/perl
 # Problem doesn't manifest if Test::More is in effect?
 # What the hell?
+
+use File::Temp ();
+BEGIN { $ENV{PAR_TMPDIR} = File::Temp::tempdir(TMPDIR => 1, CLEANUP => 1); }
+
 $|=1;
 print "1..1\n";
 use PAR;

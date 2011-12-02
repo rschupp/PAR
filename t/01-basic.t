@@ -4,8 +4,10 @@ use warnings;
 use Test::More tests => 8;
 use File::Spec;
 use File::Path;
+use File::Temp ();
 
 BEGIN {
+  $ENV{PAR_TMPDIR} = File::Temp::tempdir(TMPDIR => 1, CLEANUP => 1);
   $ENV{PAR_CLEAN} = 1;
 }
 
