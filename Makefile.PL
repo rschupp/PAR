@@ -1,12 +1,13 @@
 
 use strict;
-use 5.006;
+use 5.008001;
 use inc::Module::Install;
 
 name        'PAR';
 abstract    'Perl Archive Tookit';
 all_from    'lib/PAR.pm';
 
+perl_version '5.008001';
 requires    'File::Temp'        => 0.05;
 requires    'Compress::Zlib'    => ($^O eq 'MSWin32') ? 1.16 : 1.30;
 requires    'Archive::Zip'      => 1.00;

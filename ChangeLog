@@ -1,3 +1,9 @@
+[Changes for 1.005 - Dec 2, 2011]
+  - bump Perl version requirement to 5.8.1 (Schwern: The End Of 5.6 Is Nigh!)
+  - run all tests using a nonce PAR_TMPDIR (otherwise CPAN Testers
+    goes crazy as top level /tmp/par-USER directories (or similar)
+    from previous tests may now be considered "unsafe")
+
 [Changes for 1.004 - Nov 30, 2011]
   - back out r1241: it causes errors in PAR::Packer's test suite
   - change "unsafe directory" error message to match the wording 
