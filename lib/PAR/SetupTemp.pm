@@ -98,7 +98,11 @@ sub _get_par_user_tempdir {
       qw( C:\\TEMP /tmp . )
   ) {
     next unless defined $path and -d $path and -w $path;
-    $temp_path = File::Spec->catdir($path, "par-$username");
+    # create a temp directory that is unique per user
+    # NOTE: $username may be in an unspecified charset/encoding;
+    # use a name that hopefully works for all of them;
+    # also avoid problems with platform-specific meta characters in the name
+    $temp_path = File::Spec->catdir($path, "par-".unpack("H*", $username));
     ($temp_path) = $temp_path =~ /^(.*)$/s;
     unless (mkdir($temp_path, 0700) || $!{EEXIST}) {
       warn "creation of private subdirectory $temp_path failed (errno=$!)"; 
@@ -140,7 +144,6 @@ sub _find_username {
   else {
     $username = $ENV{USERNAME} || $ENV{USER} || 'SYSTEM';
   }
-  $username =~ s/\W/_/g;
 
   return $username;
 }
