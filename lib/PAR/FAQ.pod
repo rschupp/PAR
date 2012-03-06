@@ -102,7 +102,13 @@ Comment out the line that starts with " unless (caller) ", and compile it again.
 
 =head2 I get a link error '/usr/bin/ld: cannot find -lperl' during the 'make' step of the installation on Debian. What's wrong?
 
-This is a common problem when building compiled libraries on Debian distribution installations with the default perl package. To fix this problem, create a symbolic link from libperl.so.5.6.1 to libperl.so in /usr/lib (cd /usr/lib; ln -s libperl.so.5.6.1 libperl.so) and re-run the 'make' step of the installation. Or install libperl-dev
+Install the C<libperl-dev> package. 
+
+Note that Debian provides (usually up-to-date) packages of the modules 
+in the PAR ecosystem: L<Module::Scandeps>, L<PAR>,
+L<PAR::Dist> and L<PAR::Packer>; the corresponding packages are called
+C<libmodule-scandeps-perl>,  C<libpar-dist-perl>, C<libpar-perl>
+and C<libpar-packer-perl>.
 
 =head2 I specify a .ico file with --icon for Win32, but the icon is still the black and white camel. What's wrong?
 
