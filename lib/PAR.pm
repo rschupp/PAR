@@ -537,7 +537,7 @@ sub _import_repository {
     my $obj;
 
     # Support existing clients passed in as objects.
-    if (ref($url) and UNIVERSAL::isa($obj, 'PAR::Repository::Client')) {
+    if (ref($url) and UNIVERSAL::isa($url, 'PAR::Repository::Client')) {
         $obj = $url;
     }
     else {
