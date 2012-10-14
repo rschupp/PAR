@@ -550,7 +550,7 @@ sub _import_repository {
     }
 
     if (exists($opt->{fallback}) and not $opt->{fallback}) {
-        push @PriorityRepositoryObjects, $obj; # repository beats local stuff
+        unshift @PriorityRepositoryObjects, $obj; # repository beats local stuff
     } else {
         push @RepositoryObjects, $obj; # local stuff beats repository
     }
