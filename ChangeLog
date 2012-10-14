@@ -1,3 +1,17 @@
+[Changes for 1.006 - Oct 15, 2012]
+  - Fix RT #78633: PAR::import ignores url => $repo_client_object
+    applied patch from KENO, thanks!
+  - Fix RT #73491: cache directory naming problem
+    In PAR::SetupTemp::_get_par_user_tempdir (actually _find_username)
+    we try to sanitize username (so that there are no problematic
+    characters in the name of the per-user cache directory), but the
+    strategy fails miserably for some charset encodings.
+    E.g. for EUC-KR or CP949 (as in the bug report) we may produce an 
+    illegal sequence of bytes; in other cases we may cause collisions 
+    (different usernames mapping to the same directory name). 
+    Fix the problem once and for all by encoding the username
+    (bytewise) as 2 hex digits.
+
 [Changes for 1.005 - Dec 2, 2011]
   - bump Perl version requirement to 5.8.1 (Schwern: The End Of 5.6 Is Nigh!)
   - run all tests using a nonce PAR_TMPDIR (otherwise CPAN Testers
