@@ -1,3 +1,9 @@
+[Changes for 1.007 - Oct 22, 2012]
+  - Hopefully fix "pp -C ..." for any modules that assume an
+    actual tree of files, e.g. looking for all installed modules Foo::Bar::*;
+    call _extract_inc even when $ENV{PAR_CLEAN} is true
+  - update to Module::Install 1.06
+
 [Changes for 1.006 - Oct 15, 2012]
   - Fix RT #78633: PAR::import ignores url => $repo_client_object
     applied patch from KENO, thanks!
