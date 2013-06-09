@@ -1,3 +1,5 @@
+=encoding utf8
+
 =head1 NAME
 
 PAR::FAQ - Frequently Asked Questions about PAR
@@ -218,7 +220,7 @@ When searching for an answer to this myself, I found many references to using "e
 
 =head2 How can I change the icon of the generated .exe file under Windows?
 
-There is another not-completely-documented switch that only works on windows, –icon MyIcon.ico. So just use this:
+There is another not-completely-documented switch that only works on windows, --icon MyIcon.ico. So just use this:
 
     % pp --icon "c:\path to\MyIcon.ico" -o file.exe file.pl.
 
@@ -256,7 +258,7 @@ After quite some time, it seems like the smart folks at Redhat found the culprit
   this won't work.
 
 Much praise to all who helped track this down! The discussion can be found in the following RT tickets:
-L<http://rt.cpan.org/Public/Bug/Display.html?id=18536 #18536> and L<http://rt.cpan.org/Public/Bug/Display.html?id=19609 #19609>.
+L<http://rt.cpan.org/Public/Bug/Display.html?id=18536|#18536> and L<http://rt.cpan.org/Public/Bug/Display.html?id=19609|#19609>.
 
 -- Steffen Mueller, 22 July 2006
 
