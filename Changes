@@ -1,3 +1,23 @@
+1.008  2015-01-24
+
+  - Fix #101662: Prevent shared libs from being cached in memory on AIX
+    applied patch from Thoke@northpeak.org, thanks.
+    Note: this is one half of the fix, the other is in PAR::Packer
+
+  - Fix #86178: dll files not extracted to shlib subfolder when using -l or to other folder when using -a
+    extract all files from the zip, including all DLLs
+
+  - Fix #86014: [PATCH] POD fix
+    applied Debian patch from gregor herrmann <gregoa@debian.org>, thanks!
+    while we're at it fix two bad L<> hyperlinks reported by podchecker
+
+  - Fix RT #86650: typo fixes
+
+  - reformat ChangeLog file according to CPAN::Changes::Spec 
+    and rename it to Changes 
+
+  - Update to Module::Build 1.14
+
 1.007  2012-10-22
   - Hopefully fix "pp -C ..." for any modules that assume an
     actual tree of files, e.g. looking for all installed modules Foo::Bar::*;
