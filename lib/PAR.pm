@@ -793,7 +793,7 @@ sub find_par {
 
     return $rv if defined $rv or not @PriorityRepositoryObjects;
 
-    # the repositories that are prefered over locally installed modules
+    # the repositories that are preferred over locally installed modules
     my $module = $args[1];
     $module =~ s/\.pm$//;
     $module =~ s/\//::/g;

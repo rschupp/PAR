@@ -31,7 +31,7 @@ and wait for the script to download and extract PAR and its dependencies. If you
 
 =head3 ppm
 
-If you are using ActivePerl from ActiveState, you can use the 'ppm' program that comes with the ActiveState Perl. Instructions can be found below. PAR is availlable from various PPM repositories and some packages are compatible with some versions of ActivePerl and not with others. There is an incomplete PAR-Win32 Binary Compatibility List at L<http://par.wikia.com/wiki/PAR_PPM_Compatibility_List> There are at least three relevant PPM repositories: The default ActiveState one, the bribes repository which is used in the example below and Randy Kobes' repository at L<http://theoryx5.uwinnipeg.ca/ppms/>.
+If you are using ActivePerl from ActiveState, you can use the 'ppm' program that comes with the ActiveState Perl. Instructions can be found below. PAR is available from various PPM repositories and some packages are compatible with some versions of ActivePerl and not with others. There is an incomplete PAR-Win32 Binary Compatibility List at L<http://par.wikia.com/wiki/PAR_PPM_Compatibility_List> There are at least three relevant PPM repositories: The default ActiveState one, the bribes repository which is used in the example below and Randy Kobes' repository at L<http://theoryx5.uwinnipeg.ca/ppms/>.
 
     C:\> ppm3
     # activestate was out of date compared to this one
@@ -228,7 +228,7 @@ There is another not-completely-documented switch that only works on windows, --
 
 =head2 The command line parameters (@ARGV) of a pp-ed binary called from another pp-ed binary are missing or broken. What the...?
 
-This was a bug in releases up to and incuding PAR-0.90. Please upgrade to PAR 0.91 or later and the problem will go away.
+This was a bug in releases up to and including PAR-0.90. Please upgrade to PAR 0.91 or later and the problem will go away.
 
 =head2 I want to include a pp-ed binary in an RPM package. How can I make this work?
 

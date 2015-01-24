@@ -76,7 +76,7 @@ sub _bootstrap {
     }
 
     my $member;
-    # First, try to find things in the peferentially loaded PARs:
+    # First, try to find things in the preferentially loaded PARs:
     $member = PAR::_find_par_internals([@PAR::PAR_INC], undef, $file, 1)
       if defined &PAR::_find_par_internals;
 
