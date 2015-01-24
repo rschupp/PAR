@@ -1,10 +1,10 @@
-[Changes for 1.007 - Oct 22, 2012]
+1.007  2012-10-22
   - Hopefully fix "pp -C ..." for any modules that assume an
     actual tree of files, e.g. looking for all installed modules Foo::Bar::*;
     call _extract_inc even when $ENV{PAR_CLEAN} is true
   - update to Module::Install 1.06
 
-[Changes for 1.006 - Oct 15, 2012]
+1.006  2012-10-15
   - Fix RT #78633: PAR::import ignores url => $repo_client_object
     applied patch from KENO, thanks!
   - Fix RT #73491: cache directory naming problem
@@ -18,13 +18,13 @@
     Fix the problem once and for all by encoding the username
     (bytewise) as 2 hex digits.
 
-[Changes for 1.005 - Dec 2, 2011]
+1.005  2011-12-02
   - bump Perl version requirement to 5.8.1 (Schwern: The End Of 5.6 Is Nigh!)
   - run all tests using a nonce PAR_TMPDIR (otherwise CPAN Testers
     goes crazy as top level /tmp/par-USER directories (or similar)
     from previous tests may now be considered "unsafe")
 
-[Changes for 1.004 - Nov 30, 2011]
+1.004  2011-11-30
   - back out r1241: it causes errors in PAR::Packer's test suite
   - change "unsafe directory" error message to match the wording 
     used by PAR::Packer
@@ -32,7 +32,7 @@
     Debian will supply its own anyway
   - remove some cruft from MANIFEST.SKIP
 
-[Changes for 1.003 - Nov 28, 2011]
+1.003  2011-11-28
   -  RT #69560/CVE-2011-4114: PAR packed files are extracted to unsafe
      and predictable temporary directories
      (Note: this bug was originally reported against PAR::Packer, but
@@ -47,11 +47,11 @@
   - Die (with a hopefully useful message) if any error is encountered 
     during an Archive::Zip extract operation
 
-[Changes for 1.002 - Jul 25, 2010]
+1.002  2010-07-25
   - Fixes to VERSIONs of PAR::Setup*.
   - No change in behaviour since 1.001
 
-[Changes for 1.001 - Jul 25, 2010]
+1.001  2010-07-25
   - RT #57399: extract everything (including DLLs) in File::ShareDir
     directories. Module::ScanDeps classifies everything in
     File::ShareDir directories as "data", but PAR uses it's own
@@ -59,13 +59,13 @@
   - Previous release was missing META.yml.
   - Upgrade Module::Install to 1.00
 
-[Changes for 1.000 - Apr 10, 2010]
+1.000  2010-04-10
   - Fix defined(%hash) deprecation warning in PAR::Heavy
 
-[Changes for 0.994 - Jul 23, 2009]
+0.994  2009-07-23
   - Fix for the PAR::Heavy fix to the INC priority handling.
 
-[Changes for 0.993 - Jul 19, 2009]
+0.993  2009-07-19
   - The priority (fallback=>0) repositories should look at @PAR_INC
     for the loaded PARs instead of @PAR_INC_LAST.
   - Don't reload from a downloaded .par file after installing it
@@ -75,58 +75,58 @@
   - Initial support for running external perl scripts from a packaged
     interpreter.
 
-[Changes for 0.992 - Apr  5, 2009]
+0.992  2009-04-05
   - Support for non-fallback repositories.
 
-[Changes for 0.991 - Mar 10, 2009]
+0.991  2009-03-10
   - Promote previous release to stable release.
 
-[Changes for 0.989_01 - Mar  2, 2009]
-* Bug fixes, etc.
+0.989_01  2009-03-02
+  [Bug fixes, etc.]
   - Track the locations of all archives that have been extracted to
     $ENV{PAR_TEMP}/inc in this run.
 
-[Changes for 0.988 - Mar  1, 2009]
+0.988  2009-03-01
   - Promote previous release to stable release.
 
-[Changes for 0.987_01 - Feb 20, 2009]
-* New features
+0.987_01  2009-02-20
+  [New features]
   - Better cleanup of the $TMPDIR/par-$USER/temp-$$ directories
     that are typically used as caches in the "use PAR 'foo.par'" use case.
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
   - Very slightly more careful handling of PAR-specific environment
     variables.
   - Cleanup of PAR::SetupTemp
 
-[Changes for 0.986 - Feb 19, 2009]
+0.986  2009-02-19
   - Promote to stable release.
 
-[Changes for 0.985_01 - Feb  2, 2009]
-* New features
+0.985_01  2009-02-02
+  [New features]
   - Support for the brand new static dependency resolution
     of PAR::Repository::Client 0.23.
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
   - Fix issue with running scripts from repositories:
     The INC hooks used to be set up too late for this to
     automatically pick up dependencies.
 
-[Changes for 0.984 - Jan 25, 2009]
-* New features
+0.984  2009-01-25
+  [New features]
   - Implemented the auto-upgrading option for loading and installing
     from PAR::Repositories.
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
   - Fix issue with PAR::Repository::Client development versions.
 
-[Changes for 0.983 - Sep 12, 2008]
-* Dependencies
+0.983  2008-09-12
+  [Dependencies]
   - Require AutoLoader 5.67 which contains a PAR-related
     bug-fix.
   - Require PAR::Dist 0.32.
 
-* Internal changes
+  [Internal changes]
   - The full extraction process _extract_inc
     (which is triggered when a non--clean pp packaged
     executable is run) can now be forced to do the
@@ -137,19 +137,19 @@
     are to be added to @INC, we now make sure they're not
     in @INC yet.
 
-[Changes for 0.982 - Aug 10, 2008]
-* New features
+0.982  2008-08-10
+  [New features]
   - Moved the routines that setup the PAR_TEMP environment variable
     to a separate module in the distribution so it's possible to
     use PAR::Repository::Client without loading all of PAR.
   - Same for the function that sets up PAR_PROGNAME.
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
   - Upgrade to Module::Install 0.77
   - Fix for running scripts from repositories.
 
-[Changes for 0.980 - May 22, 2008]
-* Bug fixes, etc.
+0.980  2008-05-22
+  [Bug fixes, etc.]
   - The function PAR::get_filehandle() that was introduced in 0.979
     is really broken because Archive::Zip is broken. Turns out calling
     Archive::Zip::Member->fh() returns a file handle to the zip file,
@@ -158,30 +158,30 @@
     we work around this issue.
   - Upgrade to Module::Install 0.73
 
-[Changes for 0.979 - May 13, 2008]
-* New features
+0.979  2008-05-13
+  [New features]
   - New function PAR::get_filehandle() returns a file handle for a file
     in any open .par files. Similar to read_file().
 
-[Changes for 0.977 - Oct 19, 2007]
-* Bug fixes, etc.
+0.977  2007-10-19
+  [Bug fixes, etc.]
   - HPUX doesn't like shared libraries being unlinked while in use. So don't
     try to do this even in clean mode. (Workaround will be in par.pl)
     (Scott Stanton)
   - Fix DLL extraction file name matching in PAR::Heavy.
   - Save two system calls per DLL during DLL extraction in PAR::Heavy.
 
-[Changes for 0.976 - Jul 29, 2007]
-* New features
+0.976  2007-07-29
+  [New features]
   - Use Archive::Unzip::Burst for unpacking binary executables if
       available. (This yields a significant startup speed-up.)
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
     - Removed the auto_install feature from Makefile.PL. auto_install
       is conceptually broken.
 
-[Changes for 0.973 - Feb  3, 2007]
-* New features
+0.973  2007-02-03
+  [New features]
     - A new option for the "use PAR { ... };" use case:
       "no_shlib_unpack" signals that for this particular .par file,
       shared libraries that were added with the --lib option should
@@ -198,20 +198,20 @@
       This should particularly impact users of the "use PAR {file =>...}"
       form.
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
     - Applied an optimization of the unpacking process on case insensitive
       file systems.
 
-[Changes for 0.972 - Jan 16, 2007]
-* Bug fixes, etc.
+0.972  2007-01-16
+  [Bug fixes, etc.]
     - Removed PAR::AutoLoaderFix again. It wasn't working as expected
       all the time.
     - To fix the problem AutoLoaderFix was supposed to fix, we now
       require AutoLoader 5.62 or newer which was just recently released
       to CPAN. (Previously only available from blead perl.)
 
-[Changes for 0.971 - Jan 12, 2007]
-* Bug fixes, etc.
+0.971  2007-01-12
+  [Bug fixes, etc.]
     - Fixed typo in the POD. (Jerrad Pierce)
     - Included fix for a bug in AutoLoader.pm as shipped with all
       perl versions up to and including 5.8.8 as PAR::AutoLoaderFix.
@@ -219,17 +219,17 @@
       module doesn't point to a file of the same name.
       This may happen during "use PAR 'foo.par'".
 
-[Changes for 0.970 - Dec  3, 2006]
-* This release introduces some rather radical changes, so read carefully:
-* All PAR::Packer related logic has been moved to a separate distribution,
+0.970  2006-12-03
+  [This release introduces some rather radical changes, so read carefully:]
+  [All PAR::Packer related logic has been moved to a separate distribution,]
   PAR-Packer. This includes pp, parl and all packaging tools. This way,
   PAR becomes a pure-Perl distribution that can be most easily installed by
   users of software which requires PAR.
   Developers who want to use the PAR packager, pp, need to install the
   PAR-Packer distribution from CPAN.
 
-[Changes for 0.961 - Nov 23, 2006]
-* Bug fixes, etc.
+0.961  2006-11-23
+  [Bug fixes, etc.]
     - PAR::StrippedPARL::Base->write_parl() failed to work if the @INC
       directories contained spaces in 0.960. (Steven Mackenzie)
     - Much improved documentation of the environment variables
@@ -237,8 +237,8 @@
     - Fix for a spaces-in-pathname problem on Windows for
       t/30-current_exec.t. (Malcolm Nooning)
 
-[Changes for 0.960 - Nov 21, 2006]
-* Bug fixes, etc.
+0.960  2006-11-21
+  [Bug fixes, etc.]
     - myldr/Makefile.PL fix: Clean up myldr/usernamefrompwuid.h.
     - Silence warning in myldr/internals.c.
     - Silence warnings seen on Irix from myldr/env.c.
@@ -248,16 +248,16 @@
     - The parl-regeneration-for-every-pp-call addition of the 0.958 release
       should now also work for static perls.
 
-* New features
+  [New features]
     - Adressing RT ticket #6612: Now using getpwuid() to determine the
       user name if supported by the OS.
 
-[Changes for 0.959 - Nov 12, 2006]
-* This is just a hotfix release because 0.958 lacked META.yml. One day, I will
+0.959  2006-11-12
+  [This is just a hotfix release because 0.958 lacked META.yml. One day, I will]
   switch from Module::Install to Module::Build...
 
-[Changes for 0.958 - Oct 25, 2006]
-* Bug fixes, etc.
+0.958  2006-10-25
+  [Bug fixes, etc.]
     - myldr/Makefile.PL fix: make static.o depend on mktmpdir.c, my_perl.c,
       my_par.c. (Roderich Schupp)
     - Modules included with the -M option to pp were previously scanned
@@ -270,7 +270,7 @@
     - Unified the environment variables which are looked at for
       finding the system's temporary directory.
 
-* New features
+  [New features]
     - During the build process, PAR appends stripped down copies of parl
       (and parldyn if applicable) to the data classes
       PAR::StrippedPARL::Static and ::Dynamic. These
@@ -292,50 +292,50 @@
       an index of all environment variables PAR uses of its own or
       recognizes from its users. Still mostly a stub.
 
-[Changes for 0.957 - Oct 24, 2006]
-* Bug fixes, etc.
+0.957  2006-10-24
+  [Bug fixes, etc.]
     - Fix executable PARs top properly detect embedded scripts
       named the same as the executable. (Jesse Vincent)
     - Comment out the call to par_current_exec_proc (in the C loader)
       which breaks the use of symlinks to pp-ed executables when not
       called with a path. (I.e. using a search in $PATH).
 
-[Changes for 0.956 - Oct  3, 2006]
-* This is another hotfix release. Fixed a mindless bug introduced in 0.955.
+0.956  2006-10-03
+  [Bug fixes, etc.]
+   - This is another hotfix release. Fixed a mindless bug introduced in 0.955.
 
-[Changes for 0.955 - Oct  3, 2006]
-* Bug fixes, etc.
+0.955  2006-10-03
+  [Bug fixes, etc.]
     - 0.952 introduced removal of system module search paths if -B is in
       effect. This resulted in some valid PAR-related paths being removed
       as well. Fixed. Upgrading from 0.952 and 0.954 is suggested.
     - Changed the use of hard-coded '/' as path-separator to using File::Spec.
 
-[Changes for 0.954 - Sep 26, 2006]
-* This release is equivalent to 0.953. The 0.953 CPAN upload is
-  broken!
+0.954  2006-09-26
+  - This release is equivalent to 0.953. The 0.953 CPAN upload is broken!
 
-[Changes for 0.953 - Sep 18, 2006]
-* Bug fixes, etc.
+0.953  2006-09-18
+  [Bug fixes, etc.]
     - Added optional POD tests.
     - Modified -B so that if -B is in effect, all entries are stripped
       out of @INC except for the PAR hooks. This happens right before
       the script contained in the pp-ed binary is executed.
 
-[Changes for 0.952 - Aug 22, 2006]
+0.952  2006-08-22
 
-* New features
+  [New features]
     - Added the "install" option to the PAR loading syntax.
       If specified, the contents of the PAR distribution are
       permanently installed.
       This requires PAR::Repository::Client 0.04.
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
     - Fixed broken META.yml in 0.951.
 
-[Changes for 0.951 - Aug 12, 2006]
-(This includes any changes up to 0.950.)
+0.951  2006-08-12
+   (This includes any changes up to 0.950.)
 
-* New features
+  [New features]
 
     - Introduced new PAR loading syntax and semantics:
       use PAR { file => 'path/to/par/or/URL' };
@@ -365,32 +365,32 @@
     - Fixed a bug in the Spreadsheet::ParseExcel handling in
       PatchContent.pm.
 
-[Changes for 0.942 - Jul 22, 2006]
+0.942  2006-07-22
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
 
     - Better support for diagnostics.pm (in conjunction with
       Module::ScanDeps 0.62.)
     - Now requiring Module::ScanDeps 0.62.
 
-[Changes for 0.941 - Jun 20, 2006]
-(No, PAR isn't stagnating. It's just that 1.00 would draw close if
-we continued with 0.01 increases.)
+0.941  2006-06-20
+  (No, PAR isn't stagnating. It's just that 1.00 would draw close if
+  we continued with 0.01 increases.)
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
 
     - Version 0.94 of PAR would use the same cache area for all pp-ed
       applications due to a faulty hotfix for Digest::SHA. This applies
       to PAR 0.94 only. Think of 0.941 being PAR 0.94 done right.
 
-[Changes for 0.94 - Jun  1, 2006]
+0.94  2006-06-01
 
-* New Features
+  [New Features]
 
     - Added support for reading options to pp from a file using a
       '@filename' argument to pp:  pp -o foo --gui @filename foo.pl
 
-* Bug fixes, etc.
+  [Bug fixes, etc.]
 
     - Workaround for a bug in Digest::SHA 5.38 and 5.39 that would prevent
       PAR from being built.
@@ -407,9 +407,9 @@ we continued with 0.01 increases.)
     - If the output directory doesn't exist, we create it now and output
       a meaningful error message if that failed.
 
-[Changes for 0.93 - May 19, 2006]
+0.93  2006-05-19
 
-* New Features
+  [New Features]
 
     - Added support for PAR_TMPDIR (PAR_GLOBAL_TMPDIR) so that the
       temp directory can be controlled for just the PAR file bits.
@@ -420,7 +420,7 @@ we continued with 0.01 increases.)
       executable, if possible on this OS. (Leolo)
     - par_findprog() now uses par_current_exec() if possible.
 
-* Bug Fixes, etc.
+  [Bug Fixes, etc.]
 
     - Upgraded to Module::Install 0.62+ (Audrey Tang, Steffen Mueller)
     - Document a strange interaction with chdir() and relative
@@ -437,18 +437,18 @@ we continued with 0.01 increases.)
     - Applied Ivan Kudryavtsev's patch that fixes a couple of calls
       to PAR subroutines in PatchContent filtered code. (tsee)
 
-[Changes for 0.92 - February 22, 2006]
+0.92  2006-02-22
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Now requiring Module::ScanDeps 0.56 which handles autouse
       correctly.
     - Now shipping with a correct SIGNATURE. (Which was broken for
       0.91.)
 
-[Changes for 0.91 - February 13, 2006]
+0.91  2006-02-13
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Applied Alan Stewart's patch which fixes @ARGV pollution in
       daughter programs. See also 
@@ -463,9 +463,9 @@ we continued with 0.01 increases.)
       true value for modules that loaded okay.
     - Changed 'PAR_BASE' in the Makefile.PL to 'SMUELLER'.
 
-[Changes for 0.90 - November 25, 2005]
+0.90  2005-11-25
 
-* Bug Fixes
+  [Bug Fixes]
 
     - When compiling with static libperl, myldr/ may fail "make"
       due to sha1.c not generated properly.
@@ -478,9 +478,9 @@ we continued with 0.01 increases.)
 
     - Compilation fixes for MinGW/MSYS.
 
-[Changes for 0.89 - June 10, 2005]
+0.89  2005-06-10
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Stop static.c from pulling in Perl header files, otherwise
       parl.exe ends up depending on the Perl DLL on Win32 when
@@ -489,9 +489,9 @@ we continued with 0.01 increases.)
     - With *nix and File::Path 1.06, par.pl's avoidance of loading
       Cwd.pm caused syntax errors.
 
-[Changes for 0.88 - June 7, 2005]
+0.88  2005-06-07
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Extracted .pl files should be loadable via the coderef-in-@INC too,
       just like .pm files and autosplit files.  This makes PAR work with
@@ -502,9 +502,9 @@ we continued with 0.01 increases.)
     - If $ENV{PWD} is not defined, fallback to use `pwd` to obtain the
       working directory for invoking.
 
-[Changes for 0.87 - January 31, 2005]
+0.87  2005-01-31
 
-* Bug Fixes
+  [Bug Fixes]
 
     - On Win32, some versions of File::Spec::Win32 contains explicit
       "use Cwd;" lines, which renders parl.exe unusable.
@@ -512,9 +512,9 @@ we continued with 0.01 increases.)
     - Executable made by "pp" may fail when invoked as "./a.out" or
       "../a.out", due to incorrect PWD handling logic.
 
-[Changes for 0.86 - December 11, 2004]
+0.86  2004-12-11
 
-* New Features
+  [New Features]
 
     - New "pp -z" (--compress) option to set compression level (0-9).
 
@@ -551,7 +551,7 @@ we continued with 0.01 increases.)
 
     - Remove Cwd.pm (and Cwd.so) from the bundled dependencies.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - More robust probing for case-insensitive file systems.
 
@@ -581,13 +581,13 @@ we continued with 0.01 increases.)
 
     - Detection of cl.exe, gcc.exe and cc.exe is now case-insensitive.
 
-[Changes for 0.85 - July 2, 2004]
+0.85  2004-07-02
 
-* New Features
+  [New Features]
 
     - New version of "gpp"; see contrib/gui_pp/gpp_readme.txt for details.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - MANIFEST and META.yml were not properly updated by PAR::Packer.
 
@@ -597,9 +597,9 @@ we continued with 0.01 increases.)
     - Statically-built executables was needlessly extracting libperl
       each time it runs; now it is eliminated and hence much faster.
 
-[Changes for 0.83 - May 29, 2004]
+0.83  2004-05-29
 
-* New Features
+  [New Features]
 
     - Revamped PAR::FAQ and sychronized with par.perl.org.
 
@@ -609,7 +609,7 @@ we continued with 0.01 increases.)
 
     - Updated "contrib/gui_pp/gpp" to support PAR::Packer options.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Core XS modules, such as Data::Dumper, were skipped by "pp".
 
@@ -627,9 +627,9 @@ we continued with 0.01 increases.)
 
     - "pp -f" and "pp -F" were broken.
 
-[Changes for 0.82 - May 24, 2004]
+0.82  2004-05-24
 
-* New Features
+  [New Features]
 
     - New module PAR::Packer provides an OO interface to "pp"'s
       functionality; "pp" is now merely a thin wrapper for it.
@@ -653,7 +653,7 @@ we continued with 0.01 increases.)
       STDERR.  As a consequence, t/2-pp.t no longer prints extra
       warnings during "make test".
 
-* Bug Fixes
+  [Bug Fixes]
 
     - On Non-Win32 platforms, perl 5.8.0 and earlier versions produced
       pp-generated executables that immediately segfaults.
@@ -670,9 +670,9 @@ we continued with 0.01 increases.)
 
     - Cygwin failed t/2-pp.t because "parl" is spelled as "parl.exe" there.
 
-[Changes for 0.81 - May 23, 2004]
+0.81  2004-05-23
 
-* New Features
+  [New Features]
 
     - Regained support for Win9x, Cygwin and MinGW.
 
@@ -685,7 +685,7 @@ we continued with 0.01 increases.)
       DBIx::ReportBuilder, SVK::Command, SVN::Core, and the ':encoding()'
       IO discipline.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - On non-Win32 systems, invoking pp-generated executable from PATH
       did not work.
@@ -706,9 +706,9 @@ we continued with 0.01 increases.)
 
     - $ENV{path} is also recognized as $ENV{PATH} for Win32.
 
-[Changes for 0.80 - March 17, 2004]
+0.80  2004-03-17
 
-* New Features
+  [New Features]
 
     - A comprehensive test suite for pp in contrib/automated_pp_test/.
       It is run as part of the "make test" process from t/2-pp.t.
@@ -742,7 +742,7 @@ we continued with 0.01 increases.)
 
     - OOified "pp" in contrib/object_oriented_pp/; not installed by default.
 
-* Bug Fixes
+  [Bug Fixes]
     
     - "pp -d" (--dependent) prevented "pp -C" (--clean) from working.
 
@@ -769,9 +769,9 @@ we continued with 0.01 increases.)
       not just the ones printed by "pp" itself.
 
 
-[Changes for 0.79 - January 8, 2004]
+0.79  2004-01-08
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Setting PAR_CLEAN had the reversed effect.  Oops.
 
@@ -779,9 +779,9 @@ we continued with 0.01 increases.)
       properly, resulting in "permission denied" errors during
       certain race conditions.
 
-[Changes for 0.78 - January 7, 2004]
+0.78  2004-01-07
 
-* New Features
+  [New Features]
 
     - By default, executables generated by "pp" will now store
       extracted files in cache directories.  You may override
@@ -793,7 +793,7 @@ we continued with 0.01 increases.)
 
     - PAR_CLEARTEMP is renamed to PAR_CLEAN.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - On Win32, temporary directories containing shared libraries
       was not being properly cleaned up.
@@ -801,9 +801,9 @@ we continued with 0.01 increases.)
     - If no suitable temporary directories are found, use the current
       directory (".") instead of the root directory ("/").
 
-[Changes for 0.77 - January 1, 2004]
+0.77  2004-01-01
 
-* New Features
+  [New Features]
 
     - New "pp -c" and "pp -x" (--compile/--execute) options run the
       script with "perl -c" to check for dependencies.
@@ -826,7 +826,7 @@ we continued with 0.01 increases.)
 
     - External Zlib is no longer required to run pp-generated binaries.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Makefile.PL was failing if $Config{cc} contains spaces.
 
@@ -847,9 +847,9 @@ we continued with 0.01 increases.)
     - Some self-built PAR instances on Windows were failing due to
       mismatching short and long pathnames.
 
-[Changes for 0.76 - October 28, 2003]
+0.76  2003-10-28
 
-* New Features
+  [New Features]
 
     - Input filters. "pp --filter Bleach" now obfuscates the incoming
       script with PAR::Filter::Bleach; "pp --modfilter Bleach" applies
@@ -870,7 +870,7 @@ we continued with 0.01 increases.)
 
     - Tk pixmap (.xpm) files can now be packed with "pp --add".
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Perl 5.8.1 has an off-by-one bug that prevents "parl" to
       function properly.  We have now provided a workaround;
@@ -878,15 +878,15 @@ we continued with 0.01 increases.)
 
     - Fixed https support for LWP via the new Module::ScapDeps.
 
-[Changes for 0.75 - September 21, 2003]
+0.75  2003-09-21
 
-* New Features
+  [New Features]
     
     - "pp -o file.exe file.par" now packs file.par into file.exe;
       this means you can hand-tweak PAR files generated by "pp -p"
       before packing it into an executable.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Packing multiple programs by "pp script1.pl script2.pl" was
       producing syntax errors; fixed.
@@ -901,9 +901,9 @@ we continued with 0.01 increases.)
 
     - On Win32, the PE info headers no longer show PAR_XXXXXXXXXXX.
 
-[Changes for 0.74 - August 20, 2003]
+0.74  2003-08-20
 
-* New Features
+  [New Features]
 
     - pp now has a set of "PatchContent" rules, dealing with
       non-PAR-compatible modules: Tk, Tk::Widget, Win32::API::Type,
@@ -921,7 +921,7 @@ we continued with 0.01 increases.)
 
     - A new icon for Win32 that is hopefully prettier.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - All data after __DATA__ are preserved for included libraries.
       This helps self-reading modules like Net::LDAP::Constants.
@@ -944,14 +944,14 @@ we continued with 0.01 increases.)
     - Eliminated "callback called on exit" warnings, and the related
       "access violation" error on Win32.
 
-[Changes for 0.73 - August 6, 2003]
+0.73  2003-08-06
 
-* New Features
+  [New Features]
 
     - The PAR Homepage is now online at http://par.perl.org/.
       Documentations have been changed to link to it.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Tk applications can now properly access xpm/xbm files
       with Tk->findINC.
@@ -967,13 +967,13 @@ we continued with 0.01 increases.)
       process; now searches inside $ENV{$Config{ldlibpthname}} and
       $Config{libpth} to find it.
 
-[Changes for 0.72 - August 2, 2003]
+0.72  2003-08-02
 
-* New Features
+  [New Features]
 
     - CHECK and INIT blocks in programs inside PAR are now supported.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Two debug statements were mistakenly left in the source,
       resulting in "trying to get rid of /tmp/par_priv.xxxx.tmp"
@@ -987,9 +987,9 @@ we continued with 0.01 increases.)
       and can significantly reduce executable file size by eliminating
       unneccessary shared libraries.
 
-[Changes for 0.71 - July 30, 2003]
+0.71  2003-07-30
 
-* Bug Fixes
+  [Bug Fixes]
 
     - A nasty data-loss bug has been uncovered immediately after the
       previous release; it only affects Windows platforms, and may
@@ -998,9 +998,9 @@ we continued with 0.01 increases.)
     - Building on Red Hat linux was failing, with error message that
       says "my_perl not declared".  This has since been fixed.
 
-[Changes for 0.70 - July 29, 2003]
+0.70  2003-07-29
 
-* New Features
+  [New Features]
 
     - On machines with shared libperl, "pp" now makes truly stand-alone
       executables; the old behaviour is available with "pp --dependent".
@@ -1036,7 +1036,7 @@ we continued with 0.01 increases.)
     - The "Cross-Platform Packaging and Deployment with PAR" tutorial
       is now online as http://www.autrijus.org/par-tutorial/.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - MANIFEST.SKIP was broken on Win32.
 
@@ -1051,9 +1051,9 @@ we continued with 0.01 increases.)
       miss IO.dll and other shared libraries since they couldn't
       be correctly found in @INC.
 
-[Changes for 0.69 - May 31, 2003]
+0.69  2003-05-31
 
-* New Features
+  [New Features]
 
     - Under Perl 5.8, "pp -p" now works with Apache::PAR.
       See http://aut.dyndns.org/par-tutorial/slide018.html for
@@ -1066,7 +1066,7 @@ we continued with 0.01 increases.)
     - "pp -l" now searchs in system library paths, and
       appends "lib" / prepends ".$dl_ext" where necessary.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - PAR segfaults on some Unix platforms due to a NULL pointer
       used in mktmpdir.c.  Fixed.
@@ -1080,9 +1080,9 @@ we continued with 0.01 increases.)
     - Win32 did not properly cleans up PAR_TEMP directory, resulting
       in failure for executables that reused the same PID.  Fixed.
 
-[Changes for 0.68 - May 26, 2003]
+0.68  2003-05-26
 
-* New Features
+  [New Features]
 
     - New 'pp -l' option to pack additional shared libraries (DLLs).
 
@@ -1093,7 +1093,7 @@ we continued with 0.01 increases.)
       viewed by Gecko-based browsers with Javascript turned on, e.g.:
       jar:http://aut.dyndns.org/par/test.par!/MANIFEST
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Each pp-executable instance now creates its own PAR_TEMP directory;
       this avoids permission errors when multiple users run the same binary.
@@ -1109,9 +1109,9 @@ we continued with 0.01 increases.)
 
     - Fixed building on ActivePerl 626 and below due to a missing $Config{ld}.
 
-[Changes for 0.67 - April 1, 2003]
+0.67  2003-04-01
 
-* New Features
+  [New Features]
 
     - PAR now works on Cygwin and MinGW/MSYS.
 
@@ -1125,7 +1125,7 @@ we continued with 0.01 increases.)
 
     - New -g (--gui) flag for 'pp' to build console-less Win32 executables.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Building on Darwin Perl 5.6.0 was broken with 'cc -s'.
 
@@ -1139,9 +1139,9 @@ we continued with 0.01 increases.)
 
     - Better AutoInstall support, which uses 'sudo' where necessary.
 
-[Changes for 0.66 - March 20, 2003]
+0.66  2003-03-20
 
-* New Features
+  [New Features]
 
     - Adds PAR::Intro, a PODified version of the online presentation.
 
@@ -1153,7 +1153,7 @@ we continued with 0.01 increases.)
 
     - HTTP fetching of precompiled packages in addition to FTP.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Makefile.PL now downloads precompiled packages only if needed.
 
@@ -1176,18 +1176,18 @@ we continued with 0.01 increases.)
 
     - File::Temp was missing as a dependency.
 
-* Known Issues
+  [Known Issues]
 
     - Cygwin support is still broken.
 
     - PAR does not include utf8_heavy.pl nor unicore/* for scripts that
       has "use utf8;".  This has since been fixed by Module::ScanDeps 0.18.
 
-[Changes for 0.65 - March 9, 2003]
+0.65  2003-03-09
 
 This release comes with several significant improvements:
 
-* Automatic binary installation
+  [Automatic binary installation]
 
     Previously, users without a C compiler cannot build the 'parl'
     executable, and is therefore unable to create self-contained
@@ -1202,7 +1202,7 @@ This release comes with several significant improvements:
     framework; it will greatly benefit all CPAN authors with non-pure-perl
     distributions.
 
-* POD stripping
+  [POD stripping]
 
     Packages generated with 'pp' will now strip POD sections from all
     packed dependencies (your own scripts is unaffected); all binary
@@ -1212,7 +1212,7 @@ This release comes with several significant improvements:
     You can turn off this feature with the PAR_VERBATIM environment
     variable.
 
-* XS Incompatibility solved
+  [XS Incompatibility solved]
 
     Because 'pp'-generated executables includes some fixed version of
     shared libraries (IO, Zlib, etc), they used to break when the
@@ -1221,15 +1221,15 @@ This release comes with several significant improvements:
     Now PAR::Heavy intercepts DynaLoader::dl_expandspec to always prefer
     the library inside the PAR file, so this issue is resolved.
 
-* 5.6.1 Reclaimed
+  [5.6.1 Reclaimed]
 
     Thanks to Sisyphus and various others, building on Perl 5.6.1
     (with its old ExtUtils::MakeMaker and lack of PTHREAD_ATFORK)
     now works again.
 
-[Changes for 0.64 - March 2, 2003]
+0.64  2003-03-02
 
-* New Features
+  [New Features]
 
     - The t/0-signature.t test is re-enabled for people using my
       Module::Signature to verify the module's OpenPGP signature.
@@ -1239,7 +1239,7 @@ This release comes with several significant improvements:
       drop-in replacement for ExtUtils::MakeMaker that needs no
       extra action/prerequisites for end users.
 
-* Bug Fixes
+  [Bug Fixes]
 
     - Dynamic loading on Win32 was broken, due to a binmode() bug
       reported by Bill Atkins, D. Menzel and others.
@@ -1247,9 +1247,9 @@ This release comes with several significant improvements:
     - Building on Win32 in directory names that contain spaces
       did not work.
       
-[Changes for 0.63 - February 6, 2003]
+0.63  2003-02-06
 
-* Bug Fixes
+  [Bug Fixes]
 
     - The 'parl' binary (which replaces the old 'par' or 'par.exe')
       didn't work properly when bundling perl modules for self-
