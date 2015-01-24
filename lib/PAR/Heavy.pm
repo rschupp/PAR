@@ -158,7 +158,7 @@ sub _dl_extract {
         binmode($fh);
         $member->extractToFileHandle($fh);
         close $fh;
-        chmod 0755, $filename;
+        chmod 0750, $filename;
     }
 
     return $filename;
