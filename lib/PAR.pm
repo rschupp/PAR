@@ -722,14 +722,9 @@ sub _extract_inc {
 
           for ( $zip->memberNames() ) {
               s{^/}{};
-
-              # Skip DLLs (these will be handled by the dynaloader hook) 
-              # except for those placed in File::ShareDir directories.
-              next if (m{\.\Q$dlext\E[^/]*$} && !m{^lib/auto/share/(dist|module)/}); 
-
               my $outfile =  File::Spec->catfile($inc, $_);
               next if -e $outfile and not -w _;
-              $zip->extractMember($_, "$inc/" . $_);
+              $zip->extractMember($_, $outfile);
           }
         }
         
