@@ -29,7 +29,6 @@ if (can_use('Crypt::OpenPGP') or can_run('gpg')) {
             'Module::Signature';
 }
 
-include_deps        'Test::More';
 no_index            directory => 'contrib';
 auto_provides;
 
