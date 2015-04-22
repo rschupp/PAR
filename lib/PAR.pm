@@ -621,7 +621,7 @@ sub _run_member {
 
     if ($is_new) {
         my $file = $member->fileName;
-        print $fh "package main; shift \@INC;\n";
+        print $fh "package main;\n";
         if (defined &Internals::PAR::CLEARSTACK and $clear_stack) {
             print $fh "Internals::PAR::CLEARSTACK();\n";
         }
@@ -630,7 +630,7 @@ sub _run_member {
         seek ($fh, 0, 0);
     }
 
-    unshift @INC, sub { $fh };
+    unshift @INC, sub { shift @INC; return $fh };
 
     $ENV{PAR_0} = $filename; # for Pod::Usage
     { do 'main';
@@ -651,14 +651,14 @@ sub _run_external_file {
     if (defined &Internals::PAR::CLEARSTACK and $clear_stack) {
         $clear_stack = "Internals::PAR::CLEARSTACK();\n";
     }
-    my $string = "package main; shift \@INC;\n$clearstack#line 1 \"$filename\"\n"
+    my $string = "package main;\n$clearstack#line 1 \"$filename\"\n"
                  . do { local $/ = undef; <$ffh> };
     close $ffh;
 
     open my $fh, '<', \$string
       or die "Can't open file handle to string: $!";
 
-    unshift @INC, sub { $fh };
+    unshift @INC, sub { shift @INC; return $fh };
 
     $ENV{PAR_0} = $filename; # for Pod::Usage
     { do 'main';
