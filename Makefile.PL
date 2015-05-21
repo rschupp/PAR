@@ -6,6 +6,7 @@ use inc::Module::Install;
 name        'PAR';
 abstract    'Perl Archive Tookit';
 all_from    'lib/PAR.pm';
+repository  'https://www.openfoundry.org/svn/par/trunk';
 
 perl_version '5.008001';
 requires    'File::Temp'        => 0.05;
