@@ -673,15 +673,14 @@ sub _run_external_file {
 # returns that directory.
 sub _extract_inc {
     my $file_or_azip_handle = shift;
-    my $force_extract = shift;
-    my $inc = "$PAR::SetupTemp::PARTemp/inc";
     my $dlext = defined($Config{dlext}) ? $Config::Config{dlext} : '';
-    my $inc_exists = -d $inc;
     my $is_handle = ref($file_or_azip_handle) && $file_or_azip_handle->isa('Archive::Zip::Archive');
 
     require File::Spec;
+    my $inc = File::Spec->catdir($PAR::SetupTemp::PARTemp, "inc");
+    my $canary = File::Spec->catfile($PAR::SetupTemp::PARTemp, $PAR::SetupTemp::Canary);
 
-    if (!$inc_exists or $force_extract) {
+    if (!-d $inc || !-e $canary) {
         for (1 .. 10) { mkdir("$inc.lock", 0755) and last; sleep 1 }
         
         undef $@;
@@ -725,9 +724,19 @@ sub _extract_inc {
               my $outfile =  File::Spec->catfile($inc, $_);
               next if -e $outfile and not -w _;
               $zip->extractMember($_, $outfile);
+              # Unfortunately Archive::Zip doesn't have an option
+              # NOT to restore member timestamps when extracting, hence set 
+              # it to "now" (making it younger than the canary file).
+              utime(undef, undef, $outfile);
           }
         }
         
+        # touch (and back-date) canary file
+        open my $fh, ">", $canary; 
+        close $fh;
+        my $dateback = time() - $PAR::SetupTemp::CanaryDateBack;
+        utime($dateback, $dateback, $canary);
+
         rmdir("$inc.lock");
 
         $ArchivesExtracted{$is_handle ? $file_or_azip_handle->fileName() : $file_or_azip_handle} = $inc;

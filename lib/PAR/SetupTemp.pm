@@ -32,6 +32,11 @@ environment variable.
 # for PAR internal use only!
 our $PARTemp;
 
+# name of the canary file
+our $Canary = "_CANARY_.txt";
+# how much to "date back" the canary file (in seconds)
+our $CanaryDateBack = 24 * 3600;        # 1 day
+
 # The C version of this code appears in myldr/mktmpdir.c
 # This code also lives in PAR::Packer's par.pl as _set_par_temp!
 sub set_par_temp_env {
