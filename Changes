@@ -1,3 +1,21 @@
+1.010  2015-07-13
+
+  - Fix #101800 "[PATCH] Reinstate files to inc dir if deleted by external process"
+    Periodic temp  directory cleaning programs (eg. "tmpwatch") may remove some
+    (older) files from $PAR_TEMP/inc, but keep others. This causes the packed
+    program to fail.
+
+    - When extracting a .par file to $PAR_TEMP/inc do NOT restore the original
+      modified timestamps of the file (so that the extracted files have
+      the time of extraction as their modified time).
+
+    - Add a "canary" file in $PAR_TEMP and back-date it 1 day. Hence any process
+      removing files in $PAR_TEMP based on timestamps should remove 
+      the "canary" before others.
+
+    - If the canary file is missing, extract the .par to $PAR_TEMP/inc 
+      as previously was done only when $PAR_TEMP/inc was missing.
+
 1.009  2015-04-22
 
   - Fix 103861 for PAR-Packer: Adding local directories to @INC for a pp executable fails
