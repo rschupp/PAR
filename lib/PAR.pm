@@ -1183,10 +1183,7 @@ __END__
 
 =head1 SEE ALSO
 
-The PAR homepage at L<http://par.perl.org>.
-
-L<PAR::Tutorial>, L<PAR::FAQ> (For a more
-current FAQ, refer to the homepage.)
+L<PAR::Tutorial>, L<PAR::FAQ> 
 
 The L<PAR::Packer> distribution which contains the packaging utilities:
 L<par.pl>, L<parl>, L<pp>.
@@ -1230,7 +1227,7 @@ Audrey Tang E<lt>cpan@audreyt.orgE<gt>
 
 Steffen Mueller E<lt>smueller@cpan.orgE<gt>
 
-L<http://par.perl.org/> is the official PAR website.  You can write
+You can write
 to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty mail to
 E<lt>par-subscribe@perl.orgE<gt> to participate in the discussion.
 

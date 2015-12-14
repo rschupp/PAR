@@ -7,7 +7,6 @@ PAR::FAQ - Frequently Asked Questions about PAR
 =head1 SYNOPSIS
 
 This is the Frequently Asked Questions list for the Perl Archive Toolkit.
-You can edit this document at L<http://par.perl.org/wiki/FAQ> online.
 This (included) FAQ list might be outdated. The Wiki version at the above URL
 is guaranteed to be up to date.
 
@@ -100,7 +99,7 @@ Answer from: Steffen Mueller, 16 August 2006
 
 I<Note:> Is this still a problem?
 
-Comment out the line that starts with " unless (caller) ", and compile it again. Note that this is considered a bug; clearing the caller stack is a development in progress. See: L<http://par.perl.org/wiki/Development_in_progress>
+Comment out the line that starts with " unless (caller) ", and compile it again. Note that this is considered a bug; clearing the caller stack is a development in progress.
 
 =head2 I get a link error '/usr/bin/ld: cannot find -lperl' during the 'make' step of the installation on Debian. What's wrong?
 
@@ -348,7 +347,7 @@ L<PAR>, L<PAR::Tutorial>
 Audrey Tang E<lt>cpan@audreyt.orgE<gt>, 
 Steffen Mueller E<lt>smueller@cpan.orgE<gt>
 
-L<http://par.perl.org/> is the official PAR website.  You can write
+You can write
 to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty mail to
 E<lt>par-subscribe@perl.orgE<gt> to participate in the discussion.
 
