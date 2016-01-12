@@ -595,7 +595,6 @@ sub _first_member_matching {
 
 sub _run_member_from_par {
     my $member = shift;
-    my $clear_stack = shift;
     my ($fh, $is_new, $filename) = _tempfile($member->crc32String . ".pl");
 
     if ($is_new) {
@@ -616,15 +615,11 @@ sub _run_member_from_par {
 
 sub _run_member {
     my $member = shift;
-    my $clear_stack = shift;
     my ($fh, $is_new, $filename) = _tempfile($member->crc32String . ".pl");
 
     if ($is_new) {
         my $file = $member->fileName;
         print $fh "package main;\n";
-        if (defined &Internals::PAR::CLEARSTACK and $clear_stack) {
-            print $fh "Internals::PAR::CLEARSTACK();\n";
-        }
         print $fh "#line 1 \"$file\"\n";
         $member->extractToFileHandle($fh);
         seek ($fh, 0, 0);
@@ -642,15 +637,9 @@ sub _run_member {
 
 sub _run_external_file {
     my $filename = shift;
-    my $clear_stack = shift;
-    require 5.008;
     open my $ffh, '<', $filename
       or die "Can't open perl script \"$filename\": $!";
 
-    my $clearstack = '';
-    if (defined &Internals::PAR::CLEARSTACK and $clear_stack) {
-        $clear_stack = "Internals::PAR::CLEARSTACK();\n";
-    }
     my $string = "package main;\n$clearstack#line 1 \"$filename\"\n"
                  . do { local $/ = undef; <$ffh> };
     close $ffh;
