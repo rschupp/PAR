@@ -599,8 +599,8 @@ sub _run_member_from_par {
 
     if ($is_new) {
         my $file = $member->fileName;
-        print $fh "package main;\n";
-        print $fh "#line 1 \"$file\"\n";
+        print $fh "package main;\n",
+                  "#line 1 \"$file\"\n";
         $member->extractToFileHandle($fh);
         seek ($fh, 0, 0);
     }
@@ -619,8 +619,8 @@ sub _run_member {
 
     if ($is_new) {
         my $file = $member->fileName;
-        print $fh "package main;\n";
-        print $fh "#line 1 \"$file\"\n";
+        print $fh "package main;\n",
+                  "#line 1 \"$file\"\n";
         $member->extractToFileHandle($fh);
         seek ($fh, 0, 0);
     }
@@ -640,8 +640,9 @@ sub _run_external_file {
     open my $ffh, '<', $filename
       or die "Can't open perl script \"$filename\": $!";
 
-    my $string = "package main;\n$clearstack#line 1 \"$filename\"\n"
-                 . do { local $/ = undef; <$ffh> };
+    my $string = "package main;\n" .
+                 "#line 1 \"$filename\"\n" .
+                 do { local $/ = undef; <$ffh> };
     close $ffh;
 
     open my $fh, '<', \$string
