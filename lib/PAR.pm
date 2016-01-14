@@ -723,6 +723,11 @@ sub _extract_inc {
         
         # touch (and back-date) canary file
         open my $fh, ">", $canary; 
+        print $fh <<'...';
+This file is used as "canary in the coal mine" to detect when 
+files in PAR's cache area are being removed by some clean up 
+mechanism (probably based on file modification times).
+...
         close $fh;
         my $dateback = time() - $PAR::SetupTemp::CanaryDateBack;
         utime($dateback, $dateback, $canary);
