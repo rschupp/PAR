@@ -625,7 +625,15 @@ sub _run_member {
         seek ($fh, 0, 0);
     }
 
-    unshift @INC, sub { shift @INC; return $fh };
+    # NOTE: Perl 5.14.x will print the infamous warning
+    # "Use of uninitialized value in do "file" at .../PAR.pm line 636" 
+    # when $INC{main} exists, but is undef, when "do 'main'" is called.
+    # This typically happens at the second invocation of _run_member() 
+    # when running a packed executable (the first invocation is for the 
+    # generated script/main.pl, the second for the packed script itself). 
+    # Hence shut the warning up by assigning something to $INC{main}. 
+    # 5.14.x is the only Perl version since 5.8.1 that shows this behaviour.
+    unshift @INC, sub { shift @INC; $INC{$_[1]} = $filename; return $fh };
 
     $ENV{PAR_0} = $filename; # for Pod::Usage
     { do 'main';
