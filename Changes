@@ -1,3 +1,16 @@
+1.011  2016-09-18
+
+- Move to GitHub. Thanks, OpenFoundry, for years of service.
+
+- Suppress warning "Use of uninitialized value in do "file" ..."
+    
+- Put a description of its purpose into the canary file
+
+- Remove all traces of Internals::PAR::CLEARSTACK
+
+- Remove all references to http://par.perl.org/, doesn't exist anymore
+
+
 1.010  2015-07-13
 
   - Fix #101800 "[PATCH] Reinstate files to inc dir if deleted by external process"
