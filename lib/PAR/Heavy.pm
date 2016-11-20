@@ -15,6 +15,9 @@ No user-serviceable parts inside.
 
 =cut
 
+use File::Spec;
+use Archive::Zip qw( :ERROR_CODES ); 
+
 ########################################################################
 # Dynamic inclusion of XS modules
 
@@ -97,7 +100,7 @@ sub _bootstrap {
         }
     }
 
-    $FullCache{$file} = _dl_extract($member, $file);
+    $FullCache{$file} = _dl_extract($member);
 
     # Now extract all associated shared objs in the same auto/ dir
     # XXX: shouldn't this also set $FullCache{...} for those files?
@@ -112,7 +115,7 @@ sub _bootstrap {
             next if $name eq $first;
             next unless $name =~ m{^/?\Q$path_pattern\E\/[^/]*\.\Q$DynaLoader::dl_dlext\E[^/]*$};
             $name =~ s{.*/}{};
-            _dl_extract($member, $file, $name);
+            _dl_extract($member, $name);
         }
     }
 
@@ -121,46 +124,30 @@ sub _bootstrap {
 }
 
 sub _dl_extract {
-    my ($member, $file, $name) = @_;
+    my ($member, $name) = @_;
+    $name ||= $member->crc32String . ".$DynaLoader::dl_dlext";
 
-    require File::Spec;
-    require File::Temp;
+    my $filename = File::Spec->catfile($ENV{PAR_TEMP} || File::Spec->tmpdir, $name);
+    ($filename) = $filename =~ /^([\x20-\xff]+)$/;
 
-    my ($fh, $filename);
+    return $filename if -e $filename && -s _ == $member->uncompressedSize;
 
-    # fix borked tempdir from earlier versions
-    if ($ENV{PAR_TEMP} and -e $ENV{PAR_TEMP} and !-d $ENV{PAR_TEMP}) {
-        unlink($ENV{PAR_TEMP});
-        mkdir($ENV{PAR_TEMP}, 0755);
+    # $filename doesn't exist or hasn't been completely extracted:
+    # extract it under a temporary name that isn't likely to be used
+    # by concurrent processes doing the same
+    my $tempname = "$filename.$$";
+    $member->extractToFileNamed($tempname) == AZ_OK
+        or die "Can't extract archive member ".$member->fileName." to $tempname: $!";
+
+    # now that we have a "good" copy in $tempname, rename it to $filename;
+    # if this fails (e.g. some OSes won't let you delete DLLs that are
+    # in use), but $filename exists, we assume that $filename is also
+    # "good": remove $tempname and return $filename
+    unless (rename($tempname, $filename))
+    {
+        -e $filename or die "can't rename $tempname to $filename: $!";
+        unlink($tempname);
     }
-
-    if ($ENV{PAR_CLEAN} and !$name) {
-        ($fh, $filename) = File::Temp::tempfile(
-            DIR         => ($ENV{PAR_TEMP} || File::Spec->tmpdir),
-            SUFFIX      => ".$DynaLoader::dl_dlext",
-            UNLINK      => ($^O ne 'MSWin32' and $^O !~ /hpux/),
-        );
-        ($filename) = $filename =~ /^([\x20-\xff]+)$/;
-    }
-    else {
-        $filename = File::Spec->catfile(
-            ($ENV{PAR_TEMP} || File::Spec->tmpdir),
-            ($name || ($member->crc32String . ".$DynaLoader::dl_dlext"))
-        );
-        ($filename) = $filename =~ /^([\x20-\xff]+)$/;
-
-        open $fh, '>', $filename or die $!
-            unless -r $filename and -e _
-                and -s _ == $member->uncompressedSize;
-    }
-
-    if ($fh) {
-        binmode($fh);
-        $member->extractToFileHandle($fh);
-        close $fh;
-        chmod 0750, $filename;
-    }
-
     return $filename;
 }
 
