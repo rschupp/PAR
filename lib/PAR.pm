@@ -309,6 +309,8 @@ shared object file..."
 
 =cut
 
+use Archive::Zip qw( :ERROR_CODES ); 
+
 use vars qw(@PAR_INC);              # explicitly stated PAR library files (preferred)
 use vars qw(@PAR_INC_LAST);         # explicitly stated PAR library files (fallback)
 use vars qw(%PAR_INC);              # sets {$par}{$file} for require'd modules
@@ -595,15 +597,16 @@ sub _first_member_matching {
 
 sub _run_member_from_par {
     my $member = shift;
-    my ($fh, $is_new, $filename) = _tempfile($member->crc32String . ".pl");
-
-    if ($is_new) {
-        my $file = $member->fileName;
-        print $fh "package main;\n",
-                  "#line 1 \"$file\"\n";
-        $member->extractToFileHandle($fh);
-        seek ($fh, 0, 0);
-    }
+    my (undef, $filename) = _tempfile(
+        sub {
+            my $fh = shift;
+            my $file = $member->fileName;
+            print $fh "package main;\n",
+                      "#line 1 \"$file\"\n";
+            $member->extractToFileHandle($fh) == AZ_OK
+                or die "Can't extract $file: $!";
+        },
+        $member->crc32String . ".pl");
 
     $ENV{PAR_0} = $filename; # for Pod::Usage
     { do $filename;
@@ -615,15 +618,16 @@ sub _run_member_from_par {
 
 sub _run_member {
     my $member = shift;
-    my ($fh, $is_new, $filename) = _tempfile($member->crc32String . ".pl");
-
-    if ($is_new) {
-        my $file = $member->fileName;
-        print $fh "package main;\n",
-                  "#line 1 \"$file\"\n";
-        $member->extractToFileHandle($fh);
-        seek ($fh, 0, 0);
-    }
+    my ($fh, $filename) = _tempfile(
+        sub {
+            my $fh = shift;
+            my $file = $member->fileName;
+            print $fh "package main;\n",
+                      "#line 1 \"$file\"\n";
+            $member->extractToFileHandle($fh) == AZ_OK
+                or die "Can't extract $file: $!";
+        },
+        $member->crc32String . ".pl");
 
     # NOTE: Perl 5.14.x will print the infamous warning
     # "Use of uninitialized value in do "file" at .../PAR.pm line 636" 
@@ -961,9 +965,10 @@ sub unpar {
         }
         # Got the .par as a string. (reference to scalar, of course)
         elsif (ref($par) eq 'SCALAR') {
-            my ($fh) = _tempfile();
-            print $fh $$par;
-            $par = $fh;
+            ($par, undef) = _tempfile(sub {
+                    my $fh = shift;
+                    print $fh $$par;
+                });
         }
         # If the par is not a valid .par file name and we're being strict
         # about this, then also check whether "$par.par" exists
@@ -989,7 +994,7 @@ sub unpar {
         Archive::Zip::setErrorHandler(sub {});
         my $rv = $zip->readFromFileHandle($par, @file);
         Archive::Zip::setErrorHandler(undef);
-        return unless $rv == Archive::Zip::AZ_OK();
+        return unless $rv == AZ_OK;
 
         push @LibCache, $zip;
         $LibCache{$_[0]} = $zip;
@@ -1025,11 +1030,13 @@ sub unpar {
                         ^([^/]+)$
                     };
                 my $extract_name = $1;
-                my $dest_name =
-                    File::Spec->catfile($ENV{PAR_TEMP}, $extract_name);
+                my $dest_name = File::Spec->catfile($ENV{PAR_TEMP}, $extract_name);
                 # but don't extract it if we've already got one
-                $member->extractToFileNamed($dest_name)
-                    unless(-e $dest_name);
+                unless (-e $dest_name)
+                {
+                    $member->extractToFileNamed($dest_name) == AZ_OK
+                        or die "Can't extract $member_name: $!";
+                }
             }
         }
 
@@ -1054,7 +1061,6 @@ sub unpar {
                $ENV{$key} = $tempdir;
            }
        }
-    
     }
 
     $LastAccessedPAR = $zip;
@@ -1072,51 +1078,60 @@ sub unpar {
 
     return $member if $member_only;
 
-    my ($fh, $is_new);
-    ($fh, $is_new, $LastTempFile) = _tempfile($member->crc32String . ".pm");
-    die "Bad Things Happened..." unless $fh;
-
-    if ($is_new) {
-        $member->extractToFileHandle($fh);
-        seek ($fh, 0, 0);
-    }
+    my ($fh, $LastTempFile) = _tempfile(
+        sub { 
+            my $fh = shift; 
+            my $file = $member->fileName;
+            $member->extractToFileHandle($fh) == AZ_OK
+                or die "Can't extract $file: $!";
+        },
+        $member->crc32String . ".pm");
 
     return $fh;
 }
 
 sub _tempfile {
-    my ($fh, $filename);
-    if ($ENV{PAR_CLEAN} or !@_) {
+    my ($callback, $name) = @_;
+    
+    if ($ENV{PAR_CLEAN} or !defined $name) {
         require File::Temp;
 
         if (defined &File::Temp::tempfile) {
             # under Win32, the file is created with O_TEMPORARY,
             # and will be deleted by the C runtime; having File::Temp
             # delete it has the only effect of giving ugly warnings
-            ($fh, $filename) = File::Temp::tempfile(
+            my ($fh, $filename) = File::Temp::tempfile(
                 DIR     => $PAR::SetupTemp::PARTemp,
                 UNLINK  => ($^O ne 'MSWin32' and $^O !~ /hpux/),
             ) or die "Cannot create temporary file: $!";
             binmode($fh);
-            return ($fh, 1, $filename);
+            $callback->($fh);
+            seek($fh, 0, 0);
+            return ($fh, $filename);
         }
     }
 
     require File::Spec;
 
     # untainting tempfile path
-    local $_ = File::Spec->catfile( $PAR::SetupTemp::PARTemp, $_[0] );
-    /^(.+)$/ and $filename = $1;
+    my ($filename) = File::Spec->catfile($PAR::SetupTemp::PARTemp, $name) =~ /^(.+)$/;
 
-    if (-r $filename) {
-        open $fh, '<', $filename or die $!;
+    unless (-r $filename) {
+        my $tempname = "$filename.$$";
+
+        open my $fh, '>', $tempname or die $!;
         binmode($fh);
-        return ($fh, 0, $filename);
+        $callback->($fh);
+        close($fh);
+
+        # FIXME why?
+        rename($tempname, $filename) or unlink($tempname); 
     }
 
-    open $fh, '+>', $filename or die $!;
+    open my $fh, '<', $filename or die $!;
     binmode($fh);
-    return ($fh, 1, $filename);
+
+    return ($fh, $filename);
 }
 
 # Given an Archive::Zip object, this generates a hash of
