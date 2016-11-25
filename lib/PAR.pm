@@ -681,78 +681,68 @@ sub _extract_inc {
     my $is_handle = ref($file_or_azip_handle) && $file_or_azip_handle->isa('Archive::Zip::Archive');
 
     require File::Spec;
+
     my $inc = File::Spec->catdir($PAR::SetupTemp::PARTemp, "inc");
+    my $inc_lock = "$inc.lock";
 
-=for canary
     my $canary = File::Spec->catfile($PAR::SetupTemp::PARTemp, $PAR::SetupTemp::Canary);
-    # TODO if !-e $canary
-=cut
 
-    unless (-d $inc)
+    # acquire the "wanna extract inc" lock
+    open my $lock, ">", $inc_lock or die qq[can't open "$inc_lock": $!];
+    flock($lock, LOCK_EX);
+
+    unless (-d $inc && -e $canary)
     {
-        # acquire the "wanna extract" lock
-        open my $lock, ">", "$inc-lock" or die qq[can't open "$inc-lock": $!];
-        flock($lock, LOCK_EX);
+        mkdir($inc, 0755);
 
-        unless (-d $inc)
-        {
-            # nobody has done the work already...
-            my $inc_temp = "$inc-temp";
-            mkdir($inc_temp, 0755);
+        undef $@;
+        if (!$is_handle) {
+          # First try to unzip the *fast* way.
+          eval {
+            require Archive::Unzip::Burst;
+            Archive::Unzip::Burst::unzip($file_or_azip_handle, $inc)
+              and die "Could not unzip '$file_or_azip_handle' into '$inc'. Error: $!";
+              die;
+          };
 
-            undef $@;
-            if (!$is_handle) {
-              # First try to unzip the *fast* way.
-              eval {
-                require Archive::Unzip::Burst;
-                Archive::Unzip::Burst::unzip($file_or_azip_handle, $inc_temp)
-                  and die "Could not unzip '$file_or_azip_handle' into '$inc_temp'. Error: $!";
-                  die;
-              };
-
-              # This means the fast module is there, but didn't work.
-              if ($@ =~ /^Could not unzip/) {
-                die $@;
-              }
-            }
-
-            # either failed to load Archive::Unzip::Burst or got 
-            # an Archive::Zip handle: fallback to slow way.
-            if ($is_handle || $@) {
-              my $zip;
-              if (!$is_handle) {
-                open my $fh, '<', $file_or_azip_handle
-                  or die "Cannot find '$file_or_azip_handle': $!";
-                binmode($fh);
-                bless($fh, 'IO::File');
-
-                $zip = Archive::Zip->new;
-                $zip->readFromFileHandle($fh, $file_or_azip_handle) == AZ_OK
-                    or die "Read '$file_or_azip_handle' error: $!";
-              }
-              else {
-                $zip = $file_or_azip_handle;
-              }
-
-              for ( $zip->memberNames() ) {
-                  s{^/}{};
-                  my $outfile =  File::Spec->catfile($inc_temp, $_);
-                  next if -e $outfile and not -w _;
-                  $zip->extractMember($_, $outfile);
-                  # Unfortunately Archive::Zip doesn't have an option
-                  # NOT to restore member timestamps when extracting, hence set 
-                  # it to "now" (making it younger than the canary file).
-                  utime(undef, undef, $outfile);
-              }
-            }
-
-            rename($inc_temp, $inc) or die qq[can't rename "$inc_temp" to "$inc": $!];
-
-            $ArchivesExtracted{$is_handle ? $file_or_azip_handle->fileName() : $file_or_azip_handle} = $inc;
+          # This means the fast module is there, but didn't work.
+          if ($@ =~ /^Could not unzip/) {
+            die $@;
+          }
         }
-        
-        
-=for canary
+
+        # either failed to load Archive::Unzip::Burst or got 
+        # an Archive::Zip handle: fallback to slow way.
+        if ($is_handle || $@) {
+          my $zip;
+          if (!$is_handle) {
+            open my $fh, '<', $file_or_azip_handle
+              or die "Cannot find '$file_or_azip_handle': $!";
+            binmode($fh);
+            bless($fh, 'IO::File');
+
+            $zip = Archive::Zip->new;
+            $zip->readFromFileHandle($fh, $file_or_azip_handle) == AZ_OK
+                or die "Read '$file_or_azip_handle' error: $!";
+          }
+          else {
+            $zip = $file_or_azip_handle;
+          }
+
+          for ( $zip->memberNames() ) {
+              s{^/}{};
+              my $outfile =  File::Spec->catfile($inc, $_);
+              next if -e $outfile and not -w _;
+              $zip->extractMember($_, $outfile);
+              # Unfortunately Archive::Zip doesn't have an option
+              # NOT to restore member timestamps when extracting, hence set 
+              # it to "now" (making it younger than the canary file).
+              utime(undef, undef, $outfile);
+          }
+        }
+
+        $ArchivesExtracted{$is_handle ? $file_or_azip_handle->fileName() : $file_or_azip_handle} = $inc;
+    
         # touch (and back-date) canary file
         open my $fh, ">", $canary; 
         print $fh <<'...';
@@ -763,12 +753,11 @@ mechanism (probably based on file modification times).
         close $fh;
         my $dateback = time() - $PAR::SetupTemp::CanaryDateBack;
         utime($dateback, $dateback, $canary);
-=cut
-
-        # release the "wanna extract" lock
-        flock($lock, LOCK_UN);
-        close $lock;
     }
+
+    # release the "wanna extract inc" lock
+    flock($lock, LOCK_UN);
+    close $lock;
 
     # add the freshly extracted directories to @INC,
     # but make sure there's no duplicates
