@@ -1,3 +1,17 @@
+1.012  2016-11-25
+
+  - Guard against concurrent extraction attempts of zip into "inc"
+
+    - use a file lock to protect the extraction of the complete zip into "inc"
+ 
+    - _run_member_*(), _tempfile(), _dl_extract(): 
+      make the "persistent" filename only visible when the file 
+      has been completely written
+  
+  - Make build and test work if @INC does not include "."
+
+  - Upgrade to Module::Install 1.17
+
 1.011  2016-09-18
 
 - Move to GitHub. Thanks, OpenFoundry, for years of service.
