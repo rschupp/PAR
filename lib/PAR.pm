@@ -1088,7 +1088,7 @@ sub unpar {
 
     return $member if $member_only;
 
-    my ($fh, $LastTempFile) = _tempfile(
+    (my $fh, $LastTempFile) = _tempfile(
         sub { 
             my $fh = shift; 
             my $file = $member->fileName;
