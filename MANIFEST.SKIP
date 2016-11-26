@@ -10,3 +10,4 @@
 ^\.gitignore
 \B\.svn\b
 ^MYMETA\.
+^t/hello.par

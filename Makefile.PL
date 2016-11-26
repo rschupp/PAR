@@ -31,7 +31,16 @@ if (can_use('Crypt::OpenPGP') or can_run('gpg')) {
             'Module::Signature';
 }
 
-no_index            directory => 'contrib';
+no_index    directory => 'contrib';
 auto_provides;
 
+clean_files 't/hello.par';
+
 WriteAll sign => 0;
+
+sub MY::postamble {
+    return <<'...';
+all :: 
+	$(PERL) t/gen-hello-par.pl
+...
+}
