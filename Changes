@@ -1,3 +1,9 @@
+1.013  2016-11-27
+
+  - Fix a crucial typo, hopefully fixes RT#118981 "Tests fail (with PAR 1.012?)"
+
+  - Build t/hello.par at "make" time
+    
 1.012  2016-11-25
 
   - Guard against concurrent extraction attempts of zip into "inc"
