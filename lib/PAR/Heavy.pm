@@ -15,11 +15,11 @@ No user-serviceable parts inside.
 
 =cut
 
-use File::Spec;
-use Archive::Zip qw( :ERROR_CODES ); 
-
 ########################################################################
 # Dynamic inclusion of XS modules
+
+# NOTE: Don't "use" any module here, esp. one that is an XS module or 
+# whose "use" could cause the loading of an XS module thru its dependencies.
 
 my ($bootstrap, $dl_findfile);  # Caches for code references
 my ($cache_key);                # The current file to find
@@ -136,7 +136,7 @@ sub _dl_extract {
     # extract it under a temporary name that isn't likely to be used
     # by concurrent processes doing the same
     my $tempname = "$filename.$$";
-    $member->extractToFileNamed($tempname) == AZ_OK
+    $member->extractToFileNamed($tempname) == Archive::Zip::AZ_OK()
         or die "Can't extract archive member ".$member->fileName." to $tempname: $!";
 
     # now that we have a "good" copy in $tempname, rename it to $filename;
