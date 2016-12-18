@@ -40,7 +40,7 @@ WriteAll sign => 0;
 
 sub MY::postamble {
     return <<'...';
-all :: 
+pure_all :: 
 	$(PERL) t/gen-hello-par.pl
 ...
 }
