@@ -1,3 +1,13 @@
+1.014  2016-12-18
+
+  - Fix RT#119224: "Issue about Can't locate loadable object for module"
+    drop "use" statements in PAR/Heavy.pm added in edf5f24d
+
+  - Fix RT#119010: "Wrong license link"
+    always refer to the included LICENSE file
+
+  - generate hello.par in Makefile target "pure_all"
+
 1.013  2016-11-27
 
   - Fix a crucial typo, hopefully fixes RT#118981 "Tests fail (with PAR 1.012?)"
