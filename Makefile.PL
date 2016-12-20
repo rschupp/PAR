@@ -1,13 +1,13 @@
+#!/usr/bin/perl
 
 use strict;
 use 5.008001;
-use lib ".";
+BEGIN { push @INC, '.' unless $INC[-1] eq '.' }
 use inc::Module::Install;
 
 name        'PAR';
 abstract    'Perl Archive Tookit';
 all_from    'lib/PAR.pm';
-repository  'https://github.com/rschupp/PAR';
 
 perl_version '5.008001';
 requires    'File::Temp'        => 0.05;
@@ -31,8 +31,11 @@ if (can_use('Crypt::OpenPGP') or can_run('gpg')) {
             'Module::Signature';
 }
 
-no_index    directory => 'contrib';
 auto_provides;
+
+license     'perl_5';
+resources   repository          => 'https://github.com/rschupp/PAR',
+            MailingList         => 'par@perl.org';
 
 clean_files 't/hello.par';
 
