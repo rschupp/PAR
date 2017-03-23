@@ -53,19 +53,13 @@ sub set_par_temp_env {
 
     require File::Spec;
       if (!$ENV{PAR_CLEAN} and my $mtime = (stat($PAR::SetupProgname::Progname))[9]) {
-          my $ctx = _get_digester();
+          require Digest::SHA;
+          my $ctx = Digest::SHA->new(1);
 
-          # Workaround for bug in Digest::SHA 5.38 and 5.39
-          my $sha_version = eval { $Digest::SHA::VERSION } || 0;
-          if ($sha_version eq '5.38' or $sha_version eq '5.39') {
-              $ctx->addfile($PAR::SetupProgname::Progname, "b") if ($ctx);
-          }
-          else {
-              if ($ctx and open(my $fh, "<$PAR::SetupProgname::Progname")) {
-                  binmode($fh);
-                  $ctx->addfile($fh);
-                  close($fh);
-              }
+          if ($ctx and open(my $fh, "<$PAR::SetupProgname::Progname")) {
+              binmode($fh);
+              $ctx->addfile($fh);
+              close($fh);
           }
 
           $stmpdir = File::Spec->catdir(
