@@ -1,3 +1,13 @@
+1.015  2017-04-13
+
+  - Fix RT#120722 (Reason for Module::Signature dependency unclear since 2008)
+    - "require" a non-broken version of Digest::SHA
+    - remove other crypto related "recommends"
+
+  - Switch from Module::Install to ExtUtils::MakeMaker
+    - avoids the hassle with Module::Install for Perl without "." in @INC
+    - add some resources cf META.json
+
 1.014  2016-12-18
 
   - Fix RT#119224: "Issue about Can't locate loadable object for module"
