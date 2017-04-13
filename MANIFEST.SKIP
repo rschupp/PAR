@@ -10,4 +10,5 @@
 ^\.gitignore
 \B\.svn\b
 ^MYMETA\.
+^typescript$
 ^t/hello.par
