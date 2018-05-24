@@ -48,7 +48,7 @@ To use F<Hello.pm> from F<./foo.par>:
     % perl -MPAR=./foo.par -MHello
     % perl -MPAR=./foo -MHello          # the .par part is optional
 
-Same thing, but search F<foo.par> in the C<@INC>;
+Same thing, but search F<foo.par> in C<@INC>:
 
     % perl -MPAR -Ifoo.par -MHello
     % perl -MPAR -Ifoo -MHello          # ditto
