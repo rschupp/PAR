@@ -213,13 +213,13 @@ extracted libraries, and do not clean it up after execution.
 
 =item *
 
-If I<PAR_GLOBAL_TEMP> is not set, but I<PAR_CLEAN> is specified, set
-I<PAR_GLOBAL_TEMP> to C<I<TEMP>/par-I<USER>/temp-I<PID>/>, cleaning it
+If I<PAR_GLOBAL_TEMP> is not set, but I<PAR_GLOBAL_CLEAN> is specified, set
+I<PAR_GLOBAL_TEMP> to C<I<TEMP>/par-I<USERHEX>/temp-I<PID>/>, cleaning it
 after execution.
 
 =item *
 
-If both are not set,  use C<I<TEMP>/par-I<USER>/cache-I<HASH>/> as the
+If both are not set,  use C<I<TEMP>/par-I<USERHEX>/cache-I<HASH>/> as the
 I<PAR_GLOBAL_TEMP>, reusing any existing files inside.
 
 =back
@@ -239,9 +239,11 @@ of them exists, I<.> is used.
 
 =item *
 
-I<USER> is the user name, or SYSTEM if none can be found.  On Win32, 
-this is C<$Win32::LoginName>.  On Unix, this is C<$ENV{USERNAME}> or 
-C<$ENV{USER}>.
+I<USERHEX> is derived from the user name, or SYSTEM if none can be found.
+On Win32, this is C<$Win32::LoginName>.
+On Unix, this is C<$ENV{USERNAME}> or C<$ENV{USER}>.
+Encode the raw bytes of the user name each as two hex digits
+to obtain I<USERHEX>.
 
 =item *
 
