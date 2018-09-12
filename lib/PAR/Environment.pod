@@ -142,7 +142,7 @@ the child process that it's the child.
 You should not rely on this variable outside of the PAR binary loader
 code. For a slightly more detailed discussion, please refer to the
 F<who_am_i.txt> documentation file in the PAR source distribution
-which was contributed by Alan Stewart. Related: C<PAR_ARGC>, C<PAR_ARGV_*>
+which was contributed by Alan Stewart.
 
 Documented only to avoid surprises if spawned applications expect
 to see a value initialized by the user.
