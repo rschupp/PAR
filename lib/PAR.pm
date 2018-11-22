@@ -704,7 +704,6 @@ sub _extract_inc {
             require Archive::Unzip::Burst;
             Archive::Unzip::Burst::unzip($file_or_azip_handle, $inc)
               and die "Could not unzip '$file_or_azip_handle' into '$inc'. Error: $!";
-              die;
           };
 
           # This means the fast module is there, but didn't work.
