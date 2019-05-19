@@ -715,9 +715,14 @@ sub _extract_inc {
                 binmode($fh);
                 bless($fh, 'IO::File');
 
+                # Temporarily increase Archive::Zip::ChunkSize so that we may find
+                # the EOCD even if stuff has been appended (e.g.by OSX codesign)
+                # to the zip/executable.
+                Archive::Zip::setChunkSize(-s $fh);
                 $zip = Archive::Zip->new;
                 $zip->readFromFileHandle($fh, $file_or_azip_handle) == AZ_OK
                     or die "Read '$file_or_azip_handle' error: $!";
+                Archive::Zip::setChunkSize(64 * 1024);
             }
 
             for ( $zip->memberNames() ) {
