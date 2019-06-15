@@ -731,16 +731,6 @@ L<http://search.cpan.org/perldoc?PAR::Tutorial>
 
 =over 4
 
-=item * Win32 and other icon-savvy platforms
-
-=over 4
-
-=item * Needs 3rd-party tools to add icons to C<pp>-generated executables
-
-=item * PE Header manipulation in Perl -- volunteers wanted!
-
-=back
-
 =item * Linux and other libc-based platforms
 
 =over 4
