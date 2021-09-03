@@ -4,7 +4,7 @@ $PAR::VERSION = '1.018';
 use 5.006;
 use strict;
 use warnings;
-use Config '%Config';
+use Config;
 use Carp qw/croak/;
 
 # If the 'prefork' module is available, we
@@ -679,7 +679,7 @@ sub _run_external_file {
 # returns that directory.
 sub _extract_inc {
     my $file_or_azip_handle = shift;
-    my $dlext = defined($Config{dlext}) ? $Config::Config{dlext} : '';
+    my $dlext = defined($Config{dlext}) ? $Config{dlext} : '';
     my $is_handle = ref($file_or_azip_handle) && $file_or_azip_handle->isa('Archive::Zip::Archive');
 
     require File::Spec;
