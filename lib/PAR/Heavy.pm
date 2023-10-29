@@ -49,10 +49,27 @@ sub _init_dynaloader {
     *{'DynaLoader::dl_findfile'}    = \&_dl_findfile;
 }
 
+my %dynaload_from_inc_dir;
+{
+    use Config ();
+    my $dl_ext = $Config::Config{dlext};
+    if ($dl_ext eq 'xs.dll') {
+        foreach my $name (qw /Glib Gtk2 Gtk3 Gtk4 Pango Cairo/) {
+            my $key  = "auto/$name/$name.$dl_ext";
+            my $path = "$ENV{PAR_TEMP}/inc/lib/$key";
+            $dynaload_from_inc_dir{$key} = $path;
+        }
+    }
+}
+
 # Return the cached location of .dll inside PAR first, if possible.
 sub _dl_findfile {
     print STDERR "PAR::Heavy::_dl_findfile($cache_key)\n" if $dl_debug;
-
+    if ($dynaload_from_inc_dir{$cache_key} and -e $dynaload_from_inc_dir{$cache_key}) {
+        print STDERR " found in dynaload_from_inc_dir as $dynaload_from_inc_dir{$cache_key}\n"
+            if $dl_debug;
+        return $dynaload_from_inc_dir{$cache_key};
+    }
     if (exists $FullCache{$cache_key}) {
         print STDERR " found in FullCache as $FullCache{$cache_key}\n"
             if $dl_debug;
