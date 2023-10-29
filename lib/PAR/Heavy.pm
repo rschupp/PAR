@@ -1,4 +1,7 @@
 package PAR::Heavy;
+use strict;
+use warnings;
+
 $PAR::Heavy::VERSION = '0.12';
 
 =head1 NAME
@@ -26,6 +29,7 @@ my $dl_debug = $ENV{PERL_DL_DEBUG} || 0;
 
 my ($bootstrap, $dl_findfile);  # Caches for code references
 my ($cache_key);                # The current file to find
+my %FullCache;
 my $is_insensitive_fs = (
     -s $0
         and (-s lc($0) || -1) == (-s uc($0) || -1)
@@ -43,10 +47,14 @@ sub _init_dynaloader {
     $bootstrap   = \&DynaLoader::bootstrap;
     $dl_findfile = \&DynaLoader::dl_findfile;
 
-    local $^W;
-    *{'DynaLoader::dl_expandspec'}  = sub { return };
-    *{'DynaLoader::bootstrap'}      = \&_bootstrap;
-    *{'DynaLoader::dl_findfile'}    = \&_dl_findfile;
+    {
+        no strict 'refs';
+        local $^W;
+        no warnings 'redefine';
+        *{'DynaLoader::dl_expandspec'}  = sub { return };
+        *{'DynaLoader::bootstrap'}      = \&_bootstrap;
+        *{'DynaLoader::dl_findfile'}    = \&_dl_findfile;
+    }
 }
 
 # Return the cached location of .dll inside PAR first, if possible.
