@@ -27,9 +27,10 @@ No user-serviceable parts inside.
 # enable debug/trace messages from DynaLoader perl code
 my $dl_debug = $ENV{PERL_DL_DEBUG} || 0;
 
+our %FullCache;
+
 my ($bootstrap, $dl_findfile);  # Caches for code references
 my ($cache_key);                # The current file to find
-my %FullCache;
 my $is_insensitive_fs = (
     -s $0
         and (-s lc($0) || -1) == (-s uc($0) || -1)
