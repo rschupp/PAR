@@ -1,7 +1,7 @@
 package PAR::SetupProgname;
 $PAR::SetupProgname::VERSION = '1.002';
 
-use 5.006;
+use 5.008009;
 use strict;
 use warnings;
 use Config;

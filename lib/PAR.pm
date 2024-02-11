@@ -1,7 +1,7 @@
 package PAR;
 $PAR::VERSION = '1.020';
 
-use 5.006;
+use 5.008009;
 use strict;
 use warnings;
 use Config;
@@ -865,15 +865,7 @@ sub _find_par_internals {
     my ($INC_ARY, $self, $file, $member_only) = @_;
 
     my $scheme;
-    foreach (@$INC_ARY ? @$INC_ARY : @INC) {
-        my $path = $_;
-        if ($] < 5.008001) {
-            # reassemble from "perl -Ischeme://path" autosplitting
-            $path = "$scheme:$path" if !@$INC_ARY
-                and $path and $path =~ m!//!
-                and $scheme and $scheme =~ /^\w+$/;
-            $scheme = $path;
-        }
+    foreach my $path (@$INC_ARY ? @$INC_ARY : @INC) {
         my $rv = unpar($path, $file, $member_only, 1) or next;
         $PAR_INC{$path}{$file} = 1;
         $INC{$file} = $LastTempFile if (lc($file) =~ /^(?!tk).*\.pm$/);

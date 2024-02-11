@@ -1,7 +1,7 @@
 package PAR::SetupTemp;
 $PAR::SetupTemp::VERSION = '1.002';
 
-use 5.006;
+use 5.008009;
 use strict;
 use warnings;
 
