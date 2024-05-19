@@ -1197,7 +1197,7 @@ __END__
 
 =head1 SEE ALSO
 
-L<PAR::Tutorial>, L<PAR::FAQ>
+L<PAR::Tutorial>
 
 The L<PAR::Packer> distribution which contains the packaging utilities:
 L<par.pl>, L<parl>, L<pp>.

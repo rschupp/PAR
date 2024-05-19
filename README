@@ -1,8 +1,7 @@
 This is the README file for PAR, a toolkit to create and use perl scripts
 and modules stored inside compressed .par files.
 
-Please type "perldoc PAR" after installation to see the module usage
-information, and "perldoc PAR::FAQ" for frequently answered questions.
+Please type "perldoc PAR" after installation to see the module usage information.
 
 For running ".par" files directly, please install PAR-Packer and
 see "perldoc parl".
